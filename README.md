@@ -6,7 +6,7 @@ Welcome to ECSE321 Group 02 repository.
 |------|-------|----------------|-------------|
 |Abdullah Taltello| abdullah.taltello@mail.mcgill.ca| [ALQI6](https://github.com/ALQI6)| Mechanical Engineering U4|
 |Farhad Guliyev| farhad.guliyev@mail.mcgill.ca| [Farhad054](https://github.com/Farhad054)| Computer Engineering U4|
-|Sean O'Keefe| sean.okeefe@mail.mcgill.ca| [seanokeefe03](https://github.com/seanokeefe03)| Computer Engineering U3|
+|Sean O'Keefe| sean.okeefe@mail.mcgill.ca| [seanokeefe2003](https://github.com/seanokeefe2003)| Computer Engineering U3|
 
 
 # Project overview:
