@@ -3,30 +3,40 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 
 import java.util.*;
-import java.sql.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+
+
 
 // line 20 "model.ump"
 // line 148 "model.ump"
+@Entity(name= "owners")
 public class Owner extends Person
 {
-
   //------------------------
   // ENUMERATIONS
   //------------------------
-
-  public enum RequestStatus { Approved, Declined, InProgress }
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Owner Associations
+  @OneToOne
   private Inventory inventory;
+  @OneToMany
   private List<ChangeRequest> changeRequest;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Owner(){
+
+  }
 
   public Owner(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, Inventory aInventory)
   {

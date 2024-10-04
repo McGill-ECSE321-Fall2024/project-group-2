@@ -5,17 +5,38 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 import java.sql.Date;
 import java.util.*;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+
 // line 45 "model.ump"
 // line 173 "model.ump"
+
+@Entity
+@Table(name="orders")
 public class Order
 {
 
+
+  
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private int id;
   //------------------------
   // ENUMERATIONS
   //------------------------
 
-  public enum OrderStatus { Pending, Shipped, Delivered, Cancelled }
-
+  @Enumerated(EnumType.STRING)
+  @Column(name = "orderStatus")
+  private OrderStatus status;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -26,16 +47,21 @@ public class Order
   private Date shippedDate;
   private String shipTo;
   private double total;
-  private OrderStatus status;
 
   //Order Associations
+  @OneToOne
   private Payment paymentOfOrder;
+  
+  @OneToMany
   private List<LineItem> lineItemsOfOrder;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
+  public Order(){
+
+  }
   public Order(int aNumber, Date aOrderedDate, Date aShippedDate, String aShipTo, double aTotal, OrderStatus aStatus, Payment aPaymentOfOrder)
   {
     number = aNumber;
@@ -253,5 +279,8 @@ public class Order
             "  " + "shippedDate" + "=" + (getShippedDate() != null ? !getShippedDate().equals(this)  ? getShippedDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "paymentOfOrder = "+(getPaymentOfOrder()!=null?Integer.toHexString(System.identityHashCode(getPaymentOfOrder())):"null");
+  }
+  public int getId() {
+    return id;
   }
 }

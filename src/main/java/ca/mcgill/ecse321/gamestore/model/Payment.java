@@ -4,15 +4,25 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 import java.sql.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+
+
 // line 39 "model.ump"
 // line 168 "model.ump"
+@Entity
 public class Payment
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private int id;
   //Payment Attributes
   private Date paidDate;
   private double total;
@@ -21,6 +31,8 @@ public class Payment
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Payment(){};
 
   public Payment(Date aPaidDate, double aTotal, String aDetails)
   {
