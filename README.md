@@ -8,7 +8,7 @@ Welcome to ECSE321 Group 02 repository.
 |Farhad Guliyev| farhad.guliyev@mail.mcgill.ca| [Farhad054](https://github.com/Farhad054)| Computer Engineering U4|
 |Sean O'Keefe| sean.okeefe@mail.mcgill.ca| [seanokeefe2003](https://github.com/seanokeefe2003)| Computer Engineering U3|
 |Mohamed El-Machmouchi| mohamed.el-machmouchi@mail.mcgill.ca|https://github.com/Mohamed-ctrl-droid | Software Engineering U2|
-
+|Katrina Panwar| katrina.panwar@mail.mcgill.ca | https://github.com/katrinapanwar| Software Engineering U2|
 
 # Project overview:
 The goal of this project is to create an easy-to-use web store for an independent game shop. The web store will provide the owner and the employees with all the functionalities required to manage their product catalog, inventory, and customer orders. 
