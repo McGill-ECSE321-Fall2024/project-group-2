@@ -8,13 +8,32 @@ import jakarta.persistence.Id;
 
 // line 4 "model.ump"
 // line 133 "model.ump"
+
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+
+
+
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+
+// line 4 "model.ump"
+// line 133 "model.ump"
+@MappedSuperclass
 public class Person
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private int id;
   //Person Attributes
   private String isAbstract;
 
@@ -26,6 +45,11 @@ public class Person
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Person(){
+
+  }
+
 
   public Person(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
   {
@@ -107,6 +131,11 @@ public class Person
 
   public void delete()
   {}
+
+  public int getId() {
+    // TODO Auto-generated method stub
+    return id;
+  }
 
 
   public String toString()

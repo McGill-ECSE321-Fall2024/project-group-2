@@ -4,8 +4,17 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 import java.sql.Date;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 // line 79 "model.ump"
 // line 203 "model.ump"
+@Entity
 public class ChangeRequest
 {
 
@@ -13,19 +22,25 @@ public class ChangeRequest
   // ENUMERATIONS
   //------------------------
 
-  public enum RequestStatus { Approved, Declined, InProgress }
-
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private int id;
   //ChangeRequest Attributes
   private Date timeRequest;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "requestStatus")
   private RequestStatus status;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public ChangeRequest() {};
+
 
   public ChangeRequest(Date aTimeRequest, RequestStatus aStatus)
   {

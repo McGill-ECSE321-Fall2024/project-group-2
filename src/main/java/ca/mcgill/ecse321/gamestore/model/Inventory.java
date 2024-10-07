@@ -3,18 +3,24 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 
 import java.util.*;
-import java.sql.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 // line 24 "model.ump"
 // line 153 "model.ump"
+@Entity
 public class Inventory
 {
-
+  @Id
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private int id;
   //------------------------
   // ENUMERATIONS
   //------------------------
-
-  public enum RequestStatus { Approved, Declined, InProgress }
 
   //------------------------
   // MEMBER VARIABLES
@@ -24,11 +30,14 @@ public class Inventory
   private int numberOfItems;
 
   //Inventory Associations
+  @OneToMany
   private List<ChangeRequest> changeRequest;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public Inventory(){};
 
   public Inventory(int aNumberOfItems)
   {
@@ -109,7 +118,7 @@ public class Inventory
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addChangeRequestAt(ChangeRequest aChangeRequest, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addChangeRequest(aChangeRequest))
     {
@@ -132,8 +141,8 @@ public class Inventory
       changeRequest.remove(aChangeRequest);
       changeRequest.add(index, aChangeRequest);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addChangeRequestAt(aChangeRequest, index);
     }
