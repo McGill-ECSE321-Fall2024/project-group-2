@@ -1,13 +1,13 @@
-package ca.mcgill.ecse321.gamestore;
+package ca.mcgill.ecse321.gamestore.repository;
 
 import ca.mcgill.ecse321.gamestore.model.Product;
 import ca.mcgill.ecse321.gamestore.repository.ProductRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ProductRepositoryTests {
@@ -31,9 +31,9 @@ public class ProductRepositoryTests {
         Product foundProduct = productRepository.findProductById(1); // Replace with actual ID used in your DB
 
         // Assert that the product is found and matches the expected values
-        assertNotNull(foundProduct, "The product should be found.");
-        assertEquals("Test Product", foundProduct.getName());
-        assertEquals("Test Description", foundProduct.getDescription());
+        Assertions.assertNotNull(foundProduct, "The product should be found.");
+        Assertions.assertEquals("Test Product", foundProduct.getName());
+        Assertions.assertEquals("Test Description", foundProduct.getDescription());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class ProductRepositoryTests {
         Product foundProduct = productRepository.findProductById(-1); // Using a negative ID for testing
 
         // Assert that the product is not found (should be null)
-        assertNull(foundProduct, "No product should be found with a non-existent ID.");
+        Assertions.assertNull(foundProduct, "No product should be found with a non-existent ID.");
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ProductRepositoryTests {
         Iterable<Product> allProducts = productRepository.findAll();
 
         // Assert that the product list contains the test product
-        assertTrue(allProducts.iterator().hasNext(), "There should be at least one product in the repository.");
-        assertEquals("Test Product", allProducts.iterator().next().getName());
+        Assertions.assertTrue(allProducts.iterator().hasNext(), "There should be at least one product in the repository.");
+        Assertions.assertEquals("Test Product", allProducts.iterator().next().getName());
     }
 }
