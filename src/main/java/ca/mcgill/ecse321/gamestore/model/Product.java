@@ -3,9 +3,11 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 
 import java.util.*;
+import jakarta.persistence.*;
 
 // line 63 "model.ump"
 // line 188 "model.ump"
+@Entity
 public class Product
 {
 
@@ -14,8 +16,13 @@ public class Product
   //------------------------
 
   //Product Attributes
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+  private int id;
   private String name;
   private String description;
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
 
   //Product Associations
   private List<LineItem> lineItemOfProduct;
@@ -23,6 +30,7 @@ public class Product
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Product() {}
 
   public Product(String aName, String aDescription)
   {
