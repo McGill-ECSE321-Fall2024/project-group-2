@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.012s</div>
+<div class="counter">0.937s</div>
 <p>duration</p>
 </div>
 </td>
@@ -82,7 +82,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">1.012s</td>
+<td class="success">0.937s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +90,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>01:09:39.980 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.gamestore.GamestoreApplicationTests]: GamestoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-01:09:40.204 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.gamestore.GamestoreApplication for test class ca.mcgill.ecse321.gamestore.GamestoreApplicationTests
+<pre>03:06:25.470 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.gamestore.GamestoreApplicationTests]: GamestoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+03:06:25.670 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.gamestore.GamestoreApplication for test class ca.mcgill.ecse321.gamestore.GamestoreApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,31 +102,25 @@
 
  :: Spring Boot ::                (v3.3.4)
 
-2024-10-09T01:09:41.120-04:00  INFO 39076 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Starting GamestoreApplicationTests using Java 21.0.4 with PID 39076 (started by katri in C:\Users\katri\IdeaProjects\project-group-2)
-2024-10-09T01:09:41.122-04:00  INFO 39076 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-10-09T01:09:42.551-04:00  INFO 39076 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-10-09T01:09:42.643-04:00  INFO 39076 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 0 JPA repository interfaces.
-2024-10-09T01:09:43.627-04:00  INFO 39076 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-10-09T01:09:43.824-04:00  INFO 39076 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2024-10-09T01:09:43.893-04:00  INFO 39076 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-10-09T01:09:44.418-04:00  INFO 39076 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-10-09T01:09:44.476-04:00  INFO 39076 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-10-09T01:09:44.919-04:00  INFO 39076 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@33215ffb
-2024-10-09T01:09:44.922-04:00  INFO 39076 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-10-09T01:09:45.016-04:00  WARN 39076 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-10-09T01:09:46.911-04:00  INFO 39076 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.Employee (class must be instantiated by Interceptor)
-2024-10-09T01:09:47.100-04:00  INFO 39076 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.Customer (class must be instantiated by Interceptor)
-2024-10-09T01:09:47.191-04:00  INFO 39076 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.WishList (class must be instantiated by Interceptor)
-2024-10-09T01:09:47.625-04:00  INFO 39076 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-10-09T01:09:47.737-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-10-09T01:09:47.737-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint &quot;ukmtcb9m17qjf8p97461bu4cl42&quot; of relation &quot;customer&quot; does not exist, skipping
-2024-10-09T01:09:47.742-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-10-09T01:09:47.743-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint &quot;ukgipgvk6mw4uwm029r2sjmp3ey&quot; of relation &quot;customer_review&quot; does not exist, skipping
-2024-10-09T01:09:47.748-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
-2024-10-09T01:09:47.749-04:00  WARN 39076 --- [    Test worker] o.h.engine.jdbc.spi.SqlExceptionHelper   : constraint &quot;uk1hacqwuyrd3blpu201ch35jmf&quot; of relation &quot;wish_list_line_item_in_wish_list&quot; does not exist, skipping
-2024-10-09T01:09:47.915-04:00  INFO 39076 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-10-09T01:09:48.195-04:00  WARN 39076 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-10-09T01:09:49.125-04:00  INFO 39076 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Started GamestoreApplicationTests in 8.554 seconds (process running for 10.731)
+2024-10-10T03:06:26.448-04:00  INFO 816 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Starting GamestoreApplicationTests using Java 21.0.4 with PID 816 (started by katri in C:\Users\katri\IdeaProjects\project-group-2)
+2024-10-10T03:06:26.451-04:00  INFO 816 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-10-10T03:06:27.722-04:00  INFO 816 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-10T03:06:27.847-04:00  INFO 816 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 102 ms. Found 3 JPA repository interfaces.
+2024-10-10T03:06:28.889-04:00  INFO 816 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-10T03:06:29.065-04:00  INFO 816 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-10-10T03:06:29.135-04:00  INFO 816 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-10-10T03:06:29.808-04:00  INFO 816 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-10T03:06:29.878-04:00  INFO 816 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-10-10T03:06:30.334-04:00  INFO 816 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@175f859e
+2024-10-10T03:06:30.339-04:00  INFO 816 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-10-10T03:06:30.401-04:00  WARN 816 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-10-10T03:06:32.463-04:00  INFO 816 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.Employee (class must be instantiated by Interceptor)
+2024-10-10T03:06:32.679-04:00  INFO 816 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.Customer (class must be instantiated by Interceptor)
+2024-10-10T03:06:32.802-04:00  INFO 816 --- [    Test worker] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: ca.mcgill.ecse321.gamestore.model.WishList (class must be instantiated by Interceptor)
+2024-10-10T03:06:33.374-04:00  INFO 816 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-10T03:06:33.696-04:00  INFO 816 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-10T03:06:33.992-04:00  WARN 816 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-10T03:06:35.799-04:00  INFO 816 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Started GamestoreApplicationTests in 9.812 seconds (process running for 12.239)
 </pre>
 </span>
 </div>
@@ -148,7 +142,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.10.2</a> at Oct 9, 2024, 1:09:50 a.m.</p>
+<a href="http://www.gradle.org">Gradle 8.10.2</a> at Oct 10, 2024, 3:06:37 a.m.</p>
 </div>
 </div>
 </body>
