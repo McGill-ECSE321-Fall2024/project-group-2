@@ -3,7 +3,10 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 
 
 import java.util.*;
+
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 // line 63 "model.ump"
 // line 188 "model.ump"
@@ -16,16 +19,16 @@ public class Product
   //------------------------
 
   //Product Attributes
+
+  private String name;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-
   private int id;
-  private String name;
   private String description;
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-
+  @Nullable
   //Product Associations
-  private List<LineItem> lineItemOfProduct;
+  private List<LineItem> lineItemOfProduct = new ArrayList<LineItem>();
 
   //------------------------
   // CONSTRUCTOR
@@ -36,7 +39,6 @@ public class Product
   {
     name = aName;
     description = aDescription;
-    lineItemOfProduct = new ArrayList<LineItem>();
   }
 
   //------------------------
@@ -49,6 +51,14 @@ public class Product
     name = aName;
     wasSet = true;
     return wasSet;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return id;
   }
 
   public boolean setDescription(String aDescription)
@@ -125,7 +135,7 @@ public class Product
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addLineItemOfProductAt(LineItem aLineItemOfProduct, int index)
-  {  
+  {
     boolean wasAdded = false;
     if(addLineItemOfProduct(aLineItemOfProduct))
     {
@@ -148,8 +158,8 @@ public class Product
       lineItemOfProduct.remove(aLineItemOfProduct);
       lineItemOfProduct.add(index, aLineItemOfProduct);
       wasAdded = true;
-    } 
-    else 
+    }
+    else
     {
       wasAdded = addLineItemOfProductAt(aLineItemOfProduct, index);
     }

@@ -1,30 +1,14 @@
+
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 
+
+import jakarta.persistence.*;
+@Entity
 // line 4 "model.ump"
 // line 133 "model.ump"
-
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
-
-
-
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-
-// line 4 "model.ump"
-// line 133 "model.ump"
-@MappedSuperclass
 public class Person
 {
 
@@ -146,5 +130,4 @@ public class Person
             "name" + ":" + getName()+ "," +
             "email" + ":" + getEmail()+ "," +
             "password" + ":" + getPassword()+ "]";
-  }
-}
+  }}

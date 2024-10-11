@@ -29,7 +29,7 @@ public class PaymentRepositoryTests {
 
     @Test
     public void testSavePayment() {
-        Payment foundPayment = paymentRepository.findPaymentById((int) payment.getTotal()); // Finding by total as an alternative
+        Payment foundPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by total as an alternative
         Assertions.assertNotNull(foundPayment);
         Assertions.assertEquals(payment.getPaidDate(), foundPayment.getPaidDate());
         Assertions.assertEquals(payment.getTotal(), foundPayment.getTotal());
@@ -38,31 +38,31 @@ public class PaymentRepositoryTests {
 
     @Test
     public void testUpdatePayment() {
-        Payment foundPayment = paymentRepository.findPaymentById((int) payment.getTotal()); // Finding by total as an alternative
+        Payment foundPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by total as an alternative
         foundPayment.setTotal(150.0);
         paymentRepository.save(foundPayment);
 
-        Payment updatedPayment = paymentRepository.findPaymentById((int) 150.0); // Finding by new total
+        Payment updatedPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by new total
         Assertions.assertEquals(150.0, updatedPayment.getTotal());
     }
 
     @Test
     public void testDeletePayment() {
         paymentRepository.delete(payment);
-        Payment foundPayment = paymentRepository.findPaymentById((int) payment.getTotal()); // Finding by total as an alternative
+        Payment foundPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by total as an alternative
         Assertions.assertNull(foundPayment);
     }
 
     @Test
     public void testFindByTotal() {
-        Payment foundPayment = paymentRepository.findPaymentById((int) payment.getTotal()); // Finding by total as an alternative
+        Payment foundPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by total as an alternative
         Assertions.assertNotNull(foundPayment);
         Assertions.assertEquals(100.0, foundPayment.getTotal());
     }
 
     @Test
     public void testFindByDetails() {
-        Payment foundPayment = paymentRepository.findPaymentById((int) payment.getTotal()); // Finding by total as an alternative
+        Payment foundPayment = paymentRepository.findPaymentById(payment.getId()); // Finding by total as an alternative
         Assertions.assertEquals("Payment for order", foundPayment.getDetails());
     }
 }

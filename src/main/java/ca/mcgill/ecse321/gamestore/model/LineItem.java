@@ -1,10 +1,7 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 // line 54 "model.ump"
 // line 178 "model.ump"
@@ -22,6 +19,8 @@ public class LineItem
   //LineItem Attributes
   private int quantity;
   private double price;
+  @ManyToOne
+  private Product product;
 
   //------------------------
   // CONSTRUCTOR
