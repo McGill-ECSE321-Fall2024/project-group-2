@@ -13,7 +13,7 @@ public class ChangeRequest
 {
    @Id
    @GeneratedValue
-  private int id;
+  private int requestId;
   //------------------------
   // ENUMERATIONS
   //------------------------
@@ -50,12 +50,12 @@ public class ChangeRequest
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return requestId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.requestId = id;
   }
   public boolean setTimeRequest(Date aTimeRequest)
   {

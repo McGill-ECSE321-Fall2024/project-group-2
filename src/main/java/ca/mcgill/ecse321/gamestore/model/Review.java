@@ -16,7 +16,7 @@ public class Review
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int reviewId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -49,12 +49,12 @@ public class Review
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return reviewId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.reviewId = id;
   }
   public boolean setRating(int aRating)
   {

@@ -11,7 +11,7 @@ public class LineItem
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int lineItemId;
 
   //------------------------
   // MEMBER VARIABLES
@@ -53,12 +53,12 @@ public class LineItem
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return lineItemId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.lineItemId = id;
   }
   public boolean setQuantity(int aQuantity)
   {

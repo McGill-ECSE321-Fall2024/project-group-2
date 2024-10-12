@@ -16,7 +16,7 @@ public class Payment
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int paymentId;
 
   //------------------------
   // MEMBER VARIABLES
@@ -41,12 +41,12 @@ public class Payment
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return paymentId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.paymentId = id;
   }
   public boolean setPaidDate(Date aPaidDate)
   {

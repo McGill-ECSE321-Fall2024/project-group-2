@@ -13,7 +13,7 @@ public class WishList
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int listId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -35,12 +35,12 @@ public class WishList
   //------------------------
   public WishList(){}
   public Integer getId() {
-    return id;
+    return listId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.listId = id;
   }
   public boolean setNumberItem(int aNumberItem)
   {

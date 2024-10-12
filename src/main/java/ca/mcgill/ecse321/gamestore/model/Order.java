@@ -25,7 +25,7 @@ public class Order
   //------------------------
   @Id
   @GeneratedValue
-  private int id;
+  private int orderId;
 
 
   //Order Attributes
@@ -64,12 +64,12 @@ public class Order
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return orderId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.orderId = id;
   }
   public boolean setNumber(int aNumber)
   {

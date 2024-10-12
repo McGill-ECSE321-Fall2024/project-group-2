@@ -13,7 +13,7 @@ public class Inventory
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int inventoryId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -35,12 +35,12 @@ public class Inventory
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return inventoryId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.inventoryId= id;
   }
   public boolean setNumberOfItems(int aNumberOfItems)
   {

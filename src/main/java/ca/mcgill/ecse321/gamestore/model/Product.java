@@ -11,7 +11,7 @@ public class Product
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int productId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -48,12 +48,12 @@ public class Product
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return productId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.productId = id;
   }
   public boolean setName(String aName)
   {

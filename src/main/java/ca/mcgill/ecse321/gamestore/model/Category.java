@@ -13,7 +13,7 @@ public class Category
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int categoryId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -37,12 +37,12 @@ public class Category
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return categoryId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.categoryId = id;
   }
   public boolean setName(String aName)
   {

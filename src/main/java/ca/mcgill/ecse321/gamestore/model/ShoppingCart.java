@@ -15,7 +15,7 @@ public class ShoppingCart
 {
   @Id
   @GeneratedValue
-  private int id;
+  private int cartId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -36,12 +36,12 @@ public class ShoppingCart
   // INTERFACE
   //------------------------
   public Integer getId() {
-    return id;
+    return cartId;
   }
 
   // Setter for id
   public void setId(Integer id) {
-    this.id = id;
+    this.cartId = id;
   }
 
   public boolean setCreationDate(Date aCreationDate)
