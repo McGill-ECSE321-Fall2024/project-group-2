@@ -1,15 +1,21 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.sql.Date;
-import java.util.*;
 
 // line 59 "model.ump"
-// line 183 "model.ump"
+// line 182 "model.ump"
+@Entity
 public class ShoppingCart
 {
-
+  @Id
+  @GeneratedValue
+  private int id;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -17,22 +23,26 @@ public class ShoppingCart
   //ShoppingCart Attributes
   private Date creationDate;
 
-  //ShoppingCart Associations
-  private List<LineItem> lineItemsInCart;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public ShoppingCart(){}
   public ShoppingCart(Date aCreationDate)
   {
     creationDate = aCreationDate;
-    lineItemsInCart = new ArrayList<LineItem>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return id;
+  }
+
+  // Setter for id
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
   public boolean setCreationDate(Date aCreationDate)
   {
@@ -46,98 +56,9 @@ public class ShoppingCart
   {
     return creationDate;
   }
-  /* Code from template association_GetMany */
-  public LineItem getLineItemsInCart(int index)
-  {
-    LineItem aLineItemsInCart = lineItemsInCart.get(index);
-    return aLineItemsInCart;
-  }
-
-  public List<LineItem> getLineItemsInCart()
-  {
-    List<LineItem> newLineItemsInCart = Collections.unmodifiableList(lineItemsInCart);
-    return newLineItemsInCart;
-  }
-
-  public int numberOfLineItemsInCart()
-  {
-    int number = lineItemsInCart.size();
-    return number;
-  }
-
-  public boolean hasLineItemsInCart()
-  {
-    boolean has = lineItemsInCart.size() > 0;
-    return has;
-  }
-
-  public int indexOfLineItemsInCart(LineItem aLineItemsInCart)
-  {
-    int index = lineItemsInCart.indexOf(aLineItemsInCart);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfLineItemsInCart()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addLineItemsInCart(LineItem aLineItemsInCart)
-  {
-    boolean wasAdded = false;
-    if (lineItemsInCart.contains(aLineItemsInCart)) { return false; }
-    lineItemsInCart.add(aLineItemsInCart);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeLineItemsInCart(LineItem aLineItemsInCart)
-  {
-    boolean wasRemoved = false;
-    if (lineItemsInCart.contains(aLineItemsInCart))
-    {
-      lineItemsInCart.remove(aLineItemsInCart);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addLineItemsInCartAt(LineItem aLineItemsInCart, int index)
-  {  
-    boolean wasAdded = false;
-    if(addLineItemsInCart(aLineItemsInCart))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemsInCart()) { index = numberOfLineItemsInCart() - 1; }
-      lineItemsInCart.remove(aLineItemsInCart);
-      lineItemsInCart.add(index, aLineItemsInCart);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveLineItemsInCartAt(LineItem aLineItemsInCart, int index)
-  {
-    boolean wasAdded = false;
-    if(lineItemsInCart.contains(aLineItemsInCart))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemsInCart()) { index = numberOfLineItemsInCart() - 1; }
-      lineItemsInCart.remove(aLineItemsInCart);
-      lineItemsInCart.add(index, aLineItemsInCart);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addLineItemsInCartAt(aLineItemsInCart, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
-  {
-    lineItemsInCart.clear();
-  }
+  {}
 
 
   public String toString()

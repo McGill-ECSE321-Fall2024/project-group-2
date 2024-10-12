@@ -1,24 +1,19 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
-
-import java.util.*;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
-
-
+import java.sql.Date;
 
 // line 20 "model.ump"
-// line 148 "model.ump"
-@Entity(name= "owners")
+// line 147 "model.ump"
+@Entity
 public class Owner extends Person
 {
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
 
   //------------------------
   // MEMBER VARIABLES
@@ -27,26 +22,26 @@ public class Owner extends Person
   //Owner Associations
   @OneToOne
   private Inventory inventory;
-  @OneToMany
-  private List<ChangeRequest> changeRequest;
+  @OneToOne
+  private ChangeRequest changeRequest;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Owner(){
-
-  }
-
-  public Owner(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, Inventory aInventory)
+  public Owner(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, Inventory aInventory, ChangeRequest aChangeRequest)
   {
     super(aIsAbstract, aUserID, aName, aEmail, aPassword);
     if (!setInventory(aInventory))
     {
       throw new RuntimeException("Unable to create Owner due to aInventory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    changeRequest = new ArrayList<ChangeRequest>();
+    if (!setChangeRequest(aChangeRequest))
+    {
+      throw new RuntimeException("Unable to create Owner due to aChangeRequest. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
+  public Owner (){}
 
   //------------------------
   // INTERFACE
@@ -56,37 +51,13 @@ public class Owner extends Person
   {
     return inventory;
   }
-  /* Code from template association_GetMany */
-  public ChangeRequest getChangeRequest(int index)
+  /* Code from template association_GetOne */
+  public ChangeRequest getChangeRequest()
   {
-    ChangeRequest aChangeRequest = changeRequest.get(index);
-    return aChangeRequest;
-  }
-
-  public List<ChangeRequest> getChangeRequest()
-  {
-    List<ChangeRequest> newChangeRequest = Collections.unmodifiableList(changeRequest);
-    return newChangeRequest;
-  }
-
-  public int numberOfChangeRequest()
-  {
-    int number = changeRequest.size();
-    return number;
-  }
-
-  public boolean hasChangeRequest()
-  {
-    boolean has = changeRequest.size() > 0;
-    return has;
-  }
-
-  public int indexOfChangeRequest(ChangeRequest aChangeRequest)
-  {
-    int index = changeRequest.indexOf(aChangeRequest);
-    return index;
+    return changeRequest;
   }
   /* Code from template association_SetUnidirectionalOne */
+
   public boolean setInventory(Inventory aNewInventory)
   {
     boolean wasSet = false;
@@ -97,68 +68,22 @@ public class Owner extends Person
     }
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfChangeRequest()
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setChangeRequest(ChangeRequest aNewChangeRequest)
   {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addChangeRequest(ChangeRequest aChangeRequest)
-  {
-    boolean wasAdded = false;
-    if (changeRequest.contains(aChangeRequest)) { return false; }
-    changeRequest.add(aChangeRequest);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeChangeRequest(ChangeRequest aChangeRequest)
-  {
-    boolean wasRemoved = false;
-    if (changeRequest.contains(aChangeRequest))
+    boolean wasSet = false;
+    if (aNewChangeRequest != null)
     {
-      changeRequest.remove(aChangeRequest);
-      wasRemoved = true;
+      changeRequest = aNewChangeRequest;
+      wasSet = true;
     }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addChangeRequestAt(ChangeRequest aChangeRequest, int index)
-  {
-    boolean wasAdded = false;
-    if(addChangeRequest(aChangeRequest))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfChangeRequest()) { index = numberOfChangeRequest() - 1; }
-      changeRequest.remove(aChangeRequest);
-      changeRequest.add(index, aChangeRequest);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveChangeRequestAt(ChangeRequest aChangeRequest, int index)
-  {
-    boolean wasAdded = false;
-    if(changeRequest.contains(aChangeRequest))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfChangeRequest()) { index = numberOfChangeRequest() - 1; }
-      changeRequest.remove(aChangeRequest);
-      changeRequest.add(index, aChangeRequest);
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = addChangeRequestAt(aChangeRequest, index);
-    }
-    return wasAdded;
+    return wasSet;
   }
 
   public void delete()
   {
     inventory = null;
-    changeRequest.clear();
+    changeRequest = null;
     super.delete();
   }
 

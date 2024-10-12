@@ -1,132 +1,64 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import java.util.*;
+import jakarta.persistence.*;
+
 import java.sql.Date;
 
 // line 16 "model.ump"
-// line 143 "model.ump"
+// line 142 "model.ump"
+@Entity
+@DiscriminatorValue("Employee") // Add this line
 public class Employee extends Person
 {
 
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum RequestStatus { Approved, Declined, InProgress }
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Employee Associations
-  private List<ChangeRequest> changeRequest;
+  @OneToOne
+  private ChangeRequest changeRequest;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Employee(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
+  public Employee(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, ChangeRequest aChangeRequest)
   {
     super(aIsAbstract, aUserID, aName, aEmail, aPassword);
-    changeRequest = new ArrayList<ChangeRequest>();
+    if (!setChangeRequest(aChangeRequest))
+    {
+      throw new RuntimeException("Unable to create Employee due to aChangeRequest. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
-
+  public Employee(){}
   //------------------------
   // INTERFACE
   //------------------------
-  /* Code from template association_GetMany */
-  public ChangeRequest getChangeRequest(int index)
+  /* Code from template association_GetOne */
+  public ChangeRequest getChangeRequest()
   {
-    ChangeRequest aChangeRequest = changeRequest.get(index);
-    return aChangeRequest;
+    return changeRequest;
   }
 
-  public List<ChangeRequest> getChangeRequest()
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setChangeRequest(ChangeRequest aNewChangeRequest)
   {
-    List<ChangeRequest> newChangeRequest = Collections.unmodifiableList(changeRequest);
-    return newChangeRequest;
-  }
-
-  public int numberOfChangeRequest()
-  {
-    int number = changeRequest.size();
-    return number;
-  }
-
-  public boolean hasChangeRequest()
-  {
-    boolean has = changeRequest.size() > 0;
-    return has;
-  }
-
-  public int indexOfChangeRequest(ChangeRequest aChangeRequest)
-  {
-    int index = changeRequest.indexOf(aChangeRequest);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfChangeRequest()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addChangeRequest(ChangeRequest aChangeRequest)
-  {
-    boolean wasAdded = false;
-    if (changeRequest.contains(aChangeRequest)) { return false; }
-    changeRequest.add(aChangeRequest);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeChangeRequest(ChangeRequest aChangeRequest)
-  {
-    boolean wasRemoved = false;
-    if (changeRequest.contains(aChangeRequest))
+    boolean wasSet = false;
+    if (aNewChangeRequest != null)
     {
-      changeRequest.remove(aChangeRequest);
-      wasRemoved = true;
+      changeRequest = aNewChangeRequest;
+      wasSet = true;
     }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addChangeRequestAt(ChangeRequest aChangeRequest, int index)
-  {  
-    boolean wasAdded = false;
-    if(addChangeRequest(aChangeRequest))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfChangeRequest()) { index = numberOfChangeRequest() - 1; }
-      changeRequest.remove(aChangeRequest);
-      changeRequest.add(index, aChangeRequest);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveChangeRequestAt(ChangeRequest aChangeRequest, int index)
-  {
-    boolean wasAdded = false;
-    if(changeRequest.contains(aChangeRequest))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfChangeRequest()) { index = numberOfChangeRequest() - 1; }
-      changeRequest.remove(aChangeRequest);
-      changeRequest.add(index, aChangeRequest);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addChangeRequestAt(aChangeRequest, index);
-    }
-    return wasAdded;
+    return wasSet;
   }
 
   public void delete()
   {
-    changeRequest.clear();
+    changeRequest = null;
     super.delete();
   }
 

@@ -1,14 +1,18 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
+
+import jakarta.persistence.*;
 
 import java.sql.Date;
-import java.util.*;
 
 // line 32 "model.ump"
-// line 163 "model.ump"
+// line 162 "model.ump"
+@Entity
 public class Account
-{
+{ @Id
+
+  private String email;
 
   //------------------------
   // MEMBER VARIABLES
@@ -21,16 +25,21 @@ public class Account
   private boolean isClosed;
 
   //Account Associations
+
+ @OneToOne
   private Customer accountOwner;
-  private List<Payment> payment;
+  @OneToOne
+  private Payment payment;
+  @OneToOne
   private ShoppingCart cart;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Account(String aBillingAddress, Date aOpenDate, Date aClosedDate, boolean aIsClosed, Customer aAccountOwner, ShoppingCart aCart)
+  public Account(String emailad,String aBillingAddress, Date aOpenDate, Date aClosedDate, boolean aIsClosed, Customer aAccountOwner, Payment aPayment, ShoppingCart aCart)
   {
+      email=emailad;
     billingAddress = aBillingAddress;
     openDate = aOpenDate;
     closedDate = aClosedDate;
@@ -39,16 +48,29 @@ public class Account
     {
       throw new RuntimeException("Unable to create Account due to aAccountOwner. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    payment = new ArrayList<Payment>();
+    if (!setPayment(aPayment))
+    {
+      throw new RuntimeException("Unable to create Account due to aPayment. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
     if (!setCart(aCart))
     {
       throw new RuntimeException("Unable to create Account due to aCart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
-
+  public Account(){}
   //------------------------
   // INTERFACE
   //------------------------
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  // Getter for email
+  public String getEmail() {
+    return email;
+  }
+
+  // Setter for id
 
   public boolean setBillingAddress(String aBillingAddress)
   {
@@ -111,35 +133,10 @@ public class Account
   {
     return accountOwner;
   }
-  /* Code from template association_GetMany */
-  public Payment getPayment(int index)
+  /* Code from template association_GetOne */
+  public Payment getPayment()
   {
-    Payment aPayment = payment.get(index);
-    return aPayment;
-  }
-
-  public List<Payment> getPayment()
-  {
-    List<Payment> newPayment = Collections.unmodifiableList(payment);
-    return newPayment;
-  }
-
-  public int numberOfPayment()
-  {
-    int number = payment.size();
-    return number;
-  }
-
-  public boolean hasPayment()
-  {
-    boolean has = payment.size() > 0;
-    return has;
-  }
-
-  public int indexOfPayment(Payment aPayment)
-  {
-    int index = payment.indexOf(aPayment);
-    return index;
+    return payment;
   }
   /* Code from template association_GetOne */
   public ShoppingCart getCart()
@@ -157,62 +154,16 @@ public class Account
     }
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfPayment()
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setPayment(Payment aNewPayment)
   {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addPayment(Payment aPayment)
-  {
-    boolean wasAdded = false;
-    if (payment.contains(aPayment)) { return false; }
-    payment.add(aPayment);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removePayment(Payment aPayment)
-  {
-    boolean wasRemoved = false;
-    if (payment.contains(aPayment))
+    boolean wasSet = false;
+    if (aNewPayment != null)
     {
-      payment.remove(aPayment);
-      wasRemoved = true;
+      payment = aNewPayment;
+      wasSet = true;
     }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addPaymentAt(Payment aPayment, int index)
-  {  
-    boolean wasAdded = false;
-    if(addPayment(aPayment))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPayment()) { index = numberOfPayment() - 1; }
-      payment.remove(aPayment);
-      payment.add(index, aPayment);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMovePaymentAt(Payment aPayment, int index)
-  {
-    boolean wasAdded = false;
-    if(payment.contains(aPayment))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfPayment()) { index = numberOfPayment() - 1; }
-      payment.remove(aPayment);
-      payment.add(index, aPayment);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addPaymentAt(aPayment, index);
-    }
-    return wasAdded;
+    return wasSet;
   }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setCart(ShoppingCart aNewCart)
@@ -229,7 +180,7 @@ public class Account
   public void delete()
   {
     accountOwner = null;
-    payment.clear();
+    payment = null;
     cart = null;
   }
 
@@ -242,6 +193,7 @@ public class Account
             "  " + "openDate" + "=" + (getOpenDate() != null ? !getOpenDate().equals(this)  ? getOpenDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "closedDate" + "=" + (getClosedDate() != null ? !getClosedDate().equals(this)  ? getClosedDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "accountOwner = "+(getAccountOwner()!=null?Integer.toHexString(System.identityHashCode(getAccountOwner())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "payment = "+(getPayment()!=null?Integer.toHexString(System.identityHashCode(getPayment())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "cart = "+(getCart()!=null?Integer.toHexString(System.identityHashCode(getCart())):"null");
   }
 }

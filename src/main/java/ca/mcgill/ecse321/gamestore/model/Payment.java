@@ -1,28 +1,27 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
-
-import java.sql.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-
+import java.sql.Date;
 
 // line 39 "model.ump"
-// line 168 "model.ump"
+// line 167 "model.ump"
 @Entity
+
 public class Payment
 {
+  @Id
+  @GeneratedValue
+  private int id;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
+
   //Payment Attributes
   private Date paidDate;
   private double total;
@@ -31,20 +30,24 @@ public class Payment
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
-  public Payment(){};
-
   public Payment(Date aPaidDate, double aTotal, String aDetails)
   {
     paidDate = aPaidDate;
     total = aTotal;
     details = aDetails;
   }
-
+  public Payment(){}
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return id;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.id = id;
+  }
   public boolean setPaidDate(Date aPaidDate)
   {
     boolean wasSet = false;
