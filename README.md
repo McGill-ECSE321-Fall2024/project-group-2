@@ -4,13 +4,13 @@ Furthermore, it will provide a seamless experience for customers looking to buy 
 
 # Team Introduction:
 We are a team of developers working on this project with different roles to ensure smooth progress and successful delivery of all project milestones.
-| Name | Email | GitHub profile | Program-Year|
+| Name | Team Role | Effort (in hours) | Deliverable 1(hours)| 
 |------|-------|----------------|-------------|
-|Abdullah Taltello| abdullah.taltello@mail.mcgill.ca| [ALQI6](https://github.com/ALQI6)| Mechanical Engineering U4|
-|Farhad Guliyev| farhad.guliyev@mail.mcgill.ca| [Farhad054](https://github.com/Farhad054)| Computer Engineering U4|
-|Sean O'Keefe| sean.okeefe@mail.mcgill.ca| [seanokeefe2003](https://github.com/seanokeefe2003)| Computer Engineering U3|
-|Mohamed El-Machmouchi| mohamed.el-machmouchi@mail.mcgill.ca|[Mohamed-ctrl-droid](https://github.com/Mohamed-ctrl-droid) | Software Engineering U2|
-|Katrina Panwar| katrina.panwar@mail.mcgill.ca |[katrinapanwar](https://github.com/katrinapanwar)| Software Engineering U2|
+|Abdullah Taltello| Tester|12|12|
+|Farhad Guliyev| Build and Integration Manager|12.5| 12.5|
+|Sean O'Keefe| Database Administrator|13| 13|
+|Mohamed El-Machmouchi| Persistence Layer Developer|14.5|14.5|
+|Katrina Panwar| Backend Developer |13| 13|
 
 # Project Scope:
 The goal of this project is to create a fully functional web application for an independent game store, offering services to both the management team and the customers. Core features include:
