@@ -1,24 +1,31 @@
 package ca.mcgill.ecse321.gamestore.repository;
+
+// Import necessary assertions for test validation
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+//import gamestore model
 import ca.mcgill.ecse321.gamestore.model.*;
+import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
+
+// Import test framework annotations
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
-import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
-import ca.mcgill.ecse321.gamestore.model.Order.OrderStatus;
 
+//Import Date used for Date data type
 import java.sql.Date;
-import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
+
+/**
+ * This class contains unit tests for the OwnerRepository to ensure that
+ * Owner entities are correctly persisted and retrieved from the database.
+ */
 @SpringBootTest
 class OwnerRepositoryApplicationTests {
 
-
-
+    // Autowired dependencies for interacting with repositories
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
@@ -26,53 +33,51 @@ class OwnerRepositoryApplicationTests {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-
-
-
+    /**
+     * Clears the database before and after each test to ensure a clean environment.
+     * This method deletes all Owner, ChangeRequest, and Inventory entities.
+     */
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
         changeRequestRepository.deleteAll();
         inventoryRepository.deleteAll();
-
-
-
-
-
     }
 
+    /**
+     * Tests that an Owner entity, along with associated ChangeRequest and Inventory,
+     * can be saved and retrieved from the database. It validates the fields and associations.
+     */
     @Test
     public void testPersistAndLoadOwner(){
+        // Create and save an Inventory entity
         Inventory inventory = new Inventory(13);
         inventoryRepository.save(inventory);
+
+        // Create and save a ChangeRequest entity linked to the Inventory
         Date date = Date.valueOf("2024-02-09");
         RequestStatus status= RequestStatus.InProgress;
         ChangeRequest changeRequest=new ChangeRequest(date,status,inventory);
         changeRequestRepository.save(changeRequest);
+
+        // Create and save an Owner entity linked to the Inventory and ChangeRequest
         Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory,changeRequest);
         ownerRepository.save(owner);
+
+        // Retrieve the Owner entity from the repository by its email
         String email = owner.getEmail();
         Owner ownerFromDb = ownerRepository.findOwnerByEmail(email);
 
-
-
-
-        // Read Category from database
+        // Validate that the retrieved Owner is not null matches the saved Owner and its associations
         assertNotNull(ownerFromDb);
+        assertEquals(ownerFromDb.getEmail(),owner.getEmail());
         assertEquals(ownerFromDb.getChangeRequest().getId(),owner.getChangeRequest().getId());
         assertEquals(ownerFromDb.getInventory().getId(),inventory.getId());
         assertEquals(ownerFromDb.getUserID(),owner.getUserID());
         assertEquals(ownerFromDb.getName(),owner.getName());
-        assertEquals(ownerFromDb.getEmail(),owner.getEmail());
         assertEquals(ownerFromDb.getPassword(),owner.getPassword());
 
-
-
-
     }
-
-
-
 
 }
