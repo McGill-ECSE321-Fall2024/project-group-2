@@ -30,8 +30,7 @@ class EmployeeRepositoryApplicationTests {
     // Autowired to inject the EmployeeRepository,ChangeRequestRepository,and InventoryRepository dependencies
     @Autowired
     private EmployeeRepository employeeRepository;
-    @Autowired
-    private ChangeRequestRepository changeRequestRepository;
+
     @Autowired
     private InventoryRepository inventoryRepository;
 
@@ -43,7 +42,6 @@ class EmployeeRepositoryApplicationTests {
     @AfterEach
     public void clearDatabase() {
         employeeRepository.deleteAll();
-        changeRequestRepository.deleteAll();
         inventoryRepository.deleteAll();
     }
 
@@ -58,12 +56,10 @@ class EmployeeRepositoryApplicationTests {
         Inventory inventory = new Inventory(13);
         inventoryRepository.save(inventory);
 
-        // Set up a new ChangeRequest entity associated with the Inventory
-        ChangeRequest changeRequest=new ChangeRequest (Date.valueOf("2024-10-09"),RequestStatus.InProgress,inventory);
-        changeRequestRepository.save(changeRequest);
+
 
         // Set up a new Employee entity associated with the ChangeRequest
-        Employee employee=new Employee (null,"moe12","Mohamed","moe@mail.com","1234",changeRequest);
+        Employee employee=new Employee (null,"moe12","Mohamed","moe@mail.com","1234");
         employeeRepository.save(employee);
 
         // Retrieve the Employee entity from the repository by its email
@@ -75,8 +71,6 @@ class EmployeeRepositoryApplicationTests {
         assertEquals(employeeFromDb.getEmail(),employee.getEmail());
         assertEquals(employeeFromDb.getName(),employee.getName());
         assertEquals(employeeFromDb.getPassword(),employee.getPassword());
-        assertEquals(employeeFromDb.getChangeRequest().getId(), changeRequest.getId());
-        assertEquals(employeeFromDb.getChangeRequest().getInventory().getId(), employee.getChangeRequest().getInventory().getId());
     }
 
 

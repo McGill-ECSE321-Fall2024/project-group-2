@@ -26,7 +26,7 @@ public class LineItem
   private Order order;
   @ManyToOne
   private ShoppingCart cart;
-  @OneToOne
+  @ManyToOne
   private WishList wishlist;
 
   //------------------------

@@ -2,10 +2,7 @@ package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 import java.sql.Date;
 
@@ -27,14 +24,16 @@ public class Review
   private Date reviewDate;
 
   //Review Associations
-  @OneToOne
+  @ManyToOne
   private Customer reviewWriter;
+  @ManyToOne
+  private Product product;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Review(int aRating, String aComments, Date aReviewDate, Customer aReviewWriter)
+  public Review(int aRating, String aComments, Date aReviewDate, Customer aReviewWriter,Product aProduct)
   {
     rating = aRating;
     comments = aComments;
@@ -43,6 +42,10 @@ public class Review
     {
       throw new RuntimeException("Unable to create Review due to aReviewWriter. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
+      if (!setProduct(aProduct))
+      {
+          throw new RuntimeException("Unable to create Review due to aProduct. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      }
   }
  public Review(){};
   //------------------------
@@ -99,6 +102,10 @@ public class Review
   {
     return reviewWriter;
   }
+    public Product getProduct()
+    {
+        return product;
+    }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setReviewWriter(Customer aNewReviewWriter)
   {
@@ -110,10 +117,21 @@ public class Review
     }
     return wasSet;
   }
+    public boolean setProduct(Product aNewProduct)
+    {
+        boolean wasSet = false;
+        if (aNewProduct != null)
+        {
+            product = aNewProduct;
+            wasSet = true;
+        }
+        return wasSet;
+    }
 
   public void delete()
   {
     reviewWriter = null;
+    product=null;
   }
 
 

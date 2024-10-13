@@ -5,13 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 // Import model classes and test framework annotations
-import ca.mcgill.ecse321.gamestore.model.Inventory;
+import ca.mcgill.ecse321.gamestore.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
 
 //import Date data type
@@ -25,7 +24,10 @@ class ChangeRequestRepositoryApplicationTests {
     private ChangeRequestRepository changeRequestRepository;
     @Autowired
     private InventoryRepository inventoryRepository;
-
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private OwnerRepository ownerRepository;
     /**
      * Clears the database before and after each test to ensure a clean state.
      * Deletes all data from the Inventory and ChangeRequest Repositories.
@@ -34,7 +36,10 @@ class ChangeRequestRepositoryApplicationTests {
     @BeforeEach
     public void clearDatabase() {
        changeRequestRepository.deleteAll();
+       ownerRepository.deleteAll();
        inventoryRepository.deleteAll();
+       employeeRepository.deleteAll();
+
     }
 
     /**
@@ -48,10 +53,19 @@ class ChangeRequestRepositoryApplicationTests {
         Inventory inventory = new Inventory(12);
         inventoryRepository.save(inventory);
 
+
+        // Create and save an Owner entity linked to the Inventory and ChangeRequest
+        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory);
+        ownerRepository.save(owner);
+
+        Employee employee=new Employee (null,"moe12","Mohamed","moe2@mail.com","1234");
+        employeeRepository.save(employee);
+
+
         // Create a ChangeRequest entity with a date, status, and associated inventory
-        Date date = Date.valueOf("2024-02-09");
-        RequestStatus status= RequestStatus.InProgress;
-        ChangeRequest changeRequest=new ChangeRequest(date,status,inventory);
+        Date dateRequest = Date.valueOf("2024-02-09");
+        RequestStatus statusRequest= RequestStatus.InProgress;
+        ChangeRequest changeRequest=new ChangeRequest(dateRequest,statusRequest,inventory,owner,employee);
 
         // Save the ChangeRequest entity to the repository
         changeRequest = changeRequestRepository.save(changeRequest);
@@ -63,8 +77,10 @@ class ChangeRequestRepositoryApplicationTests {
         // Verify that the retrieved ChangeRequest is not null and matches the saved ChangeRequest
         assertNotNull(changeRequestFromDb);
         assertEquals(changeRequestFromDb.getId(),changeRequest.getId());
-        assertEquals(changeRequestFromDb.getTimeRequest(), date);
-        assertEquals(changeRequestFromDb.getStatus(), status);
+        assertEquals(changeRequestFromDb.getRequestCreator().getEmail(),changeRequest.getRequestCreator().getEmail());
+        assertEquals(changeRequestFromDb.getRequestManager().getEmail(),changeRequest.getRequestManager().getEmail());
+        assertEquals(changeRequestFromDb.getTimeRequest(), dateRequest);
+        assertEquals(changeRequestFromDb.getStatus(), statusRequest);
         assertEquals(changeRequestFromDb.getInventory().getId(),inventory.getId());
     }
 

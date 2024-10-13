@@ -19,46 +19,28 @@ public class Employee extends Person
   //------------------------
 
   //Employee Associations
-  @OneToOne
-  private ChangeRequest changeRequest;
+
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Employee(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, ChangeRequest aChangeRequest)
+  public Employee(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
   {
     super(aIsAbstract, aUserID, aName, aEmail, aPassword);
-    if (!setChangeRequest(aChangeRequest))
-    {
-      throw new RuntimeException("Unable to create Employee due to aChangeRequest. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+
   }
   public Employee(){}
   //------------------------
   // INTERFACE
   //------------------------
   /* Code from template association_GetOne */
-  public ChangeRequest getChangeRequest()
-  {
-    return changeRequest;
-  }
 
   /* Code from template association_SetUnidirectionalOne */
-  public boolean setChangeRequest(ChangeRequest aNewChangeRequest)
-  {
-    boolean wasSet = false;
-    if (aNewChangeRequest != null)
-    {
-      changeRequest = aNewChangeRequest;
-      wasSet = true;
-    }
-    return wasSet;
-  }
+
 
   public void delete()
   {
-    changeRequest = null;
     super.delete();
   }
 

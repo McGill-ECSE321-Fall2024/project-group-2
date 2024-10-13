@@ -29,8 +29,6 @@ class OwnerRepositoryApplicationTests {
     @Autowired
     private OwnerRepository ownerRepository;
     @Autowired
-    private ChangeRequestRepository changeRequestRepository;
-    @Autowired
     private InventoryRepository inventoryRepository;
 
     /**
@@ -41,7 +39,6 @@ class OwnerRepositoryApplicationTests {
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
-        changeRequestRepository.deleteAll();
         inventoryRepository.deleteAll();
     }
 
@@ -58,11 +55,10 @@ class OwnerRepositoryApplicationTests {
         // Create and save a ChangeRequest entity linked to the Inventory
         Date date = Date.valueOf("2024-02-09");
         RequestStatus status= RequestStatus.InProgress;
-        ChangeRequest changeRequest=new ChangeRequest(date,status,inventory);
-        changeRequestRepository.save(changeRequest);
+
 
         // Create and save an Owner entity linked to the Inventory and ChangeRequest
-        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory,changeRequest);
+        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory);
         ownerRepository.save(owner);
 
         // Retrieve the Owner entity from the repository by its email
@@ -72,7 +68,6 @@ class OwnerRepositoryApplicationTests {
         // Validate that the retrieved Owner is not null matches the saved Owner and its associations
         assertNotNull(ownerFromDb);
         assertEquals(ownerFromDb.getEmail(),owner.getEmail());
-        assertEquals(ownerFromDb.getChangeRequest().getId(),owner.getChangeRequest().getId());
         assertEquals(ownerFromDb.getInventory().getId(),inventory.getId());
         assertEquals(ownerFromDb.getUserID(),owner.getUserID());
         assertEquals(ownerFromDb.getName(),owner.getName());

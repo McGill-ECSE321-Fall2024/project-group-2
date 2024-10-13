@@ -31,18 +31,31 @@ public class ChangeRequest
   //ChangeRequest Associations
   @OneToOne
   private Inventory inventory;
+  @ManyToOne
+  private Employee requestCreator;
+
+  @ManyToOne
+  private Owner requestManager;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus, Inventory aInventory)
+  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus, Inventory aInventory,Owner aOwner,Employee aEmployee)
   {
     timeRequest = aTimeRequest;
     status = aStatus;
     if (!setInventory(aInventory))
     {
       throw new RuntimeException("Unable to create ChangeRequest due to aInventory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setRequestCreator(aEmployee))
+    {
+      throw new RuntimeException("Unable to create ChangeRequest due to aEmployee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setRequestManager(aOwner))
+    {
+      throw new RuntimeException("Unable to create ChangeRequest due to aOwner. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
   public ChangeRequest(){}
@@ -88,6 +101,14 @@ public class ChangeRequest
     return inventory;
   }
   /* Code from template association_SetUnidirectionalOne */
+  public Employee getRequestCreator()
+  {
+    return requestCreator;
+  }
+  public Owner getRequestManager()
+  {
+    return requestManager;
+  }
   public boolean setInventory(Inventory aNewInventory)
   {
     boolean wasSet = false;
@@ -98,10 +119,32 @@ public class ChangeRequest
     }
     return wasSet;
   }
+  public boolean setRequestCreator(Employee aNewRequestCreator)
+  {
+    boolean wasSet = false;
+    if (aNewRequestCreator != null)
+    {
+      requestCreator = aNewRequestCreator;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  public boolean setRequestManager(Owner aNewRequestManager)
+  {
+    boolean wasSet = false;
+    if (aNewRequestManager != null)
+    {
+      requestManager = aNewRequestManager;
+      wasSet = true;
+    }
+    return wasSet;
+  }
 
   public void delete()
   {
     inventory = null;
+    requestManager= null;
+    requestCreator=null;
   }
 
 
