@@ -1,49 +1,64 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Date;
 
 // line 73 "model.ump"
-// line 198 "model.ump"
-
+// line 197 "model.ump"
 @Entity
 public class Review
 {
-
+  @Id
+  @GeneratedValue
+  private int reviewId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  @GeneratedValue
   //Review Attributes
-  @Id
-
   private int rating;
   private String comments;
   private Date reviewDate;
+
+  //Review Associations
+  @ManyToOne
+  private Customer reviewWriter;
+  @ManyToOne
+  private Product product;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-
-  public Review(int aRating, String aComments, Date aReviewDate)
+  public Review(int aRating, String aComments, Date aReviewDate, Customer aReviewWriter,Product aProduct)
   {
     rating = aRating;
     comments = aComments;
     reviewDate = aReviewDate;
+    if (!setReviewWriter(aReviewWriter))
+    {
+      throw new RuntimeException("Unable to create Review due to aReviewWriter. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+      if (!setProduct(aProduct))
+      {
+          throw new RuntimeException("Unable to create Review due to aProduct. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      }
   }
-  public Review(){}
-
+ public Review(){};
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return reviewId;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.reviewId = id;
+  }
   public boolean setRating(int aRating)
   {
     boolean wasSet = false;
@@ -82,9 +97,42 @@ public class Review
   {
     return reviewDate;
   }
+  /* Code from template association_GetOne */
+  public Customer getReviewWriter()
+  {
+    return reviewWriter;
+  }
+    public Product getProduct()
+    {
+        return product;
+    }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setReviewWriter(Customer aNewReviewWriter)
+  {
+    boolean wasSet = false;
+    if (aNewReviewWriter != null)
+    {
+      reviewWriter = aNewReviewWriter;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+    public boolean setProduct(Product aNewProduct)
+    {
+        boolean wasSet = false;
+        if (aNewProduct != null)
+        {
+            product = aNewProduct;
+            wasSet = true;
+        }
+        return wasSet;
+    }
 
   public void delete()
-  {}
+  {
+    reviewWriter = null;
+    product=null;
+  }
 
 
   public String toString()
@@ -92,6 +140,7 @@ public class Review
     return super.toString() + "["+
             "rating" + ":" + getRating()+ "," +
             "comments" + ":" + getComments()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "reviewDate" + "=" + (getReviewDate() != null ? !getReviewDate().equals(this)  ? getReviewDate().toString().replaceAll("  ","    ") : "this" : "null");
+            "  " + "reviewDate" + "=" + (getReviewDate() != null ? !getReviewDate().equals(this)  ? getReviewDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "reviewWriter = "+(getReviewWriter()!=null?Integer.toHexString(System.identityHashCode(getReviewWriter())):"null");
   }
 }

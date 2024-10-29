@@ -1,42 +1,33 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-
-
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 // line 4 "model.ump"
-// line 133 "model.ump"
-@MappedSuperclass
+// line 132 "model.ump"
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
+
 public class Person
 {
+  @Id
+  private String email;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
+
   //Person Attributes
   private String isAbstract;
-
   private String userID;
   private String name;
-  private String email;
   private String password;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
-  public Person(){
-
-  }
-
 
   public Person(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
   {
@@ -46,10 +37,13 @@ public class Person
     email = aEmail;
     password = aPassword;
   }
-
+  public Person(){}
   //------------------------
   // INTERFACE
   //------------------------
+
+
+  // Setter for id
 
   public boolean setIsAbstract(String aIsAbstract)
   {
@@ -118,11 +112,6 @@ public class Person
 
   public void delete()
   {}
-
-  public int getId() {
-    // TODO Auto-generated method stub
-    return id;
-  }
 
 
   public String toString()

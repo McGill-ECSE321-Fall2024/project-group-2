@@ -1,18 +1,8 @@
 package ca.mcgill.ecse321.gamestore.repository;
-
-import org.springframework.data.repository.CrudRepository;
 import ca.mcgill.ecse321.gamestore.model.Employee;
 
-import java.util.List;
+import org.springframework.data.repository.CrudRepository;
 
-public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
-
-    Employee findEmployeeById(int id);
-
-    Employee findEmployeeByEmail(String email);
-
-    Employee findEmployeeByUserID(String userID);
-
-    List<Employee> findEmployeesByChangeRequestIsNotNull();
+public interface EmployeeRepository extends CrudRepository<Employee, String> {
+    public  Employee findEmployeeByEmail(String email);
 }
-

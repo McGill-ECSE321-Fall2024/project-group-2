@@ -1,46 +1,65 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 
 // line 54 "model.ump"
-// line 178 "model.ump"
+// line 177 "model.ump"
 @Entity
 public class LineItem
 {
+  @Id
+  @GeneratedValue
+  private int lineItemId;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
   //LineItem Attributes
   private int quantity;
   private double price;
+
+  //LineItem Associations
+  @ManyToOne
+  private Order order;
+  @ManyToOne
+  private ShoppingCart cart;
+  @ManyToOne
+  private WishList wishlist;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public LineItem()
-  {
-  }
-
-  public LineItem(int aQuantity, double aPrice)
+  public LineItem(int aQuantity, double aPrice, Order aOrder, ShoppingCart aCart)
   {
     quantity = aQuantity;
     price = aPrice;
+    if (!setOrder(aOrder))
+    {
+      throw new RuntimeException("Unable to create LineItem due to aOrder. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setCart(aCart))
+    {
+      throw new RuntimeException("Unable to create LineItem due to aCart. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+
   }
+  public LineItem(){}
 
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return lineItemId;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.lineItemId = id;
+  }
   public boolean setQuantity(int aQuantity)
   {
     boolean wasSet = false;
@@ -66,20 +85,70 @@ public class LineItem
   {
     return price;
   }
+  /* Code from template association_GetOne */
+  public Order getOrder()
+  {
+    return order;
+  }
+  /* Code from template association_GetOne */
+  public ShoppingCart getCart()
+  {
+    return cart;
+  }
+  /* Code from template association_GetOne */
+  public WishList getWishlist()
+  {
+    return wishlist;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setOrder(Order aNewOrder)
+  {
+    boolean wasSet = false;
+    if (aNewOrder != null)
+    {
+      order = aNewOrder;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setCart(ShoppingCart aNewCart)
+  {
+    boolean wasSet = false;
+    if (aNewCart != null)
+    {
+      cart = aNewCart;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setWishlist(WishList aNewWishlist)
+  {
+    boolean wasSet = false;
+    if (aNewWishlist != null)
+    {
+      wishlist = aNewWishlist;
+      wasSet = true;
+    }
+    return wasSet;
+  }
 
   public void delete()
-  {}
+  {
+    order = null;
+    cart = null;
+    wishlist = null;
+  }
 
 
   public String toString()
   {
     return super.toString() + "["+
             "quantity" + ":" + getQuantity()+ "," +
-            "price" + ":" + getPrice()+ "]";
-  }
-
-  public int getId() {
-    // TODO Auto-generated method stub
-    return id;
+            "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "cart = "+(getCart()!=null?Integer.toHexString(System.identityHashCode(getCart())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "wishlist = "+(getWishlist()!=null?Integer.toHexString(System.identityHashCode(getWishlist())):"null");
   }
 }

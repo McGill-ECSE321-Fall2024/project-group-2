@@ -1,57 +1,75 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
+
+import jakarta.persistence.*;
 
 import java.sql.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 // line 79 "model.ump"
-// line 203 "model.ump"
+// line 202 "model.ump"
 @Entity
 public class ChangeRequest
 {
-
+   @Id
+   @GeneratedValue
+  private int requestId;
   //------------------------
   // ENUMERATIONS
   //------------------------
 
+  public enum RequestStatus { Approved, Declined, InProgress }
+
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
+
   //ChangeRequest Attributes
   private Date timeRequest;
-
-  @Enumerated(EnumType.STRING)
-  @Column(name = "requestStatus")
   private RequestStatus status;
+
+  //ChangeRequest Associations
+  @OneToOne
+  private Inventory inventory;
+  @ManyToOne
+  private Employee requestCreator;
+
+  @ManyToOne
+  private Owner requestManager;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ChangeRequest() {};
-
-
-  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus)
+  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus, Inventory aInventory,Owner aOwner,Employee aEmployee)
   {
     timeRequest = aTimeRequest;
     status = aStatus;
+    if (!setInventory(aInventory))
+    {
+      throw new RuntimeException("Unable to create ChangeRequest due to aInventory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setRequestCreator(aEmployee))
+    {
+      throw new RuntimeException("Unable to create ChangeRequest due to aEmployee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setRequestManager(aOwner))
+    {
+      throw new RuntimeException("Unable to create ChangeRequest due to aOwner. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
-
+  public ChangeRequest(){}
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return requestId;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.requestId = id;
+  }
   public boolean setTimeRequest(Date aTimeRequest)
   {
     boolean wasSet = false;
@@ -77,15 +95,64 @@ public class ChangeRequest
   {
     return status;
   }
+  /* Code from template association_GetOne */
+  public Inventory getInventory()
+  {
+    return inventory;
+  }
+  /* Code from template association_SetUnidirectionalOne */
+  public Employee getRequestCreator()
+  {
+    return requestCreator;
+  }
+  public Owner getRequestManager()
+  {
+    return requestManager;
+  }
+  public boolean setInventory(Inventory aNewInventory)
+  {
+    boolean wasSet = false;
+    if (aNewInventory != null)
+    {
+      inventory = aNewInventory;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  public boolean setRequestCreator(Employee aNewRequestCreator)
+  {
+    boolean wasSet = false;
+    if (aNewRequestCreator != null)
+    {
+      requestCreator = aNewRequestCreator;
+      wasSet = true;
+    }
+    return wasSet;
+  }
+  public boolean setRequestManager(Owner aNewRequestManager)
+  {
+    boolean wasSet = false;
+    if (aNewRequestManager != null)
+    {
+      requestManager = aNewRequestManager;
+      wasSet = true;
+    }
+    return wasSet;
+  }
 
   public void delete()
-  {}
+  {
+    inventory = null;
+    requestManager= null;
+    requestCreator=null;
+  }
 
 
   public String toString()
   {
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "timeRequest" + "=" + (getTimeRequest() != null ? !getTimeRequest().equals(this)  ? getTimeRequest().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null");
+            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "inventory = "+(getInventory()!=null?Integer.toHexString(System.identityHashCode(getInventory())):"null");
   }
 }
