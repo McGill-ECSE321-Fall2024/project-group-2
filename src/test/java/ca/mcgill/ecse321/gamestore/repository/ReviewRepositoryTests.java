@@ -33,8 +33,7 @@ class ReviewRepositoryApplicationTests {
     ProductRepository productRepository;
     @Autowired
     OwnerRepository ownerRepository;
-    @Autowired
-    InventoryRepository inventoryRepository;
+
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
     @Autowired
@@ -64,7 +63,6 @@ class ReviewRepositoryApplicationTests {
         orderRepository.deleteAll();
         paymentRepository.deleteAll();
         ownerRepository.deleteAll();
-        inventoryRepository.deleteAll();
     }
 
 
@@ -104,12 +102,10 @@ class ReviewRepositoryApplicationTests {
         Customer customer = new Customer(null,"Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
         customerRepository.save(customer);
 
-        // Set up a new Inventory entity with a specific number of items
-        Inventory inventory = new Inventory(13);
-        inventoryRepository.save(inventory);
 
-        // Create and save an Owner entity linked to the Inventory and ChangeRequest
-        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory);
+
+        // Create and save an Owner entity linked to the   ChangeRequest
+        Owner owner = new Owner ("moe12","moe","moe@mail.com","123");
         ownerRepository.save(owner);
 
         // Create and save a Review entity associated with the Customer and Product

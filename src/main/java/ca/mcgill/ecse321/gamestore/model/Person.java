@@ -29,9 +29,8 @@ public class Person
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
+  public Person( String aUserID, String aName, String aEmail, String aPassword)
   {
-    isAbstract = aIsAbstract;
     userID = aUserID;
     name = aName;
     email = aEmail;
@@ -45,13 +44,7 @@ public class Person
 
   // Setter for id
 
-  public boolean setIsAbstract(String aIsAbstract)
-  {
-    boolean wasSet = false;
-    isAbstract = aIsAbstract;
-    wasSet = true;
-    return wasSet;
-  }
+
 
   public boolean setUserID(String aUserID)
   {
@@ -85,10 +78,6 @@ public class Person
     return wasSet;
   }
 
-  public String getIsAbstract()
-  {
-    return isAbstract;
-  }
 
   public String getUserID()
   {
@@ -117,7 +106,6 @@ public class Person
   public String toString()
   {
     return super.toString() + "["+
-            "isAbstract" + ":" + getIsAbstract()+ "," +
             "userID" + ":" + getUserID()+ "," +
             "name" + ":" + getName()+ "," +
             "email" + ":" + getEmail()+ "," +

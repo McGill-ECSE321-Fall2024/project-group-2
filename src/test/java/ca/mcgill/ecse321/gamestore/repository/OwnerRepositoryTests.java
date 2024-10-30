@@ -28,8 +28,7 @@ class OwnerRepositoryApplicationTests {
     // Autowired dependencies for interacting with repositories
     @Autowired
     private OwnerRepository ownerRepository;
-    @Autowired
-    private InventoryRepository inventoryRepository;
+
 
     /**
      * Clears the database before and after each test to ensure a clean environment.
@@ -39,7 +38,6 @@ class OwnerRepositoryApplicationTests {
     @AfterEach
     public void clearDatabase() {
         ownerRepository.deleteAll();
-        inventoryRepository.deleteAll();
     }
 
     /**
@@ -49,8 +47,7 @@ class OwnerRepositoryApplicationTests {
     @Test
     public void testPersistAndLoadOwner(){
         // Create and save an Inventory entity
-        Inventory inventory = new Inventory(13);
-        inventoryRepository.save(inventory);
+
 
         // Create and save a ChangeRequest entity linked to the Inventory
         Date date = Date.valueOf("2024-02-09");
@@ -58,7 +55,7 @@ class OwnerRepositoryApplicationTests {
 
 
         // Create and save an Owner entity linked to the Inventory and ChangeRequest
-        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory);
+        Owner owner = new Owner ("moe12","moe","moe@mail.com","123");
         ownerRepository.save(owner);
 
         // Retrieve the Owner entity from the repository by its email
@@ -68,7 +65,6 @@ class OwnerRepositoryApplicationTests {
         // Validate that the retrieved Owner is not null matches the saved Owner and its associations
         assertNotNull(ownerFromDb);
         assertEquals(ownerFromDb.getEmail(),owner.getEmail());
-        assertEquals(ownerFromDb.getInventory().getId(),inventory.getId());
         assertEquals(ownerFromDb.getUserID(),owner.getUserID());
         assertEquals(ownerFromDb.getName(),owner.getName());
         assertEquals(ownerFromDb.getPassword(),owner.getPassword());
