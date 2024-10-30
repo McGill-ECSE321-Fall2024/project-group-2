@@ -29,8 +29,7 @@ public class ChangeRequest
   private RequestStatus status;
 
   //ChangeRequest Associations
-  @OneToOne
-  private Inventory inventory;
+
   @ManyToOne
   private Employee requestCreator;
 
@@ -41,14 +40,11 @@ public class ChangeRequest
   // CONSTRUCTOR
   //------------------------
 
-  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus, Inventory aInventory,Owner aOwner,Employee aEmployee)
+  public ChangeRequest(Date aTimeRequest, RequestStatus aStatus,Owner aOwner,Employee aEmployee)
   {
     timeRequest = aTimeRequest;
     status = aStatus;
-    if (!setInventory(aInventory))
-    {
-      throw new RuntimeException("Unable to create ChangeRequest due to aInventory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+
     if (!setRequestCreator(aEmployee))
     {
       throw new RuntimeException("Unable to create ChangeRequest due to aEmployee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -96,10 +92,7 @@ public class ChangeRequest
     return status;
   }
   /* Code from template association_GetOne */
-  public Inventory getInventory()
-  {
-    return inventory;
-  }
+
   /* Code from template association_SetUnidirectionalOne */
   public Employee getRequestCreator()
   {
@@ -109,16 +102,7 @@ public class ChangeRequest
   {
     return requestManager;
   }
-  public boolean setInventory(Inventory aNewInventory)
-  {
-    boolean wasSet = false;
-    if (aNewInventory != null)
-    {
-      inventory = aNewInventory;
-      wasSet = true;
-    }
-    return wasSet;
-  }
+
   public boolean setRequestCreator(Employee aNewRequestCreator)
   {
     boolean wasSet = false;
@@ -142,7 +126,6 @@ public class ChangeRequest
 
   public void delete()
   {
-    inventory = null;
     requestManager= null;
     requestCreator=null;
   }
@@ -152,7 +135,7 @@ public class ChangeRequest
   {
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "timeRequest" + "=" + (getTimeRequest() != null ? !getTimeRequest().equals(this)  ? getTimeRequest().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "inventory = "+(getInventory()!=null?Integer.toHexString(System.identityHashCode(getInventory())):"null");
+            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator")
+    ;
   }
 }

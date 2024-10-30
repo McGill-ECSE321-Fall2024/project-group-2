@@ -43,7 +43,7 @@ class PersonRepositoryApplicationTests {
     @Test
     public void testPersistAndLoadPerson(){
         // Create and save a Person entity
-        Person person= new Person(null,"123","Moe","m@mail.com","123");
+        Person person= new Person("123","Moe","m@mail.com","123");
         personRepository.save(person);
 
         // Retrieve the Person entity from the repository by its email

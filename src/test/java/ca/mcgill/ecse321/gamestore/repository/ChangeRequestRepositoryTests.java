@@ -22,8 +22,7 @@ class ChangeRequestRepositoryApplicationTests {
     // Autowired to inject dependencies for repositories
     @Autowired
     private ChangeRequestRepository changeRequestRepository;
-    @Autowired
-    private InventoryRepository inventoryRepository;
+
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
@@ -37,7 +36,6 @@ class ChangeRequestRepositoryApplicationTests {
     public void clearDatabase() {
        changeRequestRepository.deleteAll();
        ownerRepository.deleteAll();
-       inventoryRepository.deleteAll();
        employeeRepository.deleteAll();
 
     }
@@ -49,23 +47,20 @@ class ChangeRequestRepositoryApplicationTests {
      */
     @Test
     public void testPersistAndLoadChangeRequest(){
-        // Create and save an Inventory entity
-        Inventory inventory = new Inventory(12);
-        inventoryRepository.save(inventory);
 
 
-        // Create and save an Owner entity linked to the Inventory and ChangeRequest
-        Owner owner = new Owner (null,"moe12","moe","moe@mail.com","123",inventory);
+        // Create and save an Owner entity linked to  ChangeRequest
+        Owner owner = new Owner ("moe12","moe","moe@mail.com","123");
         ownerRepository.save(owner);
 
-        Employee employee=new Employee (null,"moe12","Mohamed","moe2@mail.com","1234");
+        Employee employee=new Employee ("moe12","Mohamed","moe2@mail.com","1234");
         employeeRepository.save(employee);
 
 
         // Create a ChangeRequest entity with a date, status, and associated inventory
         Date dateRequest = Date.valueOf("2024-02-09");
         RequestStatus statusRequest= RequestStatus.InProgress;
-        ChangeRequest changeRequest=new ChangeRequest(dateRequest,statusRequest,inventory,owner,employee);
+        ChangeRequest changeRequest=new ChangeRequest(dateRequest,statusRequest,owner,employee);
 
         // Save the ChangeRequest entity to the repository
         changeRequest = changeRequestRepository.save(changeRequest);
@@ -81,7 +76,6 @@ class ChangeRequestRepositoryApplicationTests {
         assertEquals(changeRequestFromDb.getRequestManager().getEmail(),changeRequest.getRequestManager().getEmail());
         assertEquals(changeRequestFromDb.getTimeRequest(), dateRequest);
         assertEquals(changeRequestFromDb.getStatus(), statusRequest);
-        assertEquals(changeRequestFromDb.getInventory().getId(),inventory.getId());
     }
 
 

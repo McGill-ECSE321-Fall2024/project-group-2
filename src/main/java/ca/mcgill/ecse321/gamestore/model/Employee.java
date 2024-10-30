@@ -25,9 +25,9 @@ public class Employee extends Person
   // CONSTRUCTOR
   //------------------------
 
-  public Employee(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
+  public Employee( String aUserID, String aName, String aEmail, String aPassword)
   {
-    super(aIsAbstract, aUserID, aName, aEmail, aPassword);
+    super( aUserID, aName, aEmail, aPassword);
 
   }
   public Employee(){}
