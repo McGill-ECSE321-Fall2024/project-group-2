@@ -48,12 +48,17 @@ public class CategoryService {
     @Transactional
     public boolean deleteCategory(int categoryId){
         Category category= categoryRepository.findCategoryById(categoryId);
-        if (category==null){
-            throw new IllegalArgumentException("Can't find category");
+        try{
+            if (category==null){
+                throw new IllegalArgumentException("Can't find category");
+            }
+            else{
+                categoryRepository.delete(category);
+                return true;
+            }
         }
-        else{
-            categoryRepository.delete(category);
-            return true;
+        catch(Exception e){
+            return false;
         }
     }
 

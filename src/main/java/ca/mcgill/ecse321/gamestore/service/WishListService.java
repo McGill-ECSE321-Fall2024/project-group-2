@@ -21,12 +21,17 @@ public class WishListService {
     @Transactional
     public boolean deleteWishList(int listId){
         WishList wishList = wishListRepository.findWishListById(listId);
-        if (wishList==null){
-            throw new IllegalArgumentException("Can't find Wishlist to delete");
+        try{
+            if (wishList==null){
+                throw new IllegalArgumentException("Can't find Wishlist to delete");
+            }
+            else{
+                wishListRepository.delete(wishList);
+                return true;
+            }
         }
-        else{
-            wishListRepository.delete(wishList);
-            return true;
+        catch (Exception e){
+            return false;
         }
     }
 
