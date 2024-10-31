@@ -1,64 +1,67 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import java.util.*;
-
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 // line 63 "model.ump"
-// line 188 "model.ump"
+// line 187 "model.ump"
 @Entity
 public class Product
 {
-
+  @Id
+  @GeneratedValue
+  private int productId;
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Product Attributes
-
   private String name;
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
   private String description;
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-  @Nullable
+
   //Product Associations
-  private List<LineItem> lineItemOfProduct = new ArrayList<LineItem>();
+  @OneToOne
+  private LineItem lineItemOfProduct;
+  @ManyToOne
+  private Category category;
+
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  public Product() {}
 
-  public Product(String aName, String aDescription)
+  public Product(String aName, String aDescription, LineItem aLineItemOfProduct, Category aCategory)
   {
     name = aName;
     description = aDescription;
+    if (!setLineItemOfProduct(aLineItemOfProduct))
+    {
+      throw new RuntimeException("Unable to create Product due to aLineItemOfProduct. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    if (!setCategory(aCategory))
+    {
+      throw new RuntimeException("Unable to create Product due to aCategory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
-
+  public Product () {}
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return productId;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.productId = id;
+  }
   public boolean setName(String aName)
   {
     boolean wasSet = false;
     name = aName;
     wasSet = true;
     return wasSet;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  public int getId() {
-    return id;
   }
 
   public boolean setDescription(String aDescription)
@@ -78,97 +81,43 @@ public class Product
   {
     return description;
   }
-  /* Code from template association_GetMany */
-  public LineItem getLineItemOfProduct(int index)
+  /* Code from template association_GetOne */
+  public LineItem getLineItemOfProduct()
   {
-    LineItem aLineItemOfProduct = lineItemOfProduct.get(index);
-    return aLineItemOfProduct;
+    return lineItemOfProduct;
   }
-
-  public List<LineItem> getLineItemOfProduct()
+  /* Code from template association_GetOne */
+  public Category getCategory()
   {
-    List<LineItem> newLineItemOfProduct = Collections.unmodifiableList(lineItemOfProduct);
-    return newLineItemOfProduct;
+    return category;
   }
-
-  public int numberOfLineItemOfProduct()
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setLineItemOfProduct(LineItem aNewLineItemOfProduct)
   {
-    int number = lineItemOfProduct.size();
-    return number;
-  }
-
-  public boolean hasLineItemOfProduct()
-  {
-    boolean has = lineItemOfProduct.size() > 0;
-    return has;
-  }
-
-  public int indexOfLineItemOfProduct(LineItem aLineItemOfProduct)
-  {
-    int index = lineItemOfProduct.indexOf(aLineItemOfProduct);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfLineItemOfProduct()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addLineItemOfProduct(LineItem aLineItemOfProduct)
-  {
-    boolean wasAdded = false;
-    if (lineItemOfProduct.contains(aLineItemOfProduct)) { return false; }
-    lineItemOfProduct.add(aLineItemOfProduct);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeLineItemOfProduct(LineItem aLineItemOfProduct)
-  {
-    boolean wasRemoved = false;
-    if (lineItemOfProduct.contains(aLineItemOfProduct))
+    boolean wasSet = false;
+    if (aNewLineItemOfProduct != null)
     {
-      lineItemOfProduct.remove(aLineItemOfProduct);
-      wasRemoved = true;
+      lineItemOfProduct = aNewLineItemOfProduct;
+      wasSet = true;
     }
-    return wasRemoved;
+    return wasSet;
   }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addLineItemOfProductAt(LineItem aLineItemOfProduct, int index)
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setCategory(Category aNewCategory)
   {
-    boolean wasAdded = false;
-    if(addLineItemOfProduct(aLineItemOfProduct))
+    boolean wasSet = false;
+    if (aNewCategory != null)
     {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemOfProduct()) { index = numberOfLineItemOfProduct() - 1; }
-      lineItemOfProduct.remove(aLineItemOfProduct);
-      lineItemOfProduct.add(index, aLineItemOfProduct);
-      wasAdded = true;
+      category = aNewCategory;
+      wasSet = true;
     }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveLineItemOfProductAt(LineItem aLineItemOfProduct, int index)
-  {
-    boolean wasAdded = false;
-    if(lineItemOfProduct.contains(aLineItemOfProduct))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemOfProduct()) { index = numberOfLineItemOfProduct() - 1; }
-      lineItemOfProduct.remove(aLineItemOfProduct);
-      lineItemOfProduct.add(index, aLineItemOfProduct);
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = addLineItemOfProductAt(aLineItemOfProduct, index);
-    }
-    return wasAdded;
+    return wasSet;
   }
 
   public void delete()
   {
-    lineItemOfProduct.clear();
+    lineItemOfProduct = null;
+    category = null;
   }
 
 
@@ -176,6 +125,8 @@ public class Product
   {
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
-            "description" + ":" + getDescription()+ "]";
+            "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "lineItemOfProduct = "+(getLineItemOfProduct()!=null?Integer.toHexString(System.identityHashCode(getLineItemOfProduct())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "category = "+(getCategory()!=null?Integer.toHexString(System.identityHashCode(getCategory())):"null");
   }
 }

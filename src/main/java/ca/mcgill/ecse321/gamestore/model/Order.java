@@ -1,45 +1,32 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
+
+import jakarta.persistence.*;
 
 import java.sql.Date;
-import java.util.*;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
 
 // line 45 "model.ump"
-// line 173 "model.ump"
-
+// line 172 "model.ump"
 @Entity
-@Table(name="orders")
+@Table(name = "\"order\"")
 public class Order
 {
 
-
-
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
   //------------------------
   // ENUMERATIONS
   //------------------------
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "orderStatus")
-  private OrderStatus status;
+
+  public enum OrderStatus { Pending, Shipped, Delivered, Cancelled }
+
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+  @Id
+  @GeneratedValue
+  private int orderId;
+
 
   //Order Attributes
   private int number;
@@ -47,23 +34,20 @@ public class Order
   private Date shippedDate;
   private String shipTo;
   private double total;
+  @Enumerated(EnumType.STRING)
+  private OrderStatus status;
 
   //Order Associations
   @OneToOne
   private Payment paymentOfOrder;
 
-  @OneToMany
-  private List<LineItem> lineItemsOfOrder;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(){
-
-  }
-  public Order(int aNumber, Date aOrderedDate, Date aShippedDate, String aShipTo, double aTotal, OrderStatus aStatus, Payment aPaymentOfOrder)
+  public Order(int aNumber, Date aOrderedDate, Date aShippedDate, String aShipTo, double aTotal, OrderStatus aStatus,Payment aPaymentOfOrder)
   {
+
     number = aNumber;
     orderedDate = aOrderedDate;
     shippedDate = aShippedDate;
@@ -74,13 +58,19 @@ public class Order
     {
       throw new RuntimeException("Unable to create Order due to aPaymentOfOrder. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    lineItemsOfOrder = new ArrayList<LineItem>();
   }
-
+  public Order (){}
   //------------------------
   // INTERFACE
   //------------------------
+  public Integer getId() {
+    return orderId;
+  }
 
+  // Setter for id
+  public void setId(Integer id) {
+    this.orderId = id;
+  }
   public boolean setNumber(int aNumber)
   {
     boolean wasSet = false;
@@ -163,36 +153,6 @@ public class Order
   {
     return paymentOfOrder;
   }
-  /* Code from template association_GetMany */
-  public LineItem getLineItemsOfOrder(int index)
-  {
-    LineItem aLineItemsOfOrder = lineItemsOfOrder.get(index);
-    return aLineItemsOfOrder;
-  }
-
-  public List<LineItem> getLineItemsOfOrder()
-  {
-    List<LineItem> newLineItemsOfOrder = Collections.unmodifiableList(lineItemsOfOrder);
-    return newLineItemsOfOrder;
-  }
-
-  public int numberOfLineItemsOfOrder()
-  {
-    int number = lineItemsOfOrder.size();
-    return number;
-  }
-
-  public boolean hasLineItemsOfOrder()
-  {
-    boolean has = lineItemsOfOrder.size() > 0;
-    return has;
-  }
-
-  public int indexOfLineItemsOfOrder(LineItem aLineItemsOfOrder)
-  {
-    int index = lineItemsOfOrder.indexOf(aLineItemsOfOrder);
-    return index;
-  }
   /* Code from template association_SetUnidirectionalOne */
   public boolean setPaymentOfOrder(Payment aNewPaymentOfOrder)
   {
@@ -204,68 +164,10 @@ public class Order
     }
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfLineItemsOfOrder()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addLineItemsOfOrder(LineItem aLineItemsOfOrder)
-  {
-    boolean wasAdded = false;
-    if (lineItemsOfOrder.contains(aLineItemsOfOrder)) { return false; }
-    lineItemsOfOrder.add(aLineItemsOfOrder);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeLineItemsOfOrder(LineItem aLineItemsOfOrder)
-  {
-    boolean wasRemoved = false;
-    if (lineItemsOfOrder.contains(aLineItemsOfOrder))
-    {
-      lineItemsOfOrder.remove(aLineItemsOfOrder);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addLineItemsOfOrderAt(LineItem aLineItemsOfOrder, int index)
-  {
-    boolean wasAdded = false;
-    if(addLineItemsOfOrder(aLineItemsOfOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemsOfOrder()) { index = numberOfLineItemsOfOrder() - 1; }
-      lineItemsOfOrder.remove(aLineItemsOfOrder);
-      lineItemsOfOrder.add(index, aLineItemsOfOrder);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveLineItemsOfOrderAt(LineItem aLineItemsOfOrder, int index)
-  {
-    boolean wasAdded = false;
-    if(lineItemsOfOrder.contains(aLineItemsOfOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfLineItemsOfOrder()) { index = numberOfLineItemsOfOrder() - 1; }
-      lineItemsOfOrder.remove(aLineItemsOfOrder);
-      lineItemsOfOrder.add(index, aLineItemsOfOrder);
-      wasAdded = true;
-    }
-    else
-    {
-      wasAdded = addLineItemsOfOrderAt(aLineItemsOfOrder, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
   {
     paymentOfOrder = null;
-    lineItemsOfOrder.clear();
   }
 
 
@@ -279,8 +181,5 @@ public class Order
             "  " + "shippedDate" + "=" + (getShippedDate() != null ? !getShippedDate().equals(this)  ? getShippedDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "paymentOfOrder = "+(getPaymentOfOrder()!=null?Integer.toHexString(System.identityHashCode(getPaymentOfOrder())):"null");
-  }
-  public int getId() {
-    return id;
   }
 }

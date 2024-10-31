@@ -1,22 +1,25 @@
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import java.util.*;
-import java.sql.Date;
+import jakarta.persistence.*;
 
 // line 12 "model.ump"
-// line 138 "model.ump"
+// line 137 "model.ump"
+@Entity
+@DiscriminatorValue("Customer")
+
 public class Customer extends Person
 {
+
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Customer Associations
+  @OneToOne
   private WishList wishList;
-  private List<Review> review;
 
   //------------------------
   // CONSTRUCTOR
@@ -24,10 +27,11 @@ public class Customer extends Person
 
   public Customer(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
   {
-    super(aIsAbstract, aUserID, aName, aEmail, aPassword);
-    review = new ArrayList<Review>();
+    super( aUserID, aName, aEmail, aPassword);
   }
+  public Customer (){}
 
+  // Setter for id
   //------------------------
   // INTERFACE
   //------------------------
@@ -42,36 +46,6 @@ public class Customer extends Person
     boolean has = wishList != null;
     return has;
   }
-  /* Code from template association_GetMany */
-  public Review getReview(int index)
-  {
-    Review aReview = review.get(index);
-    return aReview;
-  }
-
-  public List<Review> getReview()
-  {
-    List<Review> newReview = Collections.unmodifiableList(review);
-    return newReview;
-  }
-
-  public int numberOfReview()
-  {
-    int number = review.size();
-    return number;
-  }
-
-  public boolean hasReview()
-  {
-    boolean has = review.size() > 0;
-    return has;
-  }
-
-  public int indexOfReview(Review aReview)
-  {
-    int index = review.indexOf(aReview);
-    return index;
-  }
   /* Code from template association_SetUnidirectionalOptionalOne */
   public boolean setWishList(WishList aNewWishList)
   {
@@ -80,68 +54,10 @@ public class Customer extends Person
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfReview()
-  {
-    return 0;
-  }
-  /* Code from template association_AddUnidirectionalMany */
-  public boolean addReview(Review aReview)
-  {
-    boolean wasAdded = false;
-    if (review.contains(aReview)) { return false; }
-    review.add(aReview);
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeReview(Review aReview)
-  {
-    boolean wasRemoved = false;
-    if (review.contains(aReview))
-    {
-      review.remove(aReview);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addReviewAt(Review aReview, int index)
-  {  
-    boolean wasAdded = false;
-    if(addReview(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReview()) { index = numberOfReview() - 1; }
-      review.remove(aReview);
-      review.add(index, aReview);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveReviewAt(Review aReview, int index)
-  {
-    boolean wasAdded = false;
-    if(review.contains(aReview))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfReview()) { index = numberOfReview() - 1; }
-      review.remove(aReview);
-      review.add(index, aReview);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addReviewAt(aReview, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
   {
     wishList = null;
-    review.clear();
     super.delete();
   }
 

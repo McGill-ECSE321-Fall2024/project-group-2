@@ -1,60 +1,50 @@
-
 package ca.mcgill.ecse321.gamestore.model;/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.34.0.7242.6b8819789 modeling language!*/
-
-
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
 import jakarta.persistence.*;
-@Entity
+
 // line 4 "model.ump"
-// line 133 "model.ump"
+// line 132 "model.ump"
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
+
 public class Person
 {
+  @Id
+  private String email;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-  @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
-  private int id;
+
   //Person Attributes
   private String isAbstract;
-
   private String userID;
   private String name;
-  private String email;
   private String password;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(){
-
-  }
-
-
-  public Person(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
+  public Person( String aUserID, String aName, String aEmail, String aPassword)
   {
-    isAbstract = aIsAbstract;
     userID = aUserID;
     name = aName;
     email = aEmail;
     password = aPassword;
   }
-
+  public Person(){}
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setIsAbstract(String aIsAbstract)
-  {
-    boolean wasSet = false;
-    isAbstract = aIsAbstract;
-    wasSet = true;
-    return wasSet;
-  }
+
+  // Setter for id
+
+
 
   public boolean setUserID(String aUserID)
   {
@@ -88,10 +78,6 @@ public class Person
     return wasSet;
   }
 
-  public String getIsAbstract()
-  {
-    return isAbstract;
-  }
 
   public String getUserID()
   {
@@ -116,18 +102,13 @@ public class Person
   public void delete()
   {}
 
-  public int getId() {
-    // TODO Auto-generated method stub
-    return id;
-  }
-
 
   public String toString()
   {
     return super.toString() + "["+
-            "isAbstract" + ":" + getIsAbstract()+ "," +
             "userID" + ":" + getUserID()+ "," +
             "name" + ":" + getName()+ "," +
             "email" + ":" + getEmail()+ "," +
             "password" + ":" + getPassword()+ "]";
-  }}
+  }
+}

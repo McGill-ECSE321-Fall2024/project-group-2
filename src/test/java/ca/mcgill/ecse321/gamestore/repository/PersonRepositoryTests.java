@@ -1,94 +1,61 @@
 package ca.mcgill.ecse321.gamestore.repository;
 
+// Import necessary assertions for test validation
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Optional;
+//Import gamestore model
+import ca.mcgill.ecse321.gamestore.model.*;
 
+// Import test framework annotations
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import ca.mcgill.ecse321.gamestore.model.Person;
-import ca.mcgill.ecse321.gamestore.repository.PersonRepository;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ * This class contains unit tests for the PersonRepository to ensure that
+ * Person entities are correctly persisted and retrieved from the database.
+ */
 @SpringBootTest
-public class PersonRepositoryTests {
+class PersonRepositoryApplicationTests {
 
+    // Autowired dependency for interacting with the Person repository
     @Autowired
     private PersonRepository personRepository;
 
-    private Person person;
-
+    /**
+     * Clears the database before and after each test to ensure a clean environment.
+     * This method deletes all Person entities.
+     */
     @BeforeEach
-    public void setUp() {
-        // Create a person object for the tests
-        person = new Person();
-        person.setUserID("owner1"); // Change from setUsername to setUserID
-        person.setName("John Doe"); // Set name instead of username
-        person.setEmail("johndoe@example.com");
-        person.setPassword("securepassword");
-    }
-
     @AfterEach
-    public void tearDown() {
-        // Clean up the database after each test
+    public void clearDatabase() {
         personRepository.deleteAll();
     }
 
+
+    /**
+     * Tests that a Person entity can be saved and retrieved from the database.
+     * It validates the fields of the retrieved Person against the saved Person.
+     */
     @Test
-    public void testSavePerson() {
-        // Test saving a person to the repository
-        person = personRepository.save(person);
-
-        assertNotNull(person.getId());
-        assertEquals("owner1", person.getUserID()); // Check userID
-        assertEquals("John Doe", person.getName()); // Check name
-        assertEquals("johndoe@example.com", person.getEmail());
-    }
-
-    @Test
-    public void testFindById() {
-        // Test finding a person by ID
-        person = personRepository.save(person);
-        Person foundPerson = personRepository.findPersonById(person.getId());
-
-        assertNotNull(foundPerson);
-        assertEquals("owner1", foundPerson.getUserID()); // Check userID
-    }
-
-    @Test
-    public void testFindByEmail() {
-        // Test finding a person by email
-        person = personRepository.save(person);
-        Person foundPerson = personRepository.findPersonById(person.getId()); // Use the existing method
-
-        assertNotNull(foundPerson);
-        assertEquals("owner1", foundPerson.getUserID()); // Check userID
-    }
-
-    @Test
-    public void testUpdatePerson() {
-        // Test updating a person's details
-        person = personRepository.save(person);
-        person.setName("Jane Doe"); // Update name
+    public void testPersistAndLoadPerson(){
+        // Create and save a Person entity
+        Person person= new Person("123","Moe","m@mail.com","123");
         personRepository.save(person);
 
-        Person updatedPerson = personRepository.findPersonById(person.getId());
-        assertEquals("Jane Doe", updatedPerson.getName()); // Check updated name
-    }
+        // Retrieve the Person entity from the repository by its email
+        String email = person.getEmail();
+        Person personFromDb = personRepository.findPersonByEmail(email);
 
-    @Test
-    public void testDeletePerson() {
-        // Test deleting a person
-        person = personRepository.save(person);
-        personRepository.deleteById(person.getId());
+        // Validate that the retrieved Person is not null and matches the saved Person
+         assertNotNull(personFromDb);
+         assertEquals(personFromDb.getUserID(),person.getUserID());
+         assertEquals(personFromDb.getName(),person.getName());
+         assertEquals(personFromDb.getEmail(),person.getEmail());
+         assertEquals(personFromDb.getPassword(),person.getPassword());
 
-        Optional<Person> deletedPerson = personRepository.findById(person.getId());
-        assertTrue(deletedPerson.isEmpty());
     }
 }

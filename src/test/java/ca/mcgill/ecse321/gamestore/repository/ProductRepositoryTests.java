@@ -1,75 +1,107 @@
 package ca.mcgill.ecse321.gamestore.repository;
 
-import ca.mcgill.ecse321.gamestore.model.LineItem;
-import ca.mcgill.ecse321.gamestore.model.Product;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+// Import necessary assertions for test validation
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
+
+//Import gamestore model
+import ca.mcgill.ecse321.gamestore.model.*;
+
+// Import test framework annotations
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import ca.mcgill.ecse321.gamestore.model.Order.OrderStatus;
 
-import java.util.List;
+//Import Date used for Date data type
+import java.sql.Date;
 
-
+/**
+ * This class contains unit tests for the ProductRepository to ensure that
+ * Product entities are correctly persisted and retrieved from the database.
+ */
 @SpringBootTest
-public class ProductRepositoryTests {
+class ProductRepositoryApplicationTests {
 
+    // Autowired dependencies for interacting with various repositories
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private WishListRepository wishListRepository;
+    @Autowired
     private LineItemRepository lineItemRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
-    private Product testProduct;
-    private LineItem testLineItem;
 
+    /**
+     * Clears the database before and after each test to ensure a clean environment.
+     * This method deletes all relevant entities from the repositories.
+     */
     @BeforeEach
-    public void setUp() {
-        // Create and save a product instance for testing
-        testProduct = new Product();
-        testProduct.setName("Test Product");
-        testProduct.setDescription("Test Description");
-        System.out.println(String.valueOf(testProduct.getId())+ testProduct.getDescription()+ testProduct.getName());
-        // Create a LineItem associated with the Product
-        // Create a LineItem associated with the Product
-        testLineItem = new LineItem(2, 19.99); // Assuming quantity is 2 and price is 19.99
-  // Associate the LineItem with the Product
-        // Save the LineItem
-
+    @AfterEach
+    public void clearDatabase() {
+        productRepository.deleteAll();
+        lineItemRepository.deleteAll();
+        wishListRepository.deleteAll();
+        shoppingCartRepository.deleteAll();
+        orderRepository.deleteAll();
+        paymentRepository.deleteAll();
     }
 
+    /**
+     * Tests that a Product entity can be saved and retrieved from the database.
+     * It validates the fields of the retrieved Product against the saved Product.
+     */
     @Test
-    public void testFindProductById() {
-        testProduct.setId(1);
-        productRepository.save(testProduct);
-        // Retrieve the product using the repository method
-        // Use the saved testProduct directly
-        Product foundProduct = productRepository.findProductById(testProduct.getId()); // Replace with actual ID used in your DB
+    public void testPersistAndLoadProduct(){
+        // Create and save a Payment entity
+        Payment payment= new Payment(Date.valueOf("2024-11-22"),12,"Detail");
+        paymentRepository.save(payment);
 
-        // Assert that the product is found and matches the expected values
-        Assertions.assertNotNull(foundProduct, "The product should be found.");
-        Assertions.assertEquals("Test Product", foundProduct.getName());
-        Assertions.assertEquals("Test Description", foundProduct.getDescription());
+        // Create and save a Order entity
+        Order order = new Order(12,Date.valueOf("2024-10-12"),Date.valueOf("2024-10-14"),"3777 rue saint-urbain",100, OrderStatus.Cancelled,payment);
+        orderRepository.save(order);
 
-    }
+        // Create and save a shoppingCart entity
+        ShoppingCart shoppingCart= new ShoppingCart(Date.valueOf("2024-10-09"));
+        shoppingCartRepository.save(shoppingCart);
 
-    @Test
-    public void testFindProductByNonExistentId() {
-        // Try to find a product with a non-existing ID
-        Product foundProduct = productRepository.findProductById(-1); // Using a negative ID for testing
+        // Create and save a LineItem entity
+        LineItem lineItem = new LineItem(14,12,order,shoppingCart);
+        lineItemRepository.save(lineItem);
 
-        // Assert that the product is not found (should be null)
-        Assertions.assertNull(foundProduct, "No product should be found with a non-existent ID.");
-    }
+        // Create and save a Category entity
+        String name="Mohamed";
+        int numberOfItems=12;
+        Category category=new Category();
+        category.setName(name);
+        category.setNumberItems(numberOfItems);
+        categoryRepository.save(category);
 
-    @Test
-    public void testFindAllProducts() {
-        // Find all products in the repository
-        Iterable<Product> allProducts = productRepository.findAll();
+        // Create and save a Product entity
+        Product product= new Product("Game","Play",lineItem,category);
+        productRepository.save(product);
 
-        // Assert that the product list contains the test product
-        Assertions.assertTrue(allProducts.iterator().hasNext(), "There should be at least one product in the repository.");
-        Assertions.assertEquals("Test Product", allProducts.iterator().next().getName());
+        // Retrieve the Product entity from the repository by its ID
+        int id = product.getId();
+        Product productFromDb = productRepository.findProductById(id);
+
+        // Validate that the retrieved Product is not null and matches the saved Product
+        assertNotNull(productFromDb);
+        assertEquals(productFromDb.getId(),product.getId());
+        assertEquals(productFromDb.getCategory().getId(),product.getCategory().getId());
+        assertEquals(productFromDb.getName(),product.getName());
+        assertEquals(productFromDb.getLineItemOfProduct().getId(),product.getLineItemOfProduct().getId());
+        assertEquals(productFromDb.getDescription(),product.getDescription());
+
     }
 }
