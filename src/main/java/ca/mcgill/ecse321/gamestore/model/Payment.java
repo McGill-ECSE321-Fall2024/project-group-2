@@ -90,9 +90,9 @@ public class Payment
   public void delete()
   {}
 
-  public int getId() {
-    return id;
-  }
+  //public int getId() {
+    //return id;
+  //}
 
   public String toString()
   {
