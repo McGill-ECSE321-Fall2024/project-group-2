@@ -1,7 +1,11 @@
 package ca.mcgill.ecse321.gamestore.service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ca.mcgill.ecse321.gamestore.model.Employee;
-import ca.mcgill.ecse321.gamestore.repository.EmployeeRepository;
+import ca.mcgill.ecse321.gamestore.repository.*;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 /**
  * Service class for managing Employee operations.
@@ -20,6 +22,14 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository EmployeeRepository;
+    @Autowired
+    private AccountRepository AccountRepository;
+    @Autowired
+    private PersonRepository PersonRepository;
+    @Autowired
+    private CustomerRepository CustomerRepository;
+    @Autowired
+    private OwnerRepository OwnerRepository;
 
     /**
      * Retrieve all employees.
@@ -59,9 +69,14 @@ public class EmployeeService {
     public Employee createEmployee(String name, String email, String password) {
         validateEmployeeInputs(name, email, password);
 
-        if (EmployeeRepository.findEmployeeByEmail(email.trim()) != null) {
+        // Check if the email already exists across different repositories
+        if (PersonRepository.findPersonByEmail(email.trim()) != null
+                || EmployeeRepository.findEmployeeByEmail(email.trim()) != null
+                || CustomerRepository.findCustomerByEmail(email.trim()) != null
+                || OwnerRepository.findOwnerByEmail(email.trim()) != null
+                || AccountRepository.findAccountByEmail(email.trim()) != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "An employee with this email already exists.");
+                    "An employee or user with this email already exists.");
         }
 
         Employee employee = new Employee("false", "123", name, email.trim(), password);
@@ -127,4 +142,5 @@ public class EmployeeService {
         }
     }
 }
+
 
