@@ -37,4 +37,16 @@ public class LineItemRestController {
     public boolean deleteLineItem(@PathVariable int id) {
         return lineItemService.deleteLineItem(id);
     }
+
+    @PutMapping("/lineitems/addToCart/{lineItemId}/{cartId}")
+    public LineItemDto addToCart(@PathVariable int lineItemId, @PathVariable int cartId) {
+        LineItem lineItem = lineItemService.addToCart(lineItemId, cartId);
+        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, cartId, null);
+    }
+
+    @PutMapping("/lineitems/addToWishlist/{lineItemId}/{wishlistId}")
+    public LineItemDto addToWishlist(@PathVariable int lineItemId, @PathVariable int wishlistId) {
+        LineItem lineItem = lineItemService.addToWishlist(lineItemId, wishlistId);
+        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, wishlistId);
+    }
 }

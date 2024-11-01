@@ -1,7 +1,11 @@
 package ca.mcgill.ecse321.gamestore.service;
 
 import ca.mcgill.ecse321.gamestore.model.LineItem;
+import ca.mcgill.ecse321.gamestore.model.ShoppingCart;
+import ca.mcgill.ecse321.gamestore.model.WishList;
 import ca.mcgill.ecse321.gamestore.repository.LineItemRepository;
+import ca.mcgill.ecse321.gamestore.repository.ShoppingCartRepository;
+import ca.mcgill.ecse321.gamestore.repository.WishListRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,12 @@ public class LineItemService {
 
     @Autowired
     private LineItemRepository lineItemRepository;
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+
+    @Autowired
+    private WishListRepository wishListRepository;
 
     @Transactional
     public LineItem getLineItem(int id) {
@@ -57,5 +67,31 @@ public class LineItemService {
         }
         lineItemRepository.delete(lineItem);
         return true;
+    }
+
+    @Transactional
+    public LineItem addToCart(int lineItemId, int cartId) {
+        LineItem lineItem = lineItemRepository.findLineItemById(lineItemId);
+        ShoppingCart cart = shoppingCartRepository.findById(cartId).orElse(null);
+
+        if (lineItem == null || cart == null) {
+            throw new IllegalArgumentException("LineItem or ShoppingCart not found");
+        }
+
+        lineItem.setCart(cart);
+        return lineItemRepository.save(lineItem);
+    }
+
+    @Transactional
+    public LineItem addToWishlist(int lineItemId, int wishlistId) {
+        LineItem lineItem = lineItemRepository.findLineItemById(lineItemId);
+        WishList wishlist = wishListRepository.findById(wishlistId).orElse(null);
+
+        if (lineItem == null || wishlist == null) {
+            throw new IllegalArgumentException("LineItem or WishList not found");
+        }
+
+        lineItem.setWishlist(wishlist);
+        return lineItemRepository.save(lineItem);
     }
 }
