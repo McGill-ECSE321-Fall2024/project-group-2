@@ -94,4 +94,26 @@ public class LineItemService {
         lineItem.setWishlist(wishlist);
         return lineItemRepository.save(lineItem);
     }
+
+    @Transactional
+    public LineItem removeFromCart(int lineItemId) {
+        LineItem lineItem = lineItemRepository.findLineItemById(lineItemId);
+        if (lineItem == null || lineItem.getCart() == null) {
+            throw new IllegalArgumentException("LineItem or associated Cart not found");
+        }
+
+        lineItem.setCart(null); // Remove association with the cart
+        return lineItemRepository.save(lineItem);
+    }
+
+    @Transactional
+    public LineItem removeFromWishlist(int lineItemId) {
+        LineItem lineItem = lineItemRepository.findLineItemById(lineItemId);
+        if (lineItem == null || lineItem.getWishlist() == null) {
+            throw new IllegalArgumentException("LineItem or associated WishList not found");
+        }
+
+        lineItem.setWishlist(null); // Remove association with the wishlist
+        return lineItemRepository.save(lineItem);
+    }
 }
