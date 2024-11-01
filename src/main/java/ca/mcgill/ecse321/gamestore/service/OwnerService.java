@@ -22,7 +22,10 @@ public class OwnerService {
     private PersonRepository personRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
-
+    @Transactional
+    public Iterable<Owner> findAllOwner() {
+        return ownerRepository.findAll();
+    }
 
     @Transactional
     public Owner getOwner(String email) {
@@ -102,21 +105,5 @@ public class OwnerService {
             }
         }
     }
-    @Transactional
-    public boolean deleteOwner(String email) {
-        Owner owner = ownerRepository.findOwnerByEmail(email);
-        try {
-            // Check if user exists
-            if (ownerRepository.findOwnerByEmail(email) == null) {
-                throw new IllegalArgumentException( "User with that email does not exist!");
-            } else {
-                // Delete manager
-                ownerRepository.delete(owner);
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
 
-    }
 }
