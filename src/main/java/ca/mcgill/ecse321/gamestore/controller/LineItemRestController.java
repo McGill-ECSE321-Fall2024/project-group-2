@@ -27,9 +27,15 @@ public class LineItemRestController {
         return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
     }
 
-    @PutMapping("/lineitems/update/{id}")
-    public LineItemDto updateLineItem(@PathVariable int id, @RequestBody LineItemDto lineItemDto) {
-        LineItem lineItem = lineItemService.updateLineItem(id, lineItemDto.getQuantity(), lineItemDto.getPrice());
+    @PutMapping("/lineitems/updateQuantity/{id}")
+    public LineItemDto updateLineItemQuantity(@PathVariable int id, @RequestParam int quantity) {
+        LineItem lineItem = lineItemService.updateLineItemQuantity(id, quantity);
+        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+    }
+
+    @PutMapping("/lineitems/updatePrice/{id}")
+    public LineItemDto updateLineItemPrice(@PathVariable int id, @RequestParam double price) {
+        LineItem lineItem = lineItemService.updateLineItemPrice(id, price);
         return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
     }
 
