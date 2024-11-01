@@ -20,21 +20,17 @@ public class Owner extends Person
   //------------------------
 
   //Owner Associations
-  @OneToOne
-  private Inventory inventory;
+
 
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Owner(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword, Inventory aInventory)
+  public Owner( String aUserID, String aName, String aEmail, String aPassword)
   {
-    super(aIsAbstract, aUserID, aName, aEmail, aPassword);
-    if (!setInventory(aInventory))
-    {
-      throw new RuntimeException("Unable to create Owner due to aInventory. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
+    super( aUserID, aName, aEmail, aPassword);
+
 
   }
   public Owner (){}
@@ -43,29 +39,16 @@ public class Owner extends Person
   // INTERFACE
   //------------------------
   /* Code from template association_GetOne */
-  public Inventory getInventory()
-  {
-    return inventory;
-  }
+
   /* Code from template association_GetOne */
   /* Code from template association_SetUnidirectionalOne */
 
-  public boolean setInventory(Inventory aNewInventory)
-  {
-    boolean wasSet = false;
-    if (aNewInventory != null)
-    {
-      inventory = aNewInventory;
-      wasSet = true;
-    }
-    return wasSet;
-  }
+
   /* Code from template association_SetUnidirectionalOne */
 
 
   public void delete()
   {
-    inventory = null;
     super.delete();
   }
 

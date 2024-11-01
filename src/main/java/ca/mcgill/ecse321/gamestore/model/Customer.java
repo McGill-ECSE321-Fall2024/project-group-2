@@ -27,7 +27,7 @@ public class Customer extends Person
 
   public Customer(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
   {
-    super(aIsAbstract, aUserID, aName, aEmail, aPassword);
+    super( aUserID, aName, aEmail, aPassword);
   }
   public Customer (){}
 

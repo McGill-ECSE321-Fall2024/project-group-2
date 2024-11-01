@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 //Import Employee,ChangeRequest and Inventory classes
 import ca.mcgill.ecse321.gamestore.model.Employee;
-import ca.mcgill.ecse321.gamestore.model.Inventory;
-import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
-import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
 
 // Import test framework annotations
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 //Import Date used for Date data type
-import java.sql.Date;
+
 
 /**
  * This class contains unit tests for the EmployeeRepository to ensure that
@@ -31,8 +28,7 @@ class EmployeeRepositoryApplicationTests {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private InventoryRepository inventoryRepository;
+
 
     /**
      * Clears the database before and after each test to ensure a fresh test environment.
@@ -42,7 +38,7 @@ class EmployeeRepositoryApplicationTests {
     @AfterEach
     public void clearDatabase() {
         employeeRepository.deleteAll();
-        inventoryRepository.deleteAll();
+
     }
 
     /**
@@ -53,13 +49,12 @@ class EmployeeRepositoryApplicationTests {
     @Test
     public void testPersistAndLoadChangeRequest(){
         // Set up a new Inventory entity
-        Inventory inventory = new Inventory(13);
-        inventoryRepository.save(inventory);
+
 
 
 
         // Set up a new Employee entity associated with the ChangeRequest
-        Employee employee=new Employee (null,"moe12","Mohamed","moe@mail.com","1234");
+        Employee employee=new Employee ("moe12","Mohamed","moe@mail.com","1234");
         employeeRepository.save(employee);
 
         // Retrieve the Employee entity from the repository by its email
