@@ -20,16 +20,14 @@ public class Category
 
   //Category Attributes
   private String name;
-  private int numberItems;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Category(String aName, int aNumberItems)
+  public Category(String aName)
   {
     name = aName;
-    numberItems = aNumberItems;
   }
   public Category(){}
 
@@ -52,23 +50,12 @@ public class Category
     return wasSet;
   }
 
-  public boolean setNumberItems(int aNumberItems)
-  {
-    boolean wasSet = false;
-    numberItems = aNumberItems;
-    wasSet = true;
-    return wasSet;
-  }
 
   public String getName()
   {
     return name;
   }
 
-  public int getNumberItems()
-  {
-    return numberItems;
-  }
 
   public void delete()
   {}
@@ -77,7 +64,6 @@ public class Category
   public String toString()
   {
     return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "numberItems" + ":" + getNumberItems()+ "]";
+            "name" + ":" + getName()+ "," ;
   }
 }
