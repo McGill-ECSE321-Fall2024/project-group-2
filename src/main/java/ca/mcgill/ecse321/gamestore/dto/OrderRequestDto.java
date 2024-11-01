@@ -12,7 +12,7 @@ public class OrderRequestDto {
     private String shipTo;
     private double total;
     private OrderStatus status;
-    private int paymentId; // Assuming you have Payment ID for association
+    private int paymentId;
 
     public OrderRequestDto() {}
 

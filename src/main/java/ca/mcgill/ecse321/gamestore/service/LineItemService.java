@@ -102,7 +102,7 @@ public class LineItemService {
             throw new IllegalArgumentException("LineItem or associated Cart not found");
         }
 
-        lineItem.setCart(null); // Remove association with the cart
+        lineItem.setCart(null);
         return lineItemRepository.save(lineItem);
     }
 
@@ -113,7 +113,7 @@ public class LineItemService {
             throw new IllegalArgumentException("LineItem or associated WishList not found");
         }
 
-        lineItem.setWishlist(null); // Remove association with the wishlist
+        lineItem.setWishlist(null);
         return lineItemRepository.save(lineItem);
     }
 }

@@ -4,9 +4,9 @@ public class LineItemDto {
     private int id;
     private int quantity;
     private double price;
-    private Integer orderId; // Use Integer to allow null
-    private Integer cartId;  // Use Integer to allow null
-    private Integer wishlistId; // Use Integer to allow null
+    private Integer orderId;
+    private Integer cartId;
+    private Integer wishlistId;
 
     public LineItemDto() {}
 

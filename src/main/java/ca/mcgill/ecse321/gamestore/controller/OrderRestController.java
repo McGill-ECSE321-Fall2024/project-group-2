@@ -19,8 +19,7 @@ public class OrderRestController {
 
     @PostMapping("/create")
     public OrderResponseDto createOrder(@RequestBody OrderRequestDto orderRequest) {
-        // Instead of fetching payment from PaymentService, pass null or create a new Payment if required.
-        Payment payment = null; // Replace with a valid Payment object if needed
+        Payment payment = null;
         Order order = orderService.createOrder(
                 orderRequest.getNumber(),
                 orderRequest.getOrderedDate(),
