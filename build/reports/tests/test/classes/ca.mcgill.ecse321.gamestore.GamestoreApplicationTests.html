@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.364s</div>
+<div class="counter">0.444s</div>
 <p>duration</p>
 </div>
 </td>
@@ -82,7 +82,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.364s</td>
+<td class="success">0.444s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -90,8 +90,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>19:48:35.668 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.gamestore.GamestoreApplicationTests]: GamestoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-19:48:35.774 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.gamestore.GamestoreApplication for test class ca.mcgill.ecse321.gamestore.GamestoreApplicationTests
+<pre>13:56:47.668 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [ca.mcgill.ecse321.gamestore.GamestoreApplicationTests]: GamestoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:56:47.777 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration ca.mcgill.ecse321.gamestore.GamestoreApplication for test class ca.mcgill.ecse321.gamestore.GamestoreApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -102,21 +102,21 @@
 
  :: Spring Boot ::                (v3.3.4)
 
-2024-10-29T19:48:36.126-04:00  INFO 45048 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Starting GamestoreApplicationTests using Java 21.0.1 with PID 45048 (started by mohammadmashmoushi in /Users/mohammadmashmoushi/Downloads/gamestore)
-2024-10-29T19:48:36.127-04:00  INFO 45048 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-10-29T19:48:36.753-04:00  INFO 45048 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-10-29T19:48:36.844-04:00  INFO 45048 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 14 JPA repository interfaces.
-2024-10-29T19:48:37.348-04:00  INFO 45048 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-10-29T19:48:37.395-04:00  INFO 45048 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
-2024-10-29T19:48:37.422-04:00  INFO 45048 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-10-29T19:48:37.649-04:00  INFO 45048 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-10-29T19:48:37.667-04:00  INFO 45048 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-10-29T19:48:37.838-04:00  INFO 45048 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@8851ec
-2024-10-29T19:48:37.839-04:00  INFO 45048 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-10-29T19:48:37.865-04:00  WARN 45048 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2024-10-29T19:48:37.974-04:00  WARN 45048 --- [    Test worker] o.h.boot.model.internal.EntityBinder     : HHH000457: Joined inheritance hierarchy [ca.mcgill.ecse321.gamestore.model.Person] defined explicit @DiscriminatorColumn.  Legacy Hibernate behavior was to ignore the @DiscriminatorColumn.  However, as part of issue HHH-6911 we now apply the explicit @DiscriminatorColumn.  If you would prefer the legacy behavior, enable the `hibernate.discriminator.ignore_explicit_for_joined` setting (hibernate.discriminator.ignore_explicit_for_joined=true)
-2024-10-29T19:48:38.763-04:00  INFO 45048 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-10-29T19:48:38.834-04:00  WARN 45048 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists account add constraint FKefiu8vlfu59wt48oxjtfyrxs3 foreign key (account_owner_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkefiu8vlfu59wt48oxjtfyrxs3&quot; cannot be implemented
+2024-11-01T13:56:48.136-04:00  INFO 5335 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Starting GamestoreApplicationTests using Java 21.0.1 with PID 5335 (started by mohammadmashmoushi in /Users/mohammadmashmoushi/Downloads/gamestore)
+2024-11-01T13:56:48.137-04:00  INFO 5335 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-11-01T13:56:48.708-04:00  INFO 5335 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-01T13:56:48.775-04:00  INFO 5335 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 14 JPA repository interfaces.
+2024-11-01T13:56:49.181-04:00  INFO 5335 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-01T13:56:49.235-04:00  INFO 5335 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-01T13:56:49.269-04:00  INFO 5335 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-01T13:56:49.601-04:00  INFO 5335 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-01T13:56:49.637-04:00  INFO 5335 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-01T13:56:49.931-04:00  INFO 5335 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@e0fbed5
+2024-11-01T13:56:49.933-04:00  INFO 5335 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-01T13:56:49.990-04:00  WARN 5335 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-11-01T13:56:50.177-04:00  WARN 5335 --- [    Test worker] o.h.boot.model.internal.EntityBinder     : HHH000457: Joined inheritance hierarchy [ca.mcgill.ecse321.gamestore.model.Person] defined explicit @DiscriminatorColumn.  Legacy Hibernate behavior was to ignore the @DiscriminatorColumn.  However, as part of issue HHH-6911 we now apply the explicit @DiscriminatorColumn.  If you would prefer the legacy behavior, enable the `hibernate.discriminator.ignore_explicit_for_joined` setting (hibernate.discriminator.ignore_explicit_for_joined=true)
+2024-11-01T13:56:51.143-04:00  INFO 5335 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-01T13:56:51.257-04:00  WARN 5335 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists account add constraint FKefiu8vlfu59wt48oxjtfyrxs3 foreign key (account_owner_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkefiu8vlfu59wt48oxjtfyrxs3&quot; cannot be implemented
   Detail: Key columns &quot;account_owner_email&quot; and &quot;id&quot; are of incompatible types: character varying and integer.]
 
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &quot;alter table if exists account add constraint FKefiu8vlfu59wt48oxjtfyrxs3 foreign key (account_owner_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkefiu8vlfu59wt48oxjtfyrxs3&quot; cannot be implemented
@@ -238,7 +238,7 @@ org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &q
 	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24) ~[na:na]
 	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33) ~[na:na]
 	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:92) ~[na:na]
-	at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source) ~[na:na]
+	at jdk.proxy2/jdk.proxy2.$Proxy6.stop(Unknown Source) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:200) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:132) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:103) ~[na:na]
@@ -264,7 +264,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: foreign key constraint &quo
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
 	... 126 common frames omitted
 
-2024-10-29T19:48:38.859-04:00  WARN 45048 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists change_request add constraint FKnq9vuw6xiu4o1jgetpudaef82 foreign key (request_creator_email) references employee&quot; via JDBC [ERROR: foreign key constraint &quot;fknq9vuw6xiu4o1jgetpudaef82&quot; cannot be implemented
+2024-11-01T13:56:51.316-04:00  WARN 5335 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists change_request add constraint FKnq9vuw6xiu4o1jgetpudaef82 foreign key (request_creator_email) references employee&quot; via JDBC [ERROR: foreign key constraint &quot;fknq9vuw6xiu4o1jgetpudaef82&quot; cannot be implemented
   Detail: Key columns &quot;request_creator_email&quot; and &quot;id&quot; are of incompatible types: character varying and integer.]
 
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &quot;alter table if exists change_request add constraint FKnq9vuw6xiu4o1jgetpudaef82 foreign key (request_creator_email) references employee&quot; via JDBC [ERROR: foreign key constraint &quot;fknq9vuw6xiu4o1jgetpudaef82&quot; cannot be implemented
@@ -386,7 +386,7 @@ org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &q
 	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24) ~[na:na]
 	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33) ~[na:na]
 	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:92) ~[na:na]
-	at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source) ~[na:na]
+	at jdk.proxy2/jdk.proxy2.$Proxy6.stop(Unknown Source) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:200) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:132) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:103) ~[na:na]
@@ -412,7 +412,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: foreign key constraint &quo
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
 	... 126 common frames omitted
 
-2024-10-29T19:48:38.960-04:00  WARN 45048 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists review add constraint FKd67yl0b93xsrb71ywbci6rfwj foreign key (review_writer_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkd67yl0b93xsrb71ywbci6rfwj&quot; cannot be implemented
+2024-11-01T13:56:51.424-04:00  WARN 5335 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;alter table if exists review add constraint FKd67yl0b93xsrb71ywbci6rfwj foreign key (review_writer_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkd67yl0b93xsrb71ywbci6rfwj&quot; cannot be implemented
   Detail: Key columns &quot;review_writer_email&quot; and &quot;id&quot; are of incompatible types: character varying and integer.]
 
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &quot;alter table if exists review add constraint FKd67yl0b93xsrb71ywbci6rfwj foreign key (review_writer_email) references customer&quot; via JDBC [ERROR: foreign key constraint &quot;fkd67yl0b93xsrb71ywbci6rfwj&quot; cannot be implemented
@@ -534,7 +534,7 @@ org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &q
 	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24) ~[na:na]
 	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33) ~[na:na]
 	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:92) ~[na:na]
-	at jdk.proxy1/jdk.proxy1.$Proxy4.stop(Unknown Source) ~[na:na]
+	at jdk.proxy2/jdk.proxy2.$Proxy6.stop(Unknown Source) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker$3.run(TestWorker.java:200) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:132) ~[na:na]
 	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:103) ~[na:na]
@@ -560,9 +560,9 @@ Caused by: org.postgresql.util.PSQLException: ERROR: foreign key constraint &quo
 	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80) ~[hibernate-core-6.5.3.Final.jar:6.5.3.Final]
 	... 126 common frames omitted
 
-2024-10-29T19:48:38.966-04:00  INFO 45048 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-10-29T19:48:39.338-04:00  WARN 45048 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-10-29T19:48:39.648-04:00  INFO 45048 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Started GamestoreApplicationTests in 3.753 seconds (process running for 4.714)
+2024-11-01T13:56:51.432-04:00  INFO 5335 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-01T13:56:51.917-04:00  WARN 5335 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-01T13:56:52.297-04:00  INFO 5335 --- [    Test worker] c.m.e.g.GamestoreApplicationTests        : Started GamestoreApplicationTests in 4.379 seconds (process running for 5.708)
 </pre>
 </span>
 </div>
@@ -584,7 +584,7 @@ WARNING: Dynamic loading of agents will be disallowed by default in a future rel
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.10.2</a> at Oct 29, 2024, 7:48:40 p.m.</p>
+<a href="http://www.gradle.org">Gradle 8.10.2</a> at Nov 1, 2024, 1:56:53 p.m.</p>
 </div>
 </div>
 </body>
