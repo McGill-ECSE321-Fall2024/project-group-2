@@ -4,8 +4,7 @@ import ca.mcgill.ecse321.gamestore.model.Category;
 import ca.mcgill.ecse321.gamestore.model.LineItem;
 import ca.mcgill.ecse321.gamestore.model.Product;
 
-public class ProductDto {
-    
+public class ProductRequestDto {
     private int productId;
     private String name;
     private String description;
@@ -13,10 +12,10 @@ public class ProductDto {
     private Category category;
     
     //CONSTRUCTERS
-    public ProductDto(){
+    public ProductRequestDto(){
     }
 
-    public ProductDto(int productId, String name, String description, LineItem lineItem, Category category){
+    public ProductRequestDto(int productId, String name, String description, LineItem lineItem, Category category){
         this.productId= productId;
         this.name= name;
         this.description= description;
@@ -24,7 +23,7 @@ public class ProductDto {
         this.category= category;
     }
 
-    public ProductDto(Product product){
+    public ProductRequestDto(Product product){
         this.productId= product.getId();
         this.name= product.getName();
         this.description= product.getDescription();

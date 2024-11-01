@@ -2,21 +2,20 @@ package ca.mcgill.ecse321.gamestore.dto;
 
 import ca.mcgill.ecse321.gamestore.model.WishList;
 
-public class WishListDto {
-
+public class WishListResponseDto {
     private int listId;
     private int numberItem;
 
     //CONSTRUCTERS
-    public WishListDto(){
+    public WishListResponseDto(){
     }
 
-    public WishListDto(int listId, int numberItem){
+    public WishListResponseDto(int listId, int numberItem){
         this.numberItem= numberItem;
         this.listId= listId;
     }
 
-    public WishListDto(WishList wishList){
+    public WishListResponseDto(WishList wishList){
         this.numberItem= wishList.getNumberItem();
         this.listId= wishList.getId();
     }

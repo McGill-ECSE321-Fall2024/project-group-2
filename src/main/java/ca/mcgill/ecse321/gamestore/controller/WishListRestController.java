@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.gamestore.dto.WishListDto;
+import ca.mcgill.ecse321.gamestore.dto.WishListRequestDto;
+import ca.mcgill.ecse321.gamestore.dto.WishListResponseDto;
 import ca.mcgill.ecse321.gamestore.model.WishList;
 import ca.mcgill.ecse321.gamestore.service.WishListService;
 
@@ -24,9 +25,9 @@ public class WishListRestController {
      * @return The created wishlist.
      */
     @PostMapping(value= {"/wishlist/create", "/wishlist/create/"})
-    public WishListDto createWishList(@RequestBody WishListDto wishListDto){
+    public WishListResponseDto createWishList(@RequestBody WishListRequestDto wishListDto){
         WishList createdWishList = wishListService.createWishList(wishListDto.getNumberItem());
-        return new WishListDto(createdWishList);
+        return new WishListResponseDto(createdWishList);
     }
 
     /**
@@ -36,9 +37,9 @@ public class WishListRestController {
      * @return The wishlist with the given ID.
      */
     @GetMapping(value={"/wishlist/{listId}", "/wishlist/{listId}/"})
-    public WishListDto getWishList(@PathVariable int listId){
+    public WishListResponseDto getWishList(@PathVariable int listId){
         WishList wishList= wishListService.getWishList(listId);
-        return new WishListDto(wishList);
+        return new WishListResponseDto(wishList);
     }
 
     /**
@@ -47,9 +48,9 @@ public class WishListRestController {
      * @param listId The primary key of the wishlist to delete.
      * @return Boolean indicating whether the wishlist has been sucessfully deleted or not.
      */
-    @PostMapping(value= {"/wishlist/delete", "/wishlist/delete/"})
-    public boolean deleteWishList(@RequestBody WishListDto wishListDto){
-        boolean deleted= wishListService.deleteWishList(wishListDto.getId());
+    @PostMapping(value= {"/wishlist/{listId}/delete", "/wishlist/{listId}/delete/"})
+    public boolean deleteWishList(@PathVariable int listId){
+        boolean deleted= wishListService.deleteWishList(listId);
         return deleted;
     }
 

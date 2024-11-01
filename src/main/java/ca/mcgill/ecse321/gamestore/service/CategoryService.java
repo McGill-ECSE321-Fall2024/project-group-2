@@ -31,6 +31,11 @@ public class CategoryService {
     }
 
     @Transactional
+    public Iterable<Category> getAllCategory (){
+        return categoryRepository.findAll();
+    }
+
+    @Transactional
     public Category updateCategoryName(int categoryId, String name){
         Category category= categoryRepository.findCategoryById(categoryId);
         if (category==null){

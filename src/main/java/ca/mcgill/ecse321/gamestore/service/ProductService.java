@@ -26,6 +26,17 @@ public class ProductService {
     }
 
     @Transactional
+    public Iterable<Product> getAllProduct(){
+        return productRepository.findAll();
+    }
+
+    @Transactional
+    public Iterable<Product> getAllProductWithCategory(int categoryId){
+        return productRepository.findAllByCategoryId(categoryId);
+    }
+
+
+    @Transactional
     public Product createProduct(String name, String description, LineItem lineItem, Category category){
         if (category==null){
             throw new IllegalArgumentException( "Category cannot be null!");
@@ -62,5 +73,42 @@ public class ProductService {
             return false;
         }
     }
+
+    @Transactional
+    public Product updateProductName(int productId, String name){
+        Product product = productRepository.findProductById(productId);
+            if (product==null){
+                throw new IllegalArgumentException( "Product Not Found!");
+            }
+            else{
+                product.setName(name);
+                return product;
+            }
+        }
+
+    @Transactional
+    public Product updateProductDescription(int productId, String descrtiption){
+        Product product = productRepository.findProductById(productId);
+            if (product==null){
+                throw new IllegalArgumentException( "Product Not Found!");
+            }
+            else{
+                product.setDescription(descrtiption);
+                return product;
+            }
+        }
+
+
+    @Transactional
+    public Product updateProductCategory(int productId, Category category){
+        Product product = productRepository.findProductById(productId);
+            if (product==null){
+                throw new IllegalArgumentException( "Product Not Found!");
+            }
+            else{
+                product.setCategory(category);
+                return product;
+            }
+        }
 
 }
