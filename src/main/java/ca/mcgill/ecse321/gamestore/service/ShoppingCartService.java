@@ -12,7 +12,10 @@ import java.sql.Date;
 public class ShoppingCartService {
     @Autowired
     ShoppingCartRepository shoppingCartRepository;
-
+    @Transactional
+    public Iterable<ShoppingCart> findAllShoppingCarts() {
+        return shoppingCartRepository.findAll();
+    }
     @Transactional
     public ShoppingCart createShoppingCart(Date creationDate) {
         ShoppingCart shoppingCart = new ShoppingCart(creationDate);

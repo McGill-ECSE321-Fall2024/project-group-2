@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.gamestore.controller;
+import java.util.ArrayList;
 
+import ca.mcgill.ecse321.gamestore.dto.OwnerListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,8 @@ import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.OwnerService;
 
+import java.util.List;
+
 
 @RestController
 public class OwnerRestController {
@@ -18,7 +22,14 @@ public class OwnerRestController {
     @Autowired
     private OwnerService service;
 
-
+    @GetMapping("/owner")
+    public OwnerListDto findAllOwner() {
+        List<OwnerDto> owner = new ArrayList<OwnerDto>();
+        for (Owner model : service.findAllOwner()) {
+            owner.add(new OwnerDto(model));
+        }
+        return new OwnerListDto(owner);
+    }
     @GetMapping(value = { "/owners/{email}", "/owners/{email}/" })
     public OwnerDto getOwner(@PathVariable("email") String email) {
         Owner owner = service.getOwner(email);
@@ -47,9 +58,5 @@ public class OwnerRestController {
     }
 
 
-    @PostMapping(value = { "/owners/delete", "/owners/delete/" })
-    public Boolean deleteOwner(@RequestBody OwnerDto ownerDto) {
-        Boolean deleted = service.deleteOwner(ownerDto.getEmail());
-        return deleted;
-    }
+
 }
