@@ -1,70 +1,138 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import ca.mcgill.ecse321.gamestore.dto.LineItemDto;
+import ca.mcgill.ecse321.gamestore.dto.LineItemRequestDto;
+import ca.mcgill.ecse321.gamestore.dto.LineItemResponseDto;
 import ca.mcgill.ecse321.gamestore.model.LineItem;
 import ca.mcgill.ecse321.gamestore.service.LineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/lineitems")
 public class LineItemRestController {
 
     @Autowired
     private LineItemService lineItemService;
 
-    @GetMapping("/lineitems/{id}")
-    public LineItemDto getLineItem(@PathVariable int id) {
+    /**
+     * Get a LineItem by its ID.
+     *
+     * @param id The ID of the LineItem.
+     * @return LineItemResponseDto containing details of the LineItem.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<LineItemResponseDto> getLineItem(@PathVariable int id) {
         LineItem lineItem = lineItemService.getLineItem(id);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(),
-                lineItem.getOrder() != null ? lineItem.getOrder().getNumber() : null,
-                lineItem.getCart() != null ? lineItem.getCart().getId() : null,
-                lineItem.getWishlist() != null ? lineItem.getWishlist().getId() : null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PostMapping("/lineitems/create")
-    public LineItemDto createLineItem(@RequestBody LineItemDto lineItemDto) {
-        LineItem lineItem = lineItemService.createLineItem(lineItemDto.getQuantity(), lineItemDto.getPrice());
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+    /**
+     * Create a new LineItem.
+     *
+     * @param requestDto The LineItemRequestDto containing quantity, price, and optionally cartId and wishlistId.
+     * @return LineItemResponseDto with the created LineItem's details.
+     */
+    @PostMapping
+    public ResponseEntity<LineItemResponseDto> createLineItem(@RequestBody LineItemRequestDto requestDto) {
+        LineItem lineItem = lineItemService.createLineItem(requestDto.getQuantity(), requestDto.getPrice());
+
+        // Optionally add to cart or wishlist
+        if (requestDto.getCartId() != null) {
+            lineItem = lineItemService.addToCart(lineItem.getId(), requestDto.getCartId());
+        }
+        if (requestDto.getWishlistId() != null) {
+            lineItem = lineItemService.addToWishlist(lineItem.getId(), requestDto.getWishlistId());
+        }
+
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PutMapping("/lineitems/updateQuantity/{id}")
-    public LineItemDto updateLineItemQuantity(@PathVariable int id, @RequestParam int quantity) {
+    /**
+     * Update the quantity of an existing LineItem.
+     *
+     * @param id The ID of the LineItem.
+     * @param quantity The new quantity to be set.
+     * @return LineItemResponseDto with the updated LineItem's details.
+     */
+    @PutMapping("/{id}/quantity")
+    public ResponseEntity<LineItemResponseDto> updateLineItemQuantity(@PathVariable int id, @RequestBody int quantity) {
         LineItem lineItem = lineItemService.updateLineItemQuantity(id, quantity);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PutMapping("/lineitems/updatePrice/{id}")
-    public LineItemDto updateLineItemPrice(@PathVariable int id, @RequestParam double price) {
+    /**
+     * Update the price of an existing LineItem.
+     *
+     * @param id The ID of the LineItem.
+     * @param price The new price to be set.
+     * @return LineItemResponseDto with the updated LineItem's details.
+     */
+    @PutMapping("/{id}/price")
+    public ResponseEntity<LineItemResponseDto> updateLineItemPrice(@PathVariable int id, @RequestBody double price) {
         LineItem lineItem = lineItemService.updateLineItemPrice(id, price);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @DeleteMapping("/lineitems/delete/{id}")
-    public boolean deleteLineItem(@PathVariable int id) {
-        return lineItemService.deleteLineItem(id);
+    /**
+     * Delete a LineItem by its ID.
+     *
+     * @param id The ID of the LineItem to delete.
+     * @return A boolean indicating the success of the deletion.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteLineItem(@PathVariable int id) {
+        boolean deleted = lineItemService.deleteLineItem(id);
+        return ResponseEntity.ok(deleted);
     }
 
-    @PutMapping("/lineitems/addToCart/{lineItemId}/{cartId}")
-    public LineItemDto addToCart(@PathVariable int lineItemId, @PathVariable int cartId) {
+    /**
+     * Add a LineItem to a ShoppingCart.
+     *
+     * @param lineItemId The ID of the LineItem.
+     * @param cartId The ID of the ShoppingCart to add to.
+     * @return LineItemResponseDto with updated details of the LineItem.
+     */
+    @PutMapping("/{lineItemId}/addToCart/{cartId}")
+    public ResponseEntity<LineItemResponseDto> addToCart(@PathVariable int lineItemId, @PathVariable int cartId) {
         LineItem lineItem = lineItemService.addToCart(lineItemId, cartId);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, cartId, null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PutMapping("/lineitems/addToWishlist/{lineItemId}/{wishlistId}")
-    public LineItemDto addToWishlist(@PathVariable int lineItemId, @PathVariable int wishlistId) {
+    /**
+     * Add a LineItem to a WishList.
+     *
+     * @param lineItemId The ID of the LineItem.
+     * @param wishlistId The ID of the WishList to add to.
+     * @return LineItemResponseDto with updated details of the LineItem.
+     */
+    @PutMapping("/{lineItemId}/addToWishlist/{wishlistId}")
+    public ResponseEntity<LineItemResponseDto> addToWishlist(@PathVariable int lineItemId, @PathVariable int wishlistId) {
         LineItem lineItem = lineItemService.addToWishlist(lineItemId, wishlistId);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, wishlistId);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PutMapping("/lineitems/removeFromCart/{lineItemId}")
-    public LineItemDto removeFromCart(@PathVariable int lineItemId) {
+    /**
+     * Remove a LineItem from its associated ShoppingCart.
+     *
+     * @param lineItemId The ID of the LineItem to remove from the cart.
+     * @return LineItemResponseDto with updated details of the LineItem.
+     */
+    @PutMapping("/{lineItemId}/removeFromCart")
+    public ResponseEntity<LineItemResponseDto> removeFromCart(@PathVariable int lineItemId) {
         LineItem lineItem = lineItemService.removeFromCart(lineItemId);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 
-    @PutMapping("/lineitems/removeFromWishlist/{lineItemId}")
-    public LineItemDto removeFromWishlist(@PathVariable int lineItemId) {
+    /**
+     * Remove a LineItem from its associated WishList.
+     *
+     * @param lineItemId The ID of the LineItem to remove from the wishlist.
+     * @return LineItemResponseDto with updated details of the LineItem.
+     */
+    @PutMapping("/{lineItemId}/removeFromWishlist")
+    public ResponseEntity<LineItemResponseDto> removeFromWishlist(@PathVariable int lineItemId) {
         LineItem lineItem = lineItemService.removeFromWishlist(lineItemId);
-        return new LineItemDto(lineItem.getId(), lineItem.getQuantity(), lineItem.getPrice(), null, null, null);
+        return ResponseEntity.ok(new LineItemResponseDto(lineItem));
     }
 }

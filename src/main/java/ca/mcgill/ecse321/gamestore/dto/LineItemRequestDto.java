@@ -1,33 +1,16 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
-public class LineItemDto {
-    private int id;
+public class LineItemRequestDto {
+
     private int quantity;
     private double price;
-    private Integer orderId;
     private Integer cartId;
     private Integer wishlistId;
 
-    public LineItemDto() {}
-
-    public LineItemDto(int id, int quantity, double price, Integer orderId, Integer cartId, Integer wishlistId) {
-        this.id = id;
-        this.quantity = quantity;
-        this.price = price;
-        this.orderId = orderId;
-        this.cartId = cartId;
-        this.wishlistId = wishlistId;
-    }
+    // Default constructor
+    public LineItemRequestDto() {}
 
     // Getters and Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getQuantity() {
         return quantity;
     }
@@ -42,14 +25,6 @@ public class LineItemDto {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
     }
 
     public Integer getCartId() {
