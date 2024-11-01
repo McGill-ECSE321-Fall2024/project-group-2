@@ -42,7 +42,7 @@ class CustomerRepositoryApplicationTests {
     @Test
     public void testPersistAndLoadCustomer(){
         // Set up a new Customer entity
-        Customer customer = new Customer(null,"Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
+        Customer customer = new Customer("Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
 
         // Save the Customer entity to the repository
         customerRepository.save(customer);

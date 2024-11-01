@@ -19,15 +19,15 @@ public class WishList
   //------------------------
 
   //WishList Attributes
-  private int numberItem;
+  private String wishName;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public WishList(int aNumberItem)
+  public WishList(String wishName)
   {
-    numberItem = aNumberItem;
+    wishName = wishName;
   }
 
   //------------------------
@@ -42,26 +42,26 @@ public class WishList
   public void setId(Integer id) {
     this.listId = id;
   }
-  public boolean setNumberItem(int aNumberItem)
+  public boolean setWishName(String aWishName)
   {
     boolean wasSet = false;
-    numberItem = aNumberItem;
+    wishName = aWishName;
     wasSet = true;
     return wasSet;
   }
-
-  public int getNumberItem()
+  public String getWishName()
   {
-    return numberItem;
+
+    return wishName;
   }
 
-  public void delete()
-  {}
+
+
 
 
   public String toString()
   {
     return super.toString() + "["+
-            "numberItem" + ":" + getNumberItem()+ "]";
+            "wishName" + ":" + wishName+ "]";
   }
 }

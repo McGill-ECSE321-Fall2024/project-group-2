@@ -52,7 +52,7 @@ class AccountRepositoryApplicationTests {
     public void testPersistAndLoadAccount(){
 
         // Create and save a Customer entity
-        Customer customer = new Customer(null,"Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
+        Customer customer = new Customer("Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
         customerRepository.save(customer);
 
         // Create and save a ShoppingCart entity

@@ -84,7 +84,7 @@ class ProductRepositoryApplicationTests {
         int numberOfItems=12;
         Category category=new Category();
         category.setName(name);
-        category.setNumberItems(numberOfItems);
+        category.setName("cat1");
         categoryRepository.save(category);
 
         // Create and save a Product entity

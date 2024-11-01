@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
+import ca.mcgill.ecse321.gamestore.dto.ProductResponseDto;
+import ca.mcgill.ecse321.gamestore.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,14 @@ public class WishListRestController {
      */
     @PostMapping(value= {"/wishlist/create", "/wishlist/create/"})
     public WishListResponseDto createWishList(@RequestBody WishListRequestDto wishListDto){
-        WishList createdWishList = wishListService.createWishList(wishListDto.getNumberItem());
+        WishList createdWishList = wishListService.createWishList(wishListDto.getWishName());
         return new WishListResponseDto(createdWishList);
+    }
+    @PostMapping(value= {"/product/{wishListId}/name/{newName}", "/product/{wishListId}/name/{newName}/"})
+    public WishListResponseDto updateWishListName(@PathVariable int wishListId, @PathVariable String newName){
+        WishList wishList= wishListService.getWishList(wishListId);
+        wishListService.updateWishListName(wishListId,newName);
+        return new WishListResponseDto(wishList);
     }
 
     /**

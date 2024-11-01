@@ -40,7 +40,7 @@ class WishListRepositoryApplicationTests {
     @Test
     public void testPersistAndLoadShoppingCart(){
         // Create and save a WishList entity with a number of items
-        WishList wishList=new WishList(14);
+        WishList wishList=new WishList("Birthday");
         wishListRepository.save(wishList);
 
         // Retrieve the WishList entity from the repository by its ID
@@ -50,7 +50,7 @@ class WishListRepositoryApplicationTests {
         // Validate that the retrieved WishList matches the saved WishList
         assertNotNull(wishListFromDb);
         assertEquals(wishListFromDb.getId(),wishList.getId());
-        assertEquals(wishListFromDb.getNumberItem(),wishList.getNumberItem());
+        assertEquals(wishListFromDb.getWishName(),wishList.getWishName());
 
     }
 

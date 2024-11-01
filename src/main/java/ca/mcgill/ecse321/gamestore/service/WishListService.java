@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamestore.service;
 
+import ca.mcgill.ecse321.gamestore.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,8 @@ public class WishListService {
     WishListRepository wishListRepository;
 
     @Transactional
-    public WishList createWishList(int aNumberItem){
-        WishList wishList = new WishList(aNumberItem);
+    public WishList createWishList(String wishName){
+        WishList wishList = new WishList(wishName);
         return wishListRepository.save(wishList);
     }
 
@@ -32,6 +33,17 @@ public class WishListService {
         }
         catch (Exception e){
             return false;
+        }
+    }
+    @Transactional
+    public WishList updateWishListName(int wishListId, String name){
+        WishList wishList = wishListRepository.findWishListById(wishListId);
+        if (wishList==null){
+            throw new IllegalArgumentException( "WishList Not Found!");
+        }
+        else{
+            wishList.setWishName(name);
+            return wishList;
         }
     }
 

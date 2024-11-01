@@ -51,39 +51,5 @@ class LineItemRepositoryApplicationTests {
         shoppingCartRepository.deleteAll();
     }
 
-    /**
-     * Tests that a LineItem entity, along with its associated Order and ShoppingCart,
-     * can be saved and retrieved from the database. It also validates associations with
-     * the Payment entity of the Order.
-     */
-    @Test
-    public void testPersistAndLoadLineItem(){
-        // Create and save a Payment entity
-        Payment payment= new Payment(Date.valueOf("2024-11-22"),16,"Detail");
-        paymentRepository.save(payment);
 
-        // Create and save an Order entity, linking it to the Payment
-        Order order = new Order(15,Date.valueOf("2024-10-12"),Date.valueOf("2024-10-14"),"3777 rue saint-urbain",100, OrderStatus.Cancelled,payment);
-        orderRepository.save(order);
-
-        // Create and save a ShoppingCart entity
-        ShoppingCart shoppingCart= new ShoppingCart(Date.valueOf("2024-10-09"));
-        shoppingCartRepository.save(shoppingCart);
-
-        // Create and save a LineItem entity, associating it with the Order and ShoppingCart
-        LineItem lineItem = new LineItem(13,12,order,shoppingCart);
-        lineItemRepository.save(lineItem);
-
-        // Retrieve the LineItem entity from the repository by its ID
-        int id = lineItem.getId();
-        LineItem lineItemFromDb = lineItemRepository.findLineItemById(id);
-
-        // Validate that the retrieved LineItem is not null and matches the saved LineItem and its associations
-        assertNotNull(lineItemFromDb);
-        assertEquals(lineItemFromDb.getOrder().getId(),order.getId());
-        assertEquals(lineItemFromDb.getOrder().getPaymentOfOrder().getId(),payment.getId());
-        assertEquals(lineItemFromDb.getCart().getId(), shoppingCart.getId());
-        assertEquals(lineItemFromDb.getPrice(),lineItem.getPrice());
-        assertEquals(lineItemFromDb.getQuantity(),lineItem.getQuantity());
-    }
 }

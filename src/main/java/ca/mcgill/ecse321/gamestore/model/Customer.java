@@ -25,7 +25,7 @@ public class Customer extends Person
   // CONSTRUCTOR
   //------------------------
 
-  public Customer(String aIsAbstract, String aUserID, String aName, String aEmail, String aPassword)
+  public Customer( String aUserID, String aName, String aEmail, String aPassword)
   {
     super( aUserID, aName, aEmail, aPassword);
   }

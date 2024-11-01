@@ -92,14 +92,14 @@ class ReviewRepositoryApplicationTests {
         int numberOfItems=12;
         Category category=new Category();
         category.setName(name);
-        category.setNumberItems(numberOfItems);
+        category.setName("cat1");
         categoryRepository.save(category);
 
         // Create and save a Product entity
         Product product= new Product("Game","Play",lineItem,category);
         productRepository.save(product);
         // Create and save a Customer entity
-        Customer customer = new Customer(null,"Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
+        Customer customer = new Customer("Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");
         customerRepository.save(customer);
 
 
