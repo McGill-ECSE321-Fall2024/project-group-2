@@ -44,7 +44,6 @@ class CategoryRepositoryApplicationTests {
         int numberOfItems=12;
         Category category=new Category();
         category.setName(name);
-        category.setNumberItems(numberOfItems);
         category = categoryRepository.save(category);
 
         // Retrieve the Category entity from the repository by its ID
@@ -55,10 +54,7 @@ class CategoryRepositoryApplicationTests {
         assertNotNull(categoryFromDb);
         assertEquals(categoryFromDb.getId(), category.getId());
         assertEquals(categoryFromDb.getName(), name);
-        assertEquals(categoryFromDb.getNumberItems(), numberOfItems);
     }
-
-
 
 
 }

@@ -3,17 +3,17 @@ package ca.mcgill.ecse321.gamestore.dto;
 import java.util.List;
 
 public class CategoryListDto {
-    private List<CategoryResponseDto> category;
+    private List<CategoryDto> category;
 
-    public CategoryListDto(List<CategoryResponseDto> category) {
+    public CategoryListDto(List<CategoryDto> category) {
         this.category = category;
     }
 
-    public List<CategoryResponseDto> getCategory() {
+    public List<CategoryDto> getCategory() {
         return this.category;
     }
 
-    public void setCategory(List<CategoryResponseDto> category){
+    public void setCategory(List<CategoryDto> category){
         this.category= category;
     }
 }

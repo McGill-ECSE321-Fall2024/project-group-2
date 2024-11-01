@@ -2,24 +2,21 @@ package ca.mcgill.ecse321.gamestore.dto;
 
 import ca.mcgill.ecse321.gamestore.model.Category;
 
-public class CategoryResponseDto {
+public class CategoryDto {
     private int categoryId;
     private String name;
-    private int aNumberItems;
 
     //CONSTRUCTERS
-    public CategoryResponseDto() {
+    public CategoryDto() {
     }
 
-    public CategoryResponseDto(int categoryId, String name, int aNumberItems){
+    public CategoryDto(int categoryId, String name, int aNumberItems){
         this.categoryId= categoryId;
         this.name= name;
-        this.aNumberItems= aNumberItems;
     }
 
-    public CategoryResponseDto(Category category){
+    public CategoryDto(Category category){
         this.name= category.getName();
-        this.aNumberItems= category.getNumberItems();
         this.categoryId= category.getId();
     }
 
@@ -28,9 +25,6 @@ public class CategoryResponseDto {
         return this.name;
     }
 
-    public int getNumberItems(){
-        return this.aNumberItems;
-    }
 
     public int getId(){
         return this.categoryId;
@@ -42,10 +36,6 @@ public class CategoryResponseDto {
         return true;
     }
 
-    public boolean setNumberItem(int aNumberItems){
-        this.aNumberItems= aNumberItems;
-        return true;
-    }
 
     public boolean setId (int categoryId){
         this.categoryId= categoryId;

@@ -97,7 +97,7 @@ public class ProductController {
     @PostMapping(value= {"/product/{productId}/name/{newName}", "/product/{productId}/name/{newName}/"})
     public ProductResponseDto updateProductName(@PathVariable int productId, @PathVariable String newName){
         Product product= productService.getProduct(productId);
-        product.setName(newName);
+        productService.updateProductName(productId,newName);
         return new ProductResponseDto(product);
     }
 
@@ -111,7 +111,7 @@ public class ProductController {
     @PostMapping(value= {"/product/{productId}/description/{newDescription}", "/product/{productId}/description/{newDescription}/"})
     public ProductResponseDto updateProductDescription(@PathVariable int productId, @PathVariable String newDescription){
         Product product= productService.getProduct(productId);
-        product.setDescription(newDescription);
+        productService.updateProductDescription(productId,newDescription);
         return new ProductResponseDto(product);
     }
 
@@ -123,9 +123,9 @@ public class ProductController {
      * @return The updated product.
      */
     @PostMapping(value= {"/product/{productId}/category/{newCategory}", "/product/{productId}/category/{newCategory}/"})
-    public ProductResponseDto updateProductCategory(@PathVariable int productId, @PathVariable Category newCategory){
+    public ProductResponseDto updateProductCategory(@PathVariable int productId, @PathVariable int newCategory){
         Product product= productService.getProduct(productId);
-        product.setCategory(newCategory);
+        productService.updateProductCategory(productId,newCategory);
         return new ProductResponseDto(product);
     }
 

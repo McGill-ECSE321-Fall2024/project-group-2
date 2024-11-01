@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamestore.service;
 
+import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ import jakarta.transaction.Transactional;
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Transactional
     public Product getProduct(int productId){
@@ -100,13 +103,16 @@ public class ProductService {
 
 
     @Transactional
-    public Product updateProductCategory(int productId, Category category){
+    public Product updateProductCategory(int productId, int categoryId){
         Product product = productRepository.findProductById(productId);
             if (product==null){
                 throw new IllegalArgumentException( "Product Not Found!");
             }
+            else if (categoryRepository.findCategoryById(categoryId)==null){
+                throw new IllegalArgumentException( "Category not found");
+            }
             else{
-                product.setCategory(category);
+                product.setCategory(categoryRepository.findCategoryById(categoryId));
                 return product;
             }
         }
