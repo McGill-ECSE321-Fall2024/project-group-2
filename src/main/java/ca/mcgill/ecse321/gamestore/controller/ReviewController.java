@@ -1,14 +1,16 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import ca.mcgill.ecse321.gamestore.dto.ReviewDto;
+import ca.mcgill.ecse321.gamestore.dto.ReviewRequestDto;
+import ca.mcgill.ecse321.gamestore.dto.ReviewResponseDto;
+import ca.mcgill.ecse321.gamestore.dto.ReviewListDto;
 import ca.mcgill.ecse321.gamestore.model.Review;
 import ca.mcgill.ecse321.gamestore.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reviews")
@@ -17,68 +19,54 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    /**
-     * Creates a new Review.
-     * @param dto Review data from the request body.
-     * @return The created Review as a DTO.
-     */
     @PostMapping
-    public ReviewDto createReview(@RequestBody ReviewDto dto) {
+    public ReviewResponseDto createReview(@RequestBody ReviewRequestDto dto) {
         Review review = reviewService.createReview(dto);
-        return new ReviewDto(review);
+        return new ReviewResponseDto(review);
     }
 
-    /**
-     * Retrieves a Review by its ID.
-     * @param id The ID of the review.
-     * @return The Review as a DTO.
-     */
     @GetMapping("/{id}")
-    public ReviewDto getReviewById(@PathVariable Integer id) {
+    public ReviewResponseDto getReviewById(@PathVariable Integer id) {
         Review review = reviewService.getReviewById(id);
-        return new ReviewDto(review);
+        return new ReviewResponseDto(review);
     }
 
-    /**
-     * Retrieves all Reviews.
-     * @return A list of Review DTOs.
-     */
     @GetMapping
-    public List<ReviewDto> getAllReviews() {
-        return reviewService.getAllReviews().stream()
-                .map(ReviewDto::new)
-                .collect(Collectors.toList());
+    public ReviewListDto getAllReviews() {
+        List<Review> reviews = reviewService.getAllReviews();
+        List<ReviewResponseDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviews) {
+            reviewDtos.add(new ReviewResponseDto(review));
+        }
+        return new ReviewListDto(reviewDtos);
     }
 
-    /**
-     * Retrieves all Reviews for a specific Product.
-     * @param productId The ID of the product.
-     * @return A list of Review DTOs.
-     */
     @GetMapping("/product/{productId}")
-    public List<ReviewDto> getReviewsByProduct(@PathVariable Integer productId) {
-        return reviewService.getReviewsByProduct(productId).stream()
-                .map(ReviewDto::new)
-                .collect(Collectors.toList());
+    public ReviewListDto getReviewsByProduct(@PathVariable Integer productId) {
+        List<Review> reviews = reviewService.getReviewsByProduct(productId);
+        List<ReviewResponseDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviews) {
+            reviewDtos.add(new ReviewResponseDto(review));
+        }
+        return new ReviewListDto(reviewDtos);
     }
 
-    /**
-     * Retrieves all Reviews by a specific Customer.
-     * @param customerEmail The email of the customer.
-     * @return A list of Review DTOs.
-     */
     @GetMapping("/customer/{customerEmail}")
-    public List<ReviewDto> getReviewsByCustomer(@PathVariable String customerEmail) {
-        return reviewService.getReviewsByCustomer(customerEmail).stream()
-                .map(ReviewDto::new)
-                .collect(Collectors.toList());
+    public ReviewListDto getReviewsByCustomer(@PathVariable String customerEmail) {
+        List<Review> reviews = reviewService.getReviewsByCustomer(customerEmail);
+        List<ReviewResponseDto> reviewDtos = new ArrayList<>();
+        for (Review review : reviews) {
+            reviewDtos.add(new ReviewResponseDto(review));
+        }
+        return new ReviewListDto(reviewDtos);
     }
 
-    /**
-     * Deletes a Review by its ID. Only the manager can perform this action.
-     * @param id The ID of the review to delete.
-     * @param managerEmail The email of the manager requesting the deletion.
-     */
+    @PutMapping("/{id}")
+    public ReviewResponseDto updateReview(@PathVariable Integer id, @RequestBody ReviewRequestDto dto) {
+        Review review = reviewService.updateReview(id, dto);
+        return new ReviewResponseDto(review);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
         reviewService.deleteReview(id, managerEmail);

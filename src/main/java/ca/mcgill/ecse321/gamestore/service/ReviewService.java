@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.gamestore.service;
 
-import ca.mcgill.ecse321.gamestore.dto.ReviewDto;
+import ca.mcgill.ecse321.gamestore.dto.ReviewRequestDto;
 import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.model.Product;
@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -35,7 +34,7 @@ public class ReviewService {
     private OwnerRepository ownerRepository;
 
     @Transactional
-    public Review createReview(ReviewDto dto) {
+    public Review createReview(ReviewRequestDto dto) {
         // Validate inputs
         if (dto.getReviewWriterEmail() == null || dto.getReviewWriterEmail().isEmpty()) {
             throw new IllegalArgumentException("Review writer email cannot be empty.");
@@ -57,11 +56,10 @@ public class ReviewService {
         }
 
         // Fetch associated Product
-        Optional<Product> productOpt = productRepository.findById(dto.getProductId());
-        if (!productOpt.isPresent()) {
+        Product product = productRepository.findProductById(dto.getProductId());
+        if (product == null) {
             throw new IllegalArgumentException("Product not found with ID: " + dto.getProductId());
         }
-        Product product = productOpt.get();
 
         // Create new Review
         Review review = new Review();
@@ -79,37 +77,62 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    @Transactional(readOnly = true)
-    public Review getReviewById(Integer reviewId) {
-        Optional<Review> reviewOpt = reviewRepository.findById(reviewId);
-        if (!reviewOpt.isPresent()) {
+    @Transactional
+    public Review updateReview(Integer reviewId, ReviewRequestDto dto) {
+        // Validate review exists
+        Review review = reviewRepository.findReviewById(reviewId);
+        if (review == null) {
             throw new IllegalArgumentException("Review not found with ID: " + reviewId);
         }
-        return reviewOpt.get();
+        
+        // Validate inputs
+        if (dto.getRating() == null) {
+            throw new IllegalArgumentException("Rating cannot be null.");
+        }
+        if (dto.getRating() < 1 || dto.getRating() > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+
+        // Update review fields
+        review.setRating(dto.getRating());
+        review.setComments(dto.getComments());
+
+        // Save and return updated review
+        return reviewRepository.save(review);
+    }
+
+    @Transactional(readOnly = true)
+    public Review getReviewById(Integer reviewId) {
+        Review review = reviewRepository.findReviewById(reviewId);
+        if (review == null) {
+            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
+        }
+        return review;
     }
 
     @Transactional(readOnly = true)
     public List<Review> getAllReviews() {
         Iterable<Review> iterable = reviewRepository.findAll();
         List<Review> reviews = new ArrayList<>();
-        iterable.forEach(reviews::add);
+        for (Review review : iterable) {
+            reviews.add(review);
+        }
         return reviews;
     }
 
     @Transactional(readOnly = true)
     public List<Review> getReviewsByProduct(Integer productId) {
         // Fetch associated Product
-        Optional<Product> productOpt = productRepository.findById(productId);
-        if (!productOpt.isPresent()) {
+        Product product = productRepository.findProductById(productId);
+        if (product == null) {
             throw new IllegalArgumentException("Product not found with ID: " + productId);
         }
-        Product product = productOpt.get();
 
         // Fetch all reviews and filter by product
         Iterable<Review> allReviews = reviewRepository.findAll();
         List<Review> productReviews = new ArrayList<>();
         for (Review review : allReviews) {
-            if (review.getProduct().getId().equals(product.getId())) {
+            if (review.getProduct() != null && review.getProduct().getId().equals(product.getId())) {
                 productReviews.add(review);
             }
         }
@@ -143,10 +166,12 @@ public class ReviewService {
             throw new IllegalArgumentException("Only the manager can delete reviews.");
         }
 
-        // Proceed with deletion if manager exists
-        if (!reviewRepository.existsById(reviewId)) {
+        // Verify review exists before deletion
+        Review review = reviewRepository.findReviewById(reviewId);
+        if (review == null) {
             throw new IllegalArgumentException("Review not found with ID: " + reviewId);
         }
+        
         reviewRepository.deleteById(reviewId);
     }
 
@@ -172,4 +197,3 @@ public class ReviewService {
         return null;
     }
 }
-

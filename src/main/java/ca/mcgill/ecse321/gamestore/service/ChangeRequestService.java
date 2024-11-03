@@ -3,10 +3,9 @@ package ca.mcgill.ecse321.gamestore.service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Iterator;
 
-import ca.mcgill.ecse321.gamestore.dto.ChangeRequestDto;
+
+import ca.mcgill.ecse321.gamestore.dto.ChangeRequestRequestDto;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
 import ca.mcgill.ecse321.gamestore.model.Employee;
@@ -38,7 +37,7 @@ public class ChangeRequestService {
      * @return The created ChangeRequest.
      */
     @Transactional
-    public ChangeRequest createChangeRequest(ChangeRequestDto dto) {
+    public ChangeRequest createChangeRequest(ChangeRequestRequestDto dto) {
         // Validate inputs
         if (dto.getRequestCreatorEmail() == null || dto.getRequestCreatorEmail().isEmpty()) {
             throw new IllegalArgumentException("Request creator email cannot be empty.");
@@ -56,18 +55,27 @@ public class ChangeRequestService {
             throw new IllegalStateException("No owner found in the system.");
         }
 
-        // Create new ChangeRequest using the model's constructor
+        // Create new ChangeRequest
         ChangeRequest changeRequest = new ChangeRequest();
-
-        // Set current time as java.sql.Date
+        
+        // Set current time
         Date sqlDate = new Date(System.currentTimeMillis());
         changeRequest.setTimeRequest(sqlDate);
 
-        changeRequest.setStatus(RequestStatus.InProgress); // Default status
+        // Set status from dto if provided, otherwise default to InProgress
+        if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
+            try {
+                changeRequest.setStatus(RequestStatus.valueOf(dto.getStatus()));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid status: " + dto.getStatus());
+            }
+        } else {
+            changeRequest.setStatus(RequestStatus.InProgress);
+        }
+
         changeRequest.setRequestCreator(creator);
         changeRequest.setRequestManager(manager);
 
-        // Save to repository
         return changeRequestRepository.save(changeRequest);
     }
 
@@ -79,7 +87,10 @@ public class ChangeRequestService {
      */
     @Transactional
     public ChangeRequest approveChangeRequest(int requestId) {
-        ChangeRequest request = getChangeRequestById(requestId);
+        ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
+        if (request == null) {
+            throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+        }
         request.setStatus(RequestStatus.Approved);
         return changeRequestRepository.save(request);
     }
@@ -92,7 +103,10 @@ public class ChangeRequestService {
      */
     @Transactional
     public ChangeRequest declineChangeRequest(int requestId) {
-        ChangeRequest request = getChangeRequestById(requestId);
+        ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
+        if (request == null) {
+            throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+        }
         request.setStatus(RequestStatus.Declined);
         return changeRequestRepository.save(request);
     }
@@ -105,11 +119,11 @@ public class ChangeRequestService {
      */
     @Transactional(readOnly = true)
     public ChangeRequest getChangeRequestById(int requestId) {
-        Optional<ChangeRequest> requestOpt = changeRequestRepository.findById(requestId);
-        if (!requestOpt.isPresent()) {
+        ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
+        if (request == null) {
             throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
         }
-        return requestOpt.get();
+        return request;
     }
 
     /**
@@ -127,22 +141,16 @@ public class ChangeRequestService {
         return list;
     }
 
-
     /**
-     * Helper method to get the single Owner.
-     * Avoids using streams for simplicity.
+     * Helper method to find the Owner.
      * 
-     * @return The single Owner in the system.
+     * @return The Owner in the system.
      */
     private Owner getSingleOwner() {
-        Iterable<Owner> iterable = ownerRepository.findAll();
-        Iterator<Owner> iterator = iterable.iterator();
-        if (iterator.hasNext()) {
-            return iterator.next();
-        } else {
-            return null;
+        Iterable<Owner> owners = ownerRepository.findAll();
+        for (Owner owner : owners) {
+            return owner;  // Returns the first owner found
         }
+        return null;  // Returns null if no owners found
     }
-    
 }
-

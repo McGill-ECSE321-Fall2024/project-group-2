@@ -1,17 +1,19 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import ca.mcgill.ecse321.gamestore.dto.ChangeRequestDto;
+import ca.mcgill.ecse321.gamestore.dto.ChangeRequestRequestDto;
+import ca.mcgill.ecse321.gamestore.dto.ChangeRequestResponseDto;
+import ca.mcgill.ecse321.gamestore.dto.ChangeRequestListDto;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.service.ChangeRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
-@RequestMapping("/changerequests")
+@RequestMapping("/change-requests")
 public class ChangeRequestController {
 
     @Autowired
@@ -19,63 +21,59 @@ public class ChangeRequestController {
 
     /**
      * Creates a new ChangeRequest.
-     * 
-     * @param dto The ChangeRequest data.
-     * @return The created ChangeRequest DTO.
+     * @param dto ChangeRequest data from the request body.
+     * @return The created ChangeRequest as a DTO.
      */
     @PostMapping
-    public ChangeRequestDto createChangeRequest(@RequestBody ChangeRequestDto dto) {
+    public ChangeRequestResponseDto createChangeRequest(@RequestBody ChangeRequestRequestDto dto) {
         ChangeRequest changeRequest = changeRequestService.createChangeRequest(dto);
-        return new ChangeRequestDto(changeRequest);
+        return new ChangeRequestResponseDto(changeRequest);
     }
 
     /**
-     * Approves a ChangeRequest.
-     * 
-     * @param requestId The ID of the request.
-     * @return The updated ChangeRequest DTO.
-     */
-    @PutMapping("/{id}/approve")
-    public ChangeRequestDto approveChangeRequest(@PathVariable("id") int requestId) {
-        ChangeRequest changeRequest = changeRequestService.approveChangeRequest(requestId);
-        return new ChangeRequestDto(changeRequest);
-    }
-
-    /**
-     * Declines a ChangeRequest.
-     * 
-     * @param requestId The ID of the request.
-     * @return The updated ChangeRequest DTO.
-     */
-    @PutMapping("/{id}/decline")
-    public ChangeRequestDto declineChangeRequest(@PathVariable("id") int requestId) {
-        ChangeRequest changeRequest = changeRequestService.declineChangeRequest(requestId);
-        return new ChangeRequestDto(changeRequest);
-    }
-
-    /**
-     * Retrieves a ChangeRequest by ID.
-     * 
-     * @param requestId The ID of the request.
-     * @return The ChangeRequest DTO.
+     * Retrieves a ChangeRequest by its ID.
+     * @param id The ID of the change request.
+     * @return The ChangeRequest as a DTO.
      */
     @GetMapping("/{id}")
-    public ChangeRequestDto getChangeRequestById(@PathVariable("id") int requestId) {
-        ChangeRequest changeRequest = changeRequestService.getChangeRequestById(requestId);
-        return new ChangeRequestDto(changeRequest);
+    public ChangeRequestResponseDto getChangeRequestById(@PathVariable Integer id) {
+        ChangeRequest changeRequest = changeRequestService.getChangeRequestById(id);
+        return new ChangeRequestResponseDto(changeRequest);
     }
 
     /**
      * Retrieves all ChangeRequests.
-     * 
-     * @return List of ChangeRequest DTOs.
+     * @return A list of ChangeRequest DTOs.
      */
     @GetMapping
-    public List<ChangeRequestDto> getAllChangeRequests() {
+    public ChangeRequestListDto getAllChangeRequests() {
         List<ChangeRequest> changeRequests = changeRequestService.getAllChangeRequests();
-        return changeRequests.stream()
-                .map(ChangeRequestDto::new)
-                .collect(Collectors.toList());
+        List<ChangeRequestResponseDto> changeRequestDtos = new ArrayList<>();
+        for (ChangeRequest changeRequest : changeRequests) {
+            changeRequestDtos.add(new ChangeRequestResponseDto(changeRequest));
+        }
+        return new ChangeRequestListDto(changeRequestDtos);
+    }
+
+    /**
+     * Approves a ChangeRequest.
+     * @param id The ID of the change request to approve.
+     * @return The updated ChangeRequest as a DTO.
+     */
+    @PutMapping("/{id}/approve")
+    public ChangeRequestResponseDto approveChangeRequest(@PathVariable Integer id) {
+        ChangeRequest changeRequest = changeRequestService.approveChangeRequest(id);
+        return new ChangeRequestResponseDto(changeRequest);
+    }
+
+    /**
+     * Declines a ChangeRequest.
+     * @param id The ID of the change request to decline.
+     * @return The updated ChangeRequest as a DTO.
+     */
+    @PutMapping("/{id}/decline")
+    public ChangeRequestResponseDto declineChangeRequest(@PathVariable Integer id) {
+        ChangeRequest changeRequest = changeRequestService.declineChangeRequest(id);
+        return new ChangeRequestResponseDto(changeRequest);
     }
 }
-

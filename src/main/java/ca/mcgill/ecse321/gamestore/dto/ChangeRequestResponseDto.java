@@ -1,23 +1,20 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
-
 import java.util.Date;
 
-public class ChangeRequestDto {
-
-    private Integer id; // Corresponds to getId() and setId(Integer id)
+public class ChangeRequestResponseDto {
+    private Integer id;
     private Date timeRequest;
     private String status; // Enum as String: "Approved", "Declined", "InProgress"
     private String requestCreatorEmail; // Email of the Employee (requestCreator)
 
-
     // Default constructor
-    public ChangeRequestDto() {
+    public ChangeRequestResponseDto() {
     }
 
     // Constructor to create DTO from model
-    public ChangeRequestDto(ChangeRequest model) {
+    public ChangeRequestResponseDto(ChangeRequest model) {
         this.id = model.getId();
         this.timeRequest = model.getTimeRequest();
         this.status = model.getStatus().toString();
@@ -25,7 +22,6 @@ public class ChangeRequestDto {
     }
 
     // Getters and Setters
-
     public Integer getId() {
         return id;
     }
@@ -57,5 +53,4 @@ public class ChangeRequestDto {
     public void setRequestCreatorEmail(String requestCreatorEmail) {
         this.requestCreatorEmail = requestCreatorEmail;
     }
-
 }

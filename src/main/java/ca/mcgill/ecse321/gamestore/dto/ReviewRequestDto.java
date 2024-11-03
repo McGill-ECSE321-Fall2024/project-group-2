@@ -1,41 +1,17 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
-import java.sql.Date;
+public class ReviewRequestDto {
 
-import ca.mcgill.ecse321.gamestore.model.Review;
-
-public class ReviewDto {
-
-    private Integer reviewId;
     private Integer rating;
     private String comments;
-    private Date reviewDate;
     private String reviewWriterEmail; // Email of the Customer
     private Integer productId;        // ID of the Product
 
     // Default constructor
-    public ReviewDto() {
-    }
-
-    // Constructor to create DTO from model
-    public ReviewDto(Review review) {
-        this.reviewId = review.getId();
-        this.rating = review.getRating();
-        this.comments = review.getComments();
-        this.reviewDate = review.getReviewDate();
-        this.reviewWriterEmail = review.getReviewWriter().getEmail();
-        this.productId = review.getProduct().getId();
+    public ReviewRequestDto() {
     }
 
     // Getters and Setters
-
-    public Integer getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(Integer reviewId) {
-        this.reviewId = reviewId;
-    }
 
     public Integer getRating() {
         return rating;
@@ -51,14 +27,6 @@ public class ReviewDto {
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public Date getReviewDate() {
-        return reviewDate;
-    }
-
-    public void setReviewDate(Date reviewDate) {
-        this.reviewDate = reviewDate;
     }
 
     public String getReviewWriterEmail() {
