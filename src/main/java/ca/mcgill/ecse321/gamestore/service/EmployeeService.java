@@ -59,6 +59,7 @@ public class EmployeeService {
 
     /**
      * Create a new employee.
+     * @param userID Employee's user ID.
      * @param name Employee's name.
      * @param email Employee's email.
      * @param password Employee's password.
@@ -66,7 +67,8 @@ public class EmployeeService {
      * @throws ResponseStatusException if validation fails or email already exists.
      */
     @Transactional
-    public Employee createEmployee(String name, String email, String password) {
+    public Employee createEmployee(String userID, String name, String email, String password) {
+        // Validate inputs
         validateEmployeeInputs(name, email, password);
 
         // Check if the email already exists across different repositories
@@ -79,27 +81,36 @@ public class EmployeeService {
                     "An employee or user with this email already exists.");
         }
 
-        Employee employee = new Employee("false", "123", name, email.trim(), password);
+        // Adjusted constructor call with userID
+        Employee employee = new Employee(userID, name, email.trim(), password);
         return EmployeeRepository.save(employee);
     }
+
+
 
     /**
      * Update an existing employee's details.
      * @param email Employee's email.
+     * @param userID Employee's user ID.
      * @param newName New name for the employee.
      * @param newPassword New password for the employee.
      * @return The updated employee.
      * @throws ResponseStatusException if the employee is not found or validation fails.
      */
     @Transactional
-    public Employee updateEmployee(String email, String newName, String newPassword) {
+    public Employee updateEmployee(String email, String userID, String newName, String newPassword) {
         validateEmployeeInputs(newName, email, newPassword);
 
         Employee employee = getEmployeeByEmail(email.trim());
+
+        // Update employee details
+        employee.setUserID(userID.trim());
         employee.setName(newName.trim());
         employee.setPassword(newPassword);
+
         return EmployeeRepository.save(employee);
     }
+
 
     /**
      * Delete an employee by email.
