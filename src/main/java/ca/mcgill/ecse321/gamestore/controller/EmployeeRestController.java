@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
+import ca.mcgill.ecse321.gamestore.dto.EmployeeListDto;
 import ca.mcgill.ecse321.gamestore.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.EmployeeResponseDto;
 import ca.mcgill.ecse321.gamestore.model.Employee;
@@ -24,13 +25,14 @@ public class EmployeeRestController {
     /**
      * Get all employees.
      *
-     * @return List of EmployeeResponseDto.
+     * @return EmployeeListDto containing a list of EmployeeResponseDto.
      */
     @GetMapping
-    public List<EmployeeResponseDto> getAllEmployees() {
-        return employeeService.getAllEmployees().stream()
+    public EmployeeListDto getAllEmployees() {
+        List<EmployeeResponseDto> employees = employeeService.getAllEmployees().stream()
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
+        return new EmployeeListDto(employees);
     }
 
     /**
@@ -106,3 +108,4 @@ public class EmployeeRestController {
         );
     }
 }
+
