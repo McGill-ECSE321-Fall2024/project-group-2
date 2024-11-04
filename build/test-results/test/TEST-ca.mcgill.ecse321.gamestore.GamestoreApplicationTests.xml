@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ca.mcgill.ecse321.gamestore.GamestoreApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-01T21:04:32" hostname="Mohammads-MacBook-Air.local" time="0.003">
-  <properties/>
-  <testcase name="contextLoads()" classname="ca.mcgill.ecse321.gamestore.GamestoreApplicationTests" time="0.003"/>
-  <system-out><![CDATA[2024-11-01T17:04:32.376-04:00  INFO 9562 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [ca.mcgill.ecse321.gamestore.GamestoreApplicationTests]: GamestoreApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2024-11-01T17:04:32.380-04:00  INFO 9562 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration ca.mcgill.ecse321.gamestore.GamestoreApplication for test class ca.mcgill.ecse321.gamestore.GamestoreApplicationTests
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

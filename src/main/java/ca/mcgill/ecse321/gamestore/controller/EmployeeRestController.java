@@ -57,6 +57,7 @@ public class EmployeeRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponseDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         Employee employee = employeeService.createEmployee(
+                employeeRequestDto.getUserID(),
                 employeeRequestDto.getName(),
                 employeeRequestDto.getEmail(),
                 employeeRequestDto.getPassword()
@@ -77,6 +78,7 @@ public class EmployeeRestController {
             @RequestBody EmployeeRequestDto employeeRequestDto) {
         Employee employee = employeeService.updateEmployee(
                 email,
+                employeeRequestDto.getUserID(),
                 employeeRequestDto.getName(),
                 employeeRequestDto.getPassword()
         );
@@ -108,4 +110,5 @@ public class EmployeeRestController {
         );
     }
 }
+
 

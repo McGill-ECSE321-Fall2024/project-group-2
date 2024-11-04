@@ -101,10 +101,11 @@ public class CustomerService {
         }
 
         // Create and save the customer
-        Customer customer = new Customer("false", userID, name, emailTrimmed, password);
+        Customer customer = new Customer(userID, name, emailTrimmed, password); // Adjusted constructor
         CustomerRepository.save(customer);
         return customer;
     }
+
 
     /**
      * Update a customer's password.
