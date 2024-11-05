@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.gamestore.dto.ProductListDto;
 import ca.mcgill.ecse321.gamestore.dto.ProductRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.ProductResponseDto;
-import ca.mcgill.ecse321.gamestore.model.Category;
 import ca.mcgill.ecse321.gamestore.model.Product;
 import ca.mcgill.ecse321.gamestore.service.ProductService;
 
 @RestController
-public class ProductController {
+public class ProductRestController {
     
     @Autowired
     private ProductService productService;

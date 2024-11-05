@@ -2,12 +2,16 @@ package ca.mcgill.ecse321.gamestore.controller;
 
 import ca.mcgill.ecse321.gamestore.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
+
 import ca.mcgill.ecse321.gamestore.model.Customer;
+import ca.mcgill.ecse321.gamestore.dto.CustomerListDto;
+
 import ca.mcgill.ecse321.gamestore.service.CustomerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +47,13 @@ public class CustomerRestController {
      *
      * @return a list of all customers as response DTOs
      */
-    @GetMapping
-    public List<CustomerResponseDto> getAllCustomers() {
-        return customerService.getAllCustomers().stream()
-                .map(CustomerResponseDto::new)
-                .collect(Collectors.toList());
+    @GetMapping("/customer")
+    public CustomerListDto findAllCustomer() {
+        List<CustomerResponseDto> customer = new ArrayList<CustomerResponseDto>();
+        for (Customer model : customerService.getAllCustomers()) {
+            customer.add(new CustomerResponseDto(model));
+        }
+        return new CustomerListDto(customer);
     }
 
     /**
