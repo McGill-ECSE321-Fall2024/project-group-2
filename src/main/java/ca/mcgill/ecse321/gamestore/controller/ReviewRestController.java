@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reviews")
-public class ReviewController {
+public class ReviewRestController {
 
     @Autowired
     private ReviewService reviewService;
@@ -61,11 +61,6 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
-    @PutMapping("/{id}")
-    public ReviewResponseDto updateReview(@PathVariable Integer id, @RequestBody ReviewRequestDto dto) {
-        Review review = reviewService.updateReview(id, dto);
-        return new ReviewResponseDto(review);
-    }
 
     @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {

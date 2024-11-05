@@ -77,31 +77,8 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+
     @Transactional
-    public Review updateReview(Integer reviewId, ReviewRequestDto dto) {
-        // Validate review exists
-        Review review = reviewRepository.findReviewById(reviewId);
-        if (review == null) {
-            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
-        }
-        
-        // Validate inputs
-        if (dto.getRating() == null) {
-            throw new IllegalArgumentException("Rating cannot be null.");
-        }
-        if (dto.getRating() < 1 || dto.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5.");
-        }
-
-        // Update review fields
-        review.setRating(dto.getRating());
-        review.setComments(dto.getComments());
-
-        // Save and return updated review
-        return reviewRepository.save(review);
-    }
-
-    @Transactional(readOnly = true)
     public Review getReviewById(Integer reviewId) {
         Review review = reviewRepository.findReviewById(reviewId);
         if (review == null) {
@@ -110,7 +87,7 @@ public class ReviewService {
         return review;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getAllReviews() {
         Iterable<Review> iterable = reviewRepository.findAll();
         List<Review> reviews = new ArrayList<>();
@@ -120,7 +97,7 @@ public class ReviewService {
         return reviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByProduct(Integer productId) {
         // Fetch associated Product
         Product product = productRepository.findProductById(productId);
@@ -139,7 +116,7 @@ public class ReviewService {
         return productReviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByCustomer(String customerEmail) {
         // Fetch associated Customer
         Customer customer = findCustomerByEmail(customerEmail);

@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/change-requests")
-public class ChangeRequestController {
+public class ChangeRequestRestController {
 
     @Autowired
     private ChangeRequestService changeRequestService;
