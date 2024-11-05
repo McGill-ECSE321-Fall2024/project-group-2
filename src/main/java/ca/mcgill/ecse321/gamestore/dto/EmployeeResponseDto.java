@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
+import ca.mcgill.ecse321.gamestore.model.Employee;
+
 /**
  * DTO for sending employee data in responses.
  */
@@ -18,6 +20,13 @@ public class EmployeeResponseDto {
         this.name = name;
         this.email = email;
         this.userID = userID;
+    }
+    public EmployeeResponseDto (Employee employee) {
+
+               this.name= employee.getName();
+               this.email=employee.getEmail();
+                this.userID=employee.getUserID();
+
     }
 
     // Getters and Setters

@@ -1,14 +1,14 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import ca.mcgill.ecse321.gamestore.dto.EmployeeListDto;
-import ca.mcgill.ecse321.gamestore.dto.EmployeeRequestDto;
-import ca.mcgill.ecse321.gamestore.dto.EmployeeResponseDto;
+import ca.mcgill.ecse321.gamestore.dto.*;
+import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Employee;
 import ca.mcgill.ecse321.gamestore.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +27,13 @@ public class EmployeeRestController {
      *
      * @return EmployeeListDto containing a list of EmployeeResponseDto.
      */
-    @GetMapping
-    public EmployeeListDto getAllEmployees() {
-        List<EmployeeResponseDto> employees = employeeService.getAllEmployees().stream()
-                .map(this::convertToResponseDto)
-                .collect(Collectors.toList());
-        return new EmployeeListDto(employees);
+    @GetMapping("/employee")
+    public EmployeeListDto findAllEmployee() {
+        List<EmployeeResponseDto> employee = new ArrayList<EmployeeResponseDto>();
+        for (Employee model : employeeService.getAllEmployees()) {
+            employee.add(new EmployeeResponseDto(model));
+        }
+        return new EmployeeListDto(employee);
     }
 
     /**
@@ -44,7 +45,7 @@ public class EmployeeRestController {
     @GetMapping("/{email}")
     public EmployeeResponseDto getEmployeeByEmail(@PathVariable String email) {
         Employee employee = employeeService.getEmployeeByEmail(email);
-        return convertToResponseDto(employee);
+        return new EmployeeResponseDto(employee);
     }
 
     /**
@@ -62,7 +63,7 @@ public class EmployeeRestController {
                 employeeRequestDto.getEmail(),
                 employeeRequestDto.getPassword()
         );
-        return convertToResponseDto(employee);
+        return new EmployeeResponseDto(employee);
     }
 
     /**
@@ -82,7 +83,7 @@ public class EmployeeRestController {
                 employeeRequestDto.getName(),
                 employeeRequestDto.getPassword()
         );
-        return convertToResponseDto(employee);
+        return new EmployeeResponseDto(employee);
     }
 
     /**
@@ -96,19 +97,8 @@ public class EmployeeRestController {
         employeeService.deleteEmployee(email);
     }
 
-    /**
-     * Convert an Employee entity to EmployeeResponseDto.
-     *
-     * @param employee The Employee entity.
-     * @return EmployeeResponseDto.
-     */
-    private EmployeeResponseDto convertToResponseDto(Employee employee) {
-        return new EmployeeResponseDto(
-                employee.getName(),
-                employee.getEmail(),
-                employee.getUserID()
-        );
-    }
+
+
 }
 
 

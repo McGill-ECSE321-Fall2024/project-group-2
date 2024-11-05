@@ -12,7 +12,7 @@ import ca.mcgill.ecse321.gamestore.model.Category;
 import ca.mcgill.ecse321.gamestore.service.CategoryService;
 
 @RestController
-public class CategoryController {
+public class CategoryRestController {
 
     @Autowired
     CategoryService categoryService;
