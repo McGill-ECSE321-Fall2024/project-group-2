@@ -5,6 +5,9 @@ import java.util.List;
 public class CustomerListDto {
     private List<CustomerResponseDto> customer;
 
+    // No-argument constructor
+    public CustomerListDto() {
+    }
     public CustomerListDto(List<CustomerResponseDto> customer) {
         this.customer = customer;
     }

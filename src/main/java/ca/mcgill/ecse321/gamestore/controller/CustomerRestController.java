@@ -2,18 +2,15 @@ package ca.mcgill.ecse321.gamestore.controller;
 
 import ca.mcgill.ecse321.gamestore.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
-
 import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.dto.CustomerListDto;
-
 import ca.mcgill.ecse321.gamestore.service.CustomerService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller to expose CRUD operations for Customer entity.
@@ -22,6 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/customers")
 public class CustomerRestController {
 
+    // Service to handle business logic for customer operations
     @Autowired
     private CustomerService customerService;
 
@@ -32,14 +30,16 @@ public class CustomerRestController {
      * @return the created customer as a response DTO
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CustomerResponseDto createCustomer(@RequestBody CustomerRequestDto requestDto) {
+        // Invokes the service to create a new customer based on request data
         Customer customer = customerService.createCustomer(
                 requestDto.getUserID(),
                 requestDto.getName(),
                 requestDto.getEmail(),
                 requestDto.getPassword()
         );
-        return new CustomerResponseDto(customer);
+        return new CustomerResponseDto(customer); // Returns the created customer as a DTO
     }
 
     /**
@@ -49,11 +49,12 @@ public class CustomerRestController {
      */
     @GetMapping("/customer")
     public CustomerListDto findAllCustomer() {
+        // Initializes a list to store response DTOs of all customers
         List<CustomerResponseDto> customer = new ArrayList<CustomerResponseDto>();
         for (Customer model : customerService.getAllCustomers()) {
-            customer.add(new CustomerResponseDto(model));
+            customer.add(new CustomerResponseDto(model)); // Adds each customer to the list as a DTO
         }
-        return new CustomerListDto(customer);
+        return new CustomerListDto(customer); // Returns all customers encapsulated in a list DTO
     }
 
     /**
@@ -64,6 +65,7 @@ public class CustomerRestController {
      */
     @GetMapping("/{email}")
     public CustomerResponseDto getCustomerByEmail(@PathVariable String email) {
+        // Finds the customer by email using the service and returns it as a DTO
         Customer customer = customerService.getCustomer(email);
         return new CustomerResponseDto(customer);
     }
@@ -81,6 +83,7 @@ public class CustomerRestController {
             @PathVariable String email,
             @RequestParam String oldPassword,
             @RequestParam String newPassword) {
+        // Updates customer password and returns the updated customer as a DTO
         Customer updatedCustomer = customerService.updateCustomerPassword(
                 email, oldPassword, newPassword
         );
@@ -95,8 +98,11 @@ public class CustomerRestController {
      */
     @DeleteMapping("/{email}")
     public String deleteCustomer(@PathVariable String email) {
+        // Calls service to delete customer by email
         customerService.deleteCustomer(email);
+        // Returns a confirmation message upon successful deletion
         return "Customer with email " + email + " deleted successfully.";
     }
 }
+
 
