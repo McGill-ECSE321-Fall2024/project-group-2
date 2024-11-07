@@ -14,23 +14,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reviews")
-public class ReviewController {
+public class ReviewRestController {
 
     @Autowired
     private ReviewService reviewService;
 
+    // create review, return response dto
     @PostMapping
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto dto) {
         Review review = reviewService.createReview(dto);
         return new ReviewResponseDto(review);
     }
 
+    // get review by ID, return repsonse dto
     @GetMapping("/{id}")
     public ReviewResponseDto getReviewById(@PathVariable Integer id) {
         Review review = reviewService.getReviewById(id);
         return new ReviewResponseDto(review);
     }
 
+    // get reviews, return as list dto
     @GetMapping
     public ReviewListDto getAllReviews() {
         List<Review> reviews = reviewService.getAllReviews();
@@ -41,6 +44,7 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
+    // get reviews by product, return list dto
     @GetMapping("/product/{productId}")
     public ReviewListDto getReviewsByProduct(@PathVariable Integer productId) {
         List<Review> reviews = reviewService.getReviewsByProduct(productId);
@@ -51,6 +55,7 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
+    // get reviews by customer, return list dto
     @GetMapping("/customer/{customerEmail}")
     public ReviewListDto getReviewsByCustomer(@PathVariable String customerEmail) {
         List<Review> reviews = reviewService.getReviewsByCustomer(customerEmail);
@@ -61,12 +66,7 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
-    @PutMapping("/{id}")
-    public ReviewResponseDto updateReview(@PathVariable Integer id, @RequestBody ReviewRequestDto dto) {
-        Review review = reviewService.updateReview(id, dto);
-        return new ReviewResponseDto(review);
-    }
-
+    // delete review, returns nothing (nothing in db) 
     @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
         reviewService.deleteReview(id, managerEmail);
