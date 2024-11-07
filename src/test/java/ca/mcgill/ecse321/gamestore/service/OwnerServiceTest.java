@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamestore.service;
 
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,7 @@ public class OwnerServiceTest {
     @Test
     public void testCreateOwner_InvalidEmail() {
         // Test creation of an owner with an invalid email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.createOwner(VALID_USER_ID, VALID_NAME, INVALID_EMAIL, VALID_PASSWORD));
         assertEquals("The email is invalid!", exception.getMessage());
     }
@@ -88,7 +89,7 @@ public class OwnerServiceTest {
     @Test
     public void testCreateOwner_ExistingEmail() {
         // Test creation of an owner with an existing email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.createOwner(VALID_USER_ID, VALID_NAME, EXISTING_EMAIL, VALID_PASSWORD));
         assertEquals("User with that email already exists!", exception.getMessage());
     }
@@ -104,9 +105,9 @@ public class OwnerServiceTest {
     @Test
     public void testGetOwner_NonExistingEmail() {
         // Test retrieving an owner by a non-existing email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.getOwner("nonexistent@example.com"));
-        assertEquals("Manager Not Found", exception.getMessage());
+        assertEquals("Owner not found", exception.getMessage());
     }
 
     @Test
@@ -133,7 +134,7 @@ public class OwnerServiceTest {
     @Test
     public void testUpdateOwnerPassword_IncorrectOldPassword() {
         // Test updating an owner's password with an incorrect old password, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.updateOwnerPassword(VALID_EMAIL, "wrongOldPassword", "newPassword123"));
         assertEquals("Incorrect old password!", exception.getMessage());
     }

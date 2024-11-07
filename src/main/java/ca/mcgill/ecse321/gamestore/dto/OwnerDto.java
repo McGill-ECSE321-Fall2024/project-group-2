@@ -10,7 +10,7 @@ public class OwnerDto extends AccountDto {
     }
 
 
-    public OwnerDto(String name, String userID, String email, String password) {
+    public OwnerDto(String userID, String name, String email, String password) {
         super(name, userID, email, password);
     }
 
