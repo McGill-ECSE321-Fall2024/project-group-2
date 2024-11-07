@@ -10,6 +10,9 @@ public class ShoppingCartRequestDto {
     private Date creationDate;
 
     // Default Constructor
+    public ShoppingCartRequestDto() {
+        // Needed for JSON deserialization
+    }
 
 
     // Constructor for creating a ShoppingCartDto from a ShoppingCart model

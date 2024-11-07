@@ -9,7 +9,6 @@ public class PaymentResponseDto {
     private double total;
     private String details;
 
-    // Default constructor for serialization/deserialization
     public PaymentResponseDto() {}
 
     // Constructor to initialize a response DTO from a Payment entity

@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for handling HTTP requests related to Payment operations.
+ */
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentRestController {
 
+    // Injecting PaymentService to handle business logic
     @Autowired
     private PaymentService paymentService;
 
@@ -26,6 +30,7 @@ public class PaymentRestController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<PaymentResponseDto> getAllPayments() {
+        // Retrieves all payments, maps each to a PaymentResponseDto, and returns the list
         return paymentService.getAllPayments().stream()
                 .map(payment -> new PaymentResponseDto(
                         payment.getId(),
@@ -44,6 +49,7 @@ public class PaymentRestController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PaymentResponseDto getPaymentById(@PathVariable int id) {
+        // Retrieves payment by ID and returns it as a PaymentResponseDto
         Payment payment = paymentService.getPaymentById(id);
         return new PaymentResponseDto(
                 payment.getId(),
@@ -61,10 +67,12 @@ public class PaymentRestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PaymentResponseDto createPayment(@RequestBody PaymentRequestDto paymentRequestDto) {
+        // Calls service to create a new payment based on request data
         Payment payment = paymentService.createPayment(
                 paymentRequestDto.getPaidDate(),
                 paymentRequestDto.getTotal(),
                 paymentRequestDto.getDetails());
+        // Returns the created payment as a PaymentResponseDto
         return new PaymentResponseDto(
                 payment.getId(),
                 payment.getPaidDate(),
@@ -82,11 +90,13 @@ public class PaymentRestController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PaymentResponseDto updatePayment(@PathVariable int id, @RequestBody PaymentRequestDto paymentRequestDto) {
+        // Calls service to update payment by ID with new details provided in request
         Payment updatedPayment = paymentService.updatePayment(
                 id,
                 paymentRequestDto.getPaidDate(),
                 paymentRequestDto.getTotal(),
                 paymentRequestDto.getDetails());
+        // Returns the updated payment as a PaymentResponseDto
         return new PaymentResponseDto(
                 updatedPayment.getId(),
                 updatedPayment.getPaidDate(),
@@ -102,6 +112,8 @@ public class PaymentRestController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePayment(@PathVariable int id) {
+        // Calls service to delete the payment with the specified ID
         paymentService.deletePayment(id);
     }
 }
+
