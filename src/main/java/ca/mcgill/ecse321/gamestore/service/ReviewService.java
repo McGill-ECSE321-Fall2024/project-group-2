@@ -50,7 +50,7 @@ public class ReviewService {
         }
 
         // Fetch associated Customer (reviewWriter)
-        Customer reviewWriter = findCustomerByEmail(dto.getReviewWriterEmail());
+        Customer reviewWriter = customerRepository.findCustomerByEmail(dto.getReviewWriterEmail());
         if (reviewWriter == null) {
             throw new IllegalArgumentException("Customer not found with email: " + dto.getReviewWriterEmail());
         }
@@ -77,31 +77,8 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
+
     @Transactional
-    public Review updateReview(Integer reviewId, ReviewRequestDto dto) {
-        // Validate review exists
-        Review review = reviewRepository.findReviewById(reviewId);
-        if (review == null) {
-            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
-        }
-        
-        // Validate inputs
-        if (dto.getRating() == null) {
-            throw new IllegalArgumentException("Rating cannot be null.");
-        }
-        if (dto.getRating() < 1 || dto.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5.");
-        }
-
-        // Update review fields
-        review.setRating(dto.getRating());
-        review.setComments(dto.getComments());
-
-        // Save and return updated review
-        return reviewRepository.save(review);
-    }
-
-    @Transactional(readOnly = true)
     public Review getReviewById(Integer reviewId) {
         Review review = reviewRepository.findReviewById(reviewId);
         if (review == null) {
@@ -110,7 +87,7 @@ public class ReviewService {
         return review;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getAllReviews() {
         Iterable<Review> iterable = reviewRepository.findAll();
         List<Review> reviews = new ArrayList<>();
@@ -120,7 +97,7 @@ public class ReviewService {
         return reviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByProduct(Integer productId) {
         // Fetch associated Product
         Product product = productRepository.findProductById(productId);
@@ -139,10 +116,10 @@ public class ReviewService {
         return productReviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByCustomer(String customerEmail) {
         // Fetch associated Customer
-        Customer customer = findCustomerByEmail(customerEmail);
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found with email: " + customerEmail);
         }
@@ -157,11 +134,12 @@ public class ReviewService {
         }
         return customerReviews;
     }
-
+    
+    // reviews can only be deleted by a manager
     @Transactional
     public void deleteReview(Integer reviewId, String managerEmail) {
         // Verify that the manager exists
-        Owner manager = findOwnerByEmail(managerEmail);
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
         if (manager == null) {
             throw new IllegalArgumentException("Only the manager can delete reviews.");
         }
@@ -175,25 +153,4 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
-    // Helper method to find Customer by email
-    private Customer findCustomerByEmail(String email) {
-        Iterable<Customer> customers = customerRepository.findAll();
-        for (Customer customer : customers) {
-            if (customer.getEmail().equals(email)) {
-                return customer;
-            }
-        }
-        return null;
-    }
-
-    // Helper method to find Owner by email
-    private Owner findOwnerByEmail(String email) {
-        Iterable<Owner> owners = ownerRepository.findAll();
-        for (Owner owner : owners) {
-            if (owner.getEmail().equals(email)) {
-                return owner;
-            }
-        }
-        return null;
-    }
 }
