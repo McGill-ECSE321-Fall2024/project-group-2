@@ -1,30 +1,46 @@
 package ca.mcgill.ecse321.gamestore.service;
 
-import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ca.mcgill.ecse321.gamestore.model.Employee;
 import ca.mcgill.ecse321.gamestore.repository.*;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
 public class EmployeeService {
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private CustomerRepository customerRepository;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private PersonRepository personRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    private EmployeeRepository employeeRepository;
     @Autowired
     private OwnerRepository ownerRepository;
+
+    @Transactional
+    public Employee getEmployee(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The email cannot be empty!");
+        }
+
+        Employee employee = employeeRepository.findEmployeeByEmail(email.trim());
+        if (employee == null) {
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Employee Not Found");
+        }
+
+        return employee;
+    }
+
 
     @Transactional
     public List<Employee> getAllEmployees() {
@@ -32,75 +48,75 @@ public class EmployeeService {
     }
 
     @Transactional
-    public Employee getEmployeeByEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Email cannot be null or empty.");
-        }
-        Employee employee = employeeRepository.findEmployeeByEmail(email.trim());
-        if (employee == null) {
-            throw new GameStoreException(HttpStatus.NOT_FOUND, "No employee found with email: " + email);
-        }
-        return employee;
-    }
-
-    @Transactional
     public Employee createEmployee(String userID, String name, String email, String password) {
-        validateEmployeeInputs(name, email, password);
+        if (userID == null || userID.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The user ID cannot be empty!");
+        }
+        if (name == null || name.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The name cannot be empty!");
+        }
+        if (email == null || email.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The email cannot be empty!");
+        }
+        if (password == null || password.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The password cannot be empty!");
+        }
 
+        // Check if the email is already associated with another user
         if (personRepository.findPersonByEmail(email.trim()) != null
-                || employeeRepository.findEmployeeByEmail(email.trim()) != null
                 || customerRepository.findCustomerByEmail(email.trim()) != null
+                || employeeRepository.findEmployeeByEmail(email.trim()) != null
                 || ownerRepository.findOwnerByEmail(email.trim()) != null
                 || accountRepository.findAccountByEmail(email.trim()) != null) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST,
-                    "An employee or user with this email already exists.");
+            throw new GameStoreException(HttpStatus.CONFLICT, "User with that email already exists!");
+        }
+
+        // Validate email format
+        Pattern pattern = Pattern.compile("^(\\S+)@(\\S+)\\.((com)|(ca))$");
+        Matcher matcher = pattern.matcher(email.trim());
+        if (!matcher.matches()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The email is invalid!");
         }
 
         Employee employee = new Employee(userID, name, email.trim(), password);
-        return employeeRepository.save(employee);
+        employeeRepository.save(employee);
+        return employee;
     }
 
-    @Transactional
-    public Employee updateEmployee(String email, String userID, String newName, String newPassword) {
-        validateEmployeeInputs(newName, email, newPassword);
-        Employee employee = getEmployeeByEmail(email.trim());
 
-        employee.setUserID(userID.trim());
-        employee.setName(newName.trim());
+    @Transactional
+    public Employee updateEmployeePassword(String email, String oldPassword, String newPassword) {
+        Employee employee = employeeRepository.findEmployeeByEmail(email.trim());
+
+        if (employee == null) {
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Employee not found");
+        }
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The new password cannot be empty!");
+        }
+
+        if (!employee.getPassword().equals(oldPassword)) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Incorrect old password!");
+        }
+
         employee.setPassword(newPassword);
         return employeeRepository.save(employee);
     }
 
     @Transactional
-    public void deleteEmployee(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Email cannot be null or empty.");
+    public boolean deleteEmployee(String email) {
+        Employee employee = employeeRepository.findEmployeeByEmail(email.trim());
+
+        if (employee == null) {
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Employee with that email does not exist!");
         }
-        Employee employee = getEmployeeByEmail(email.trim());
+
         employeeRepository.delete(employee);
+        return true;
     }
-
-    private void validateEmployeeInputs(String name, String email, String password) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Employee name cannot be empty.");
-        }
-        if (email == null || email.trim().isEmpty()) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Email cannot be null or empty.");
-        }
-
-        // Validate email format if not null or empty
-        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-        Matcher matcher = emailPattern.matcher(email.trim());
-        if (!matcher.matches()) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Invalid email format.");
-        }
-
-        if (password == null || password.trim().isEmpty() || password.length() < 8) {
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters long.");
-        }
-    }
-
 }
+
+
 
 
 
