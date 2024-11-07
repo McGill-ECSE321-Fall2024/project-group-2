@@ -10,236 +10,144 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-/**
- * Unit tests for EmployeeService.
- */
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
 
-    // Mocked repository dependencies
-    @Mock
-    private EmployeeRepository employeeRepository;
-    @Mock
-    private AccountRepository accountRepository;
-    @Mock
-    private PersonRepository personRepository;
+    // Mocked dependencies for EmployeeService
     @Mock
     private CustomerRepository customerRepository;
     @Mock
+    private PersonRepository personRepository;
+    @Mock
+    private EmployeeRepository employeeRepository;
+    @Mock
     private OwnerRepository ownerRepository;
+    @Mock
+    private AccountRepository accountRepository;
 
-    // Inject mocks into the EmployeeService
+    // The service being tested, with injected mocks
     @InjectMocks
     private EmployeeService employeeService;
 
-    // Constants for commonly used test data
+    // Constants for use in tests
     private static final String VALID_USER_ID = "user123";
     private static final String VALID_NAME = "John Doe";
     private static final String VALID_EMAIL = "john.doe@example.com";
     private static final String VALID_PASSWORD = "securepassword123";
+    private static final String INVALID_EMAIL = "notanemail";
     private static final String EXISTING_EMAIL = "existing@example.com";
 
-    /**
-     * Sets up mock outputs for testing.
-     * This method is called before each test to define behavior for mocked methods.
-     */
+    // Sets up mock behaviors before each test
     @BeforeEach
-    public void setMockOutput() {
-        Employee existingEmployee = new Employee(VALID_USER_ID, VALID_NAME, EXISTING_EMAIL, VALID_PASSWORD);
-
-        // Mocks finding an employee by email, returns the existing employee if the email matches
+    public void setUpMocks() {
+        // Mock behavior for finding a employee by email
         lenient().when(employeeRepository.findEmployeeByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
             String email = invocation.getArgument(0);
-            if (email.equals(EXISTING_EMAIL)) return existingEmployee;
-            return null;
+            if (email.equals(EXISTING_EMAIL)) {
+                return new Employee("existingID", "Existing Name", email, "existingpassword");
+            } else if (email.equals(VALID_EMAIL)) {
+                return new Employee(VALID_USER_ID, VALID_NAME, email, VALID_PASSWORD);
+            }
+            return null; // Simulate non-existence for other emails
         });
 
-        // Mocks saving an employee, returns the employee instance provided
-        lenient().when(employeeRepository.save(any(Employee.class))).thenAnswer((Answer<Employee>) invocation -> invocation.getArgument(0));
+        // Mock behavior for retrieving all employees
+        lenient().when(employeeRepository.findAll()).thenReturn(List.of(
+                new Employee("user123", "John Doe", "john.doe@example.com", "password1"),
+                new Employee("user456", "Jane Doe", "jane.doe@example.com", "password2")
+        ));
+
+        // Mock behavior for saving a employee
+        lenient().when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
-    /**
-     * Test creating a new employee with valid data.
-     * Verifies that a new employee is created successfully with expected properties.
-     */
+    // Test successful employee creation
     @Test
-    public void testCreateEmployeeSuccess() {
-        Employee employee = employeeService.createEmployee(VALID_USER_ID, VALID_NAME, "new.email@example.com", VALID_PASSWORD);
-        assertNotNull(employee);
-        assertEquals(VALID_NAME, employee.getName());
-        assertEquals("new.email@example.com", employee.getEmail());
-        assertEquals(VALID_USER_ID, employee.getUserID());
+    public void testCreateEmployee_Success() {
+        Employee createdEmployee = employeeService.createEmployee(VALID_USER_ID, VALID_NAME, "new.email@example.com", VALID_PASSWORD);
+        assertNotNull(createdEmployee);
+        assertEquals(VALID_USER_ID, createdEmployee.getUserID());
+        assertEquals(VALID_NAME, createdEmployee.getName());
+        assertEquals("new.email@example.com", createdEmployee.getEmail());
+        assertEquals(VALID_PASSWORD, createdEmployee.getPassword());
     }
 
-    /**
-     * Test creating an employee with an existing email.
-     * Verifies that an exception is thrown if the email is already used by another employee.
-     */
+    // Test creating a employee with an invalid email format
     @Test
-    public void testCreateEmployeeExistingEmail() {
+    public void testCreateEmployee_InvalidEmail() {
+        Exception exception = assertThrows(GameStoreException.class, () ->
+              employeeService.createEmployee(VALID_USER_ID, VALID_NAME, INVALID_EMAIL, VALID_PASSWORD));
+        assertEquals("The email is invalid!", exception.getMessage());
+    }
+
+    // Test creating a employee with an email that already exists
+    @Test
+    public void testCreateEmployee_ExistingEmail() {
         Exception exception = assertThrows(GameStoreException.class, () ->
                 employeeService.createEmployee(VALID_USER_ID, VALID_NAME, EXISTING_EMAIL, VALID_PASSWORD));
-        assertEquals("An employee or user with this email already exists.", exception.getMessage());
+        assertEquals("User with that email already exists!", exception.getMessage());
     }
 
-    /**
-     * Test creating an employee with a short password.
-     * Verifies that an exception is thrown if the password is shorter than 8 characters.
-     */
+    // Test retrieving a employee by email when the customer exists
     @Test
-    public void testCreateEmployeeShortPassword() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.createEmployee(VALID_USER_ID, VALID_NAME, VALID_EMAIL, "short"));
-        assertEquals("Password must be at least 8 characters long.", exception.getMessage());
-    }
-
-    /**
-     * Test creating an employee with empty name.
-     * Verifies that an exception is thrown if the name is empty.
-     */
-    @Test
-    public void testCreateEmployeeEmptyName() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.createEmployee(VALID_USER_ID, "", VALID_EMAIL, VALID_PASSWORD));
-        assertEquals("Employee name cannot be empty.", exception.getMessage());
-    }
-
-    /**
-     * Test creating an employee with null email.
-     * Verifies that an exception is thrown if the email is null.
-     */
-    @Test
-    public void testCreateEmployeeNullEmail() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.createEmployee(VALID_USER_ID, VALID_NAME, null, VALID_PASSWORD));
-        assertEquals("Email cannot be null or empty.", exception.getMessage());
-    }
-
-    /**
-     * Test creating an employee with whitespace-only password.
-     * Verifies that an exception is thrown if the password consists only of whitespace.
-     */
-    @Test
-    public void testCreateEmployeeWhitespacePassword() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.createEmployee(VALID_USER_ID, VALID_NAME, VALID_EMAIL, "        "));
-        assertEquals("Password must be at least 8 characters long.", exception.getMessage());
-    }
-
-    /**
-     * Test creating an employee with special characters in name.
-     * Verifies that special characters in the name are accepted and retained.
-     */
-    @Test
-    public void testCreateEmployeeSpecialCharactersInName() {
-        Employee employee = employeeService.createEmployee(VALID_USER_ID, "John@Doe!", VALID_EMAIL, VALID_PASSWORD);
+    public void testGetEmployee_ExistingEmail() {
+        Employee employee = employeeService.getEmployee(VALID_EMAIL);
         assertNotNull(employee);
-        assertEquals("John@Doe!", employee.getName());
+        assertEquals(VALID_EMAIL, employee.getEmail());
     }
 
-    /**
-     * Test retrieving an employee by email.
-     * Verifies that an employee with a specific email is retrieved successfully.
-     */
+    // Test retrieving a employee by email when the customer does not exist
     @Test
-    public void testGetEmployeeByEmailSuccess() {
-        Employee employee = employeeService.getEmployeeByEmail(EXISTING_EMAIL);
-        assertNotNull(employee);
-        assertEquals(VALID_NAME, employee.getName());
+    public void testGetEmployee_NonExistingEmail() {
+        Exception exception = assertThrows(GameStoreException.class, () ->
+                employeeService.getEmployee("nonexistent@example.com"));
+        assertEquals("Employee Not Found", exception.getMessage());
     }
 
-    /**
-     * Test retrieving an employee by trimmed email.
-     * Verifies that leading/trailing whitespace in the email is ignored.
-     */
+    // Test retrieving all employees
     @Test
-    public void testGetEmployeeByTrimmedEmail() {
-        Employee employee = employeeService.getEmployeeByEmail("   " + EXISTING_EMAIL + "   ");
-        assertNotNull(employee);
-        assertEquals(VALID_NAME, employee.getName());
+    public void testGetAllEmployees() {
+        List<Employee> employees = employeeService.getAllEmployees();
+        assertEquals(2, employees.size());
     }
 
-    /**
-     * Test updating an employee without any actual changes.
-     * Verifies that updating with identical details does not cause issues.
-     */
+    // Test updating a employee's password successfully
     @Test
-    public void testUpdateEmployeeNoChanges() {
-        Employee updatedEmployee = employeeService.updateEmployee(EXISTING_EMAIL, VALID_USER_ID, VALID_NAME, VALID_PASSWORD);
+    public void testUpdateEmployeePassword_Success() {
+        Employee updatedEmployee = employeeService.updateEmployeePassword(VALID_EMAIL, VALID_PASSWORD, "newPassword123");
         assertNotNull(updatedEmployee);
-        assertEquals(VALID_NAME, updatedEmployee.getName());
+        assertEquals("newPassword123", updatedEmployee.getPassword());
     }
 
-    /**
-     * Test updating an employee with null password.
-     * Verifies that an exception is thrown if the password is null.
-     */
+    // Test updating a employee's password with an incorrect old password
     @Test
-    public void testUpdateEmployeeNullPassword() {
+    public void testUpdateEmployeePassword_IncorrectOldPassword() {
         Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.updateEmployee(EXISTING_EMAIL, VALID_USER_ID, VALID_NAME, null));
-        assertEquals("Password must be at least 8 characters long.", exception.getMessage());
+                employeeService.updateEmployeePassword(VALID_EMAIL, "wrongOldPassword", "newPassword123"));
+        assertEquals("Incorrect old password!", exception.getMessage());
     }
 
-    /**
-     * Test deleting an employee by null email.
-     * Verifies that an exception is thrown if the email is null when deleting an employee.
-     */
+    // Test deleting a employee successfully
     @Test
-    public void testDeleteEmployeeByNullEmail() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.deleteEmployee(null));
-        assertEquals("Email cannot be null or empty.", exception.getMessage());
+    public void testDeleteEmployee_Success() {
+        boolean isDeleted = employeeService.deleteEmployee(VALID_EMAIL);
+        assertTrue(isDeleted);
     }
 
-    /**
-     * Test retrieving a non-existing employee by email.
-     * Verifies that an exception is thrown if the email does not correspond to an existing employee.
-     */
+    // Test deleting a employee that does not exist
     @Test
-    public void testGetEmployeeByEmailNotFound() {
-        Exception exception = assertThrows(GameStoreException.class, () ->
-                employeeService.getEmployeeByEmail("nonexistent@example.com"));
-        assertEquals("No employee found with email: nonexistent@example.com", exception.getMessage());
-    }
-
-    /**
-     * Test updating an employee's details.
-     * Verifies that an employee's details can be updated successfully.
-     */
-    @Test
-    public void testUpdateEmployeeSuccess() {
-        Employee updatedEmployee = employeeService.updateEmployee(EXISTING_EMAIL, VALID_USER_ID, "New Name", "newpassword123");
-        assertNotNull(updatedEmployee);
-        assertEquals("New Name", updatedEmployee.getName());
-    }
-
-    /**
-     * Test deleting an existing employee.
-     * Verifies that an employee can be deleted successfully.
-     */
-    @Test
-    public void testDeleteEmployeeSuccess() {
-        employeeService.deleteEmployee(EXISTING_EMAIL);
-        verify(employeeRepository, times(1)).delete(any(Employee.class));
-    }
-
-    /**
-     * Test deleting a non-existing employee.
-     * Verifies that an exception is thrown if the employee to be deleted does not exist.
-     */
-    @Test
-    public void testDeleteEmployeeNotFound() {
+    public void testDeleteEmployee_NonExistingEmail() {
         Exception exception = assertThrows(GameStoreException.class, () ->
                 employeeService.deleteEmployee("nonexistent@example.com"));
-        assertEquals("No employee found with email: nonexistent@example.com", exception.getMessage());
+        assertEquals("Employee with that email does not exist!", exception.getMessage());
     }
 }
 

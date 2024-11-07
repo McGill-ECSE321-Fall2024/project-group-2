@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.gamestore.controller;
 import ca.mcgill.ecse321.gamestore.dto.*;
 import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Employee;
+import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
  * REST Controller for Employee-related operations.
  */
 @RestController
-@RequestMapping("/api/employees")
 public class EmployeeRestController {
 
     @Autowired
@@ -42,9 +42,9 @@ public class EmployeeRestController {
      * @param email Employee's email.
      * @return EmployeeResponseDto.
      */
-    @GetMapping("/{email}")
+    @GetMapping("/employee/{email}")
     public EmployeeResponseDto getEmployeeByEmail(@PathVariable String email) {
-        Employee employee = employeeService.getEmployeeByEmail(email);
+        Employee employee = employeeService.getEmployee(email);
         return new EmployeeResponseDto(employee);
     }
 
@@ -54,7 +54,7 @@ public class EmployeeRestController {
      * @param employeeRequestDto EmployeeRequestDto containing the employee details.
      * @return EmployeeResponseDto of the created employee.
      */
-    @PostMapping
+    @PostMapping("/employee")
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponseDto createEmployee(@RequestBody EmployeeRequestDto employeeRequestDto) {
         Employee employee = employeeService.createEmployee(
@@ -66,24 +66,17 @@ public class EmployeeRestController {
         return new EmployeeResponseDto(employee);
     }
 
-    /**
-     * Update an existing employee's details.
-     *
-     * @param email              Employee's email.
-     * @param employeeRequestDto EmployeeRequestDto with new details.
-     * @return EmployeeResponseDto of the updated employee.
-     */
-    @PutMapping("/{email}")
-    public EmployeeResponseDto updateEmployee(
+
+    @PutMapping(value= {"/employee/{email}/","/owner/{email}"})
+    public EmployeeResponseDto updateEmployeePassword(
             @PathVariable String email,
-            @RequestBody EmployeeRequestDto employeeRequestDto) {
-        Employee employee = employeeService.updateEmployee(
-                email,
-                employeeRequestDto.getUserID(),
-                employeeRequestDto.getName(),
-                employeeRequestDto.getPassword()
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword) {
+        // Updates customer password and returns the updated customer as a DTO
+        Employee updatedEmployee = employeeService.updateEmployeePassword(
+                email, oldPassword, newPassword
         );
-        return new EmployeeResponseDto(employee);
+        return new EmployeeResponseDto(updatedEmployee);
     }
 
     /**
@@ -91,13 +84,12 @@ public class EmployeeRestController {
      *
      * @param email Employee's email.
      */
-    @DeleteMapping("/{email}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEmployee(@PathVariable String email) {
+    @DeleteMapping("/employee/{email}")
+    public String deleteEmployee(@PathVariable String email) {
         employeeService.deleteEmployee(email);
+        return "Employee with email " + email + " deleted successfully.";
+
     }
-
-
 
 }
 
