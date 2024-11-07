@@ -54,7 +54,7 @@ public class ReviewServiceTest {
         product.setId(productId);
         
         // Mock repository behaviors for successful path
-        when(customerRepository.findAll()).thenReturn(List.of(customer));
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(customer);
         when(productRepository.findProductById(productId)).thenReturn(product);
         when(reviewRepository.save(any(Review.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -75,6 +75,9 @@ public class ReviewServiceTest {
         assertEquals(email, createdReview.getReviewWriter().getEmail());
         assertEquals(productId, createdReview.getProduct().getId());
         verify(reviewRepository, times(1)).save(any(Review.class));
+        verify(customerRepository, times(1)).findCustomerByEmail(email);
+        verify(productRepository, times(1)).findProductById(productId);
+
     }
 
     // should throw error when email is missing
@@ -115,13 +118,13 @@ public class ReviewServiceTest {
         dto.setProductId(1);
         dto.setRating(4);
         
-        when(customerRepository.findAll()).thenReturn(List.of());
+        when(customerRepository.findCustomerByEmail("nonexistent@email.com")).thenReturn(null);
 
         // Act & Assert: Verify customer not found exception
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
             () -> reviewService.createReview(dto));
         assertEquals("Customer not found with email: nonexistent@email.com", e.getMessage());
-        verify(customerRepository, times(1)).findAll();
+        verify(customerRepository, times(1)).findCustomerByEmail("nonexistent@email.com");
     }
 
 
@@ -228,7 +231,7 @@ public class ReviewServiceTest {
         review.setComments(reviewComment);
         review.setRating(4);
         
-        when(customerRepository.findAll()).thenReturn(List.of(customer));
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(customer);
         when(reviewRepository.findAll()).thenReturn(List.of(review));
 
         // Act: Retrieve customer reviews
@@ -239,7 +242,7 @@ public class ReviewServiceTest {
         assertEquals(1, reviews.size());
         assertEquals(email, reviews.get(0).getReviewWriter().getEmail());
         assertEquals(reviewComment, reviews.get(0).getComments());
-        verify(customerRepository, times(1)).findAll();
+        verify(customerRepository, times(1)).findCustomerByEmail(email);
         verify(reviewRepository, times(1)).findAll();
     }
 
@@ -254,7 +257,7 @@ public class ReviewServiceTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
             () -> reviewService.getReviewsByCustomer(email));
         assertEquals("Customer not found with email: " + email, e.getMessage());
-        verify(customerRepository, times(1)).findAll();
+        verify(customerRepository, times(1)).findCustomerByEmail(email);;
     }
 
     // succesful deletion by manager
@@ -270,14 +273,14 @@ public class ReviewServiceTest {
         
         Owner manager = new Owner("manager1", "Manager", managerEmail, "password");
         
-        when(ownerRepository.findAll()).thenReturn(List.of(manager));
+        when(ownerRepository.findOwnerByEmail(managerEmail)).thenReturn(manager);
         when(reviewRepository.findReviewById(reviewId)).thenReturn(review);
 
         // Act: Attempt deletion
         reviewService.deleteReview(reviewId, managerEmail);
 
-        // Assert: Verify deletion occurred
-        verify(ownerRepository, times(1)).findAll();
+        // Assert
+        verify(ownerRepository, times(1)).findOwnerByEmail(managerEmail);
         verify(reviewRepository, times(1)).findReviewById(reviewId);
         verify(reviewRepository, times(1)).deleteById(reviewId);
     }
@@ -290,14 +293,14 @@ public class ReviewServiceTest {
         String managerEmail = "manager@email.com";
         Owner manager = new Owner("manager1", "Manager", managerEmail, "password");
         
-        when(ownerRepository.findAll()).thenReturn(List.of(manager));
+        when(ownerRepository.findOwnerByEmail(managerEmail)).thenReturn(manager);
         when(reviewRepository.findReviewById(reviewId)).thenReturn(null);
 
         // Act & Assert: Verify review not found exception
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
             () -> reviewService.deleteReview(reviewId, managerEmail));
         assertEquals("Review not found with ID: " + reviewId, e.getMessage());
-        verify(ownerRepository, times(1)).findAll();
+        verify(ownerRepository, times(1)).findOwnerByEmail(managerEmail);
         verify(reviewRepository, times(1)).findReviewById(reviewId);
     }
 
@@ -307,12 +310,12 @@ public class ReviewServiceTest {
         // Arrange: Setup deletion attempt by non-manager
         Integer reviewId = 1;
         String email = "notmanager@email.com";
-        when(ownerRepository.findAll()).thenReturn(List.of());
+        when(ownerRepository.findOwnerByEmail(email)).thenReturn(null);
 
         // Act & Assert: Verify unauthorized exception
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
             () -> reviewService.deleteReview(reviewId, email));
         assertEquals("Only the manager can delete reviews.", e.getMessage());
-        verify(ownerRepository, times(1)).findAll();
+        verify(ownerRepository, times(1)).findOwnerByEmail(email);
     }
 }

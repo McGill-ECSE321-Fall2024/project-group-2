@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.gamestore.dto;
 
 public class ChangeRequestRequestDto {
     private String requestCreatorEmail; // Email of the Employee (requestCreator)
-    private String status; // Enum as String: "Approved", "Declined", "InProgress"
     
     // Default constructor
     public ChangeRequestRequestDto() {
@@ -17,11 +16,5 @@ public class ChangeRequestRequestDto {
         this.requestCreatorEmail = requestCreatorEmail;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    
 }

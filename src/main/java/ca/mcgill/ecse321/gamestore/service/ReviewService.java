@@ -50,7 +50,7 @@ public class ReviewService {
         }
 
         // Fetch associated Customer (reviewWriter)
-        Customer reviewWriter = findCustomerByEmail(dto.getReviewWriterEmail());
+        Customer reviewWriter = customerRepository.findCustomerByEmail(dto.getReviewWriterEmail());
         if (reviewWriter == null) {
             throw new IllegalArgumentException("Customer not found with email: " + dto.getReviewWriterEmail());
         }
@@ -119,7 +119,7 @@ public class ReviewService {
     @Transactional
     public List<Review> getReviewsByCustomer(String customerEmail) {
         // Fetch associated Customer
-        Customer customer = findCustomerByEmail(customerEmail);
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
         if (customer == null) {
             throw new IllegalArgumentException("Customer not found with email: " + customerEmail);
         }
@@ -134,11 +134,12 @@ public class ReviewService {
         }
         return customerReviews;
     }
-
+    
+    // reviews can only be deleted by a manager
     @Transactional
     public void deleteReview(Integer reviewId, String managerEmail) {
         // Verify that the manager exists
-        Owner manager = findOwnerByEmail(managerEmail);
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
         if (manager == null) {
             throw new IllegalArgumentException("Only the manager can delete reviews.");
         }
@@ -152,25 +153,4 @@ public class ReviewService {
         reviewRepository.deleteById(reviewId);
     }
 
-    // Helper method to find Customer by email
-    private Customer findCustomerByEmail(String email) {
-        Iterable<Customer> customers = customerRepository.findAll();
-        for (Customer customer : customers) {
-            if (customer.getEmail().equals(email)) {
-                return customer;
-            }
-        }
-        return null;
-    }
-
-    // Helper method to find Owner by email
-    private Owner findOwnerByEmail(String email) {
-        Iterable<Owner> owners = ownerRepository.findAll();
-        for (Owner owner : owners) {
-            if (owner.getEmail().equals(email)) {
-                return owner;
-            }
-        }
-        return null;
-    }
 }

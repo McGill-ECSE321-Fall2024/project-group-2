@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import ca.mcgill.ecse321.gamestore.dto.ChangeRequestRequestDto;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
@@ -30,15 +29,9 @@ public class ChangeRequestService {
     @Autowired
     private OwnerRepository ownerRepository;
 
-    /**
-     * Creates a new ChangeRequest.
-     * 
-     * @param dto Data Transfer Object containing request details.
-     * @return The created ChangeRequest.
-     */
+    // creates chnage request w/ status set to in progress
     @Transactional
     public ChangeRequest createChangeRequest(ChangeRequestRequestDto dto) {
-        // Validate inputs
         if (dto.getRequestCreatorEmail() == null || dto.getRequestCreatorEmail().isEmpty()) {
             throw new IllegalArgumentException("Request creator email cannot be empty.");
         }
@@ -49,75 +42,66 @@ public class ChangeRequestService {
             throw new IllegalArgumentException("Employee not found with email: " + dto.getRequestCreatorEmail());
         }
 
-        // Fetch the single Owner (requestManager)
-        Owner manager = getSingleOwner();
+        // Fetch the owner (requestManager) using repository method
+        Owner manager = ownerRepository.findOwnerByEmail("owner@email.com"); 
         if (manager == null) {
             throw new IllegalStateException("No owner found in the system.");
         }
 
         // Create new ChangeRequest
         ChangeRequest changeRequest = new ChangeRequest();
-        
-        // Set current time
-        Date sqlDate = new Date(System.currentTimeMillis());
-        changeRequest.setTimeRequest(sqlDate);
-
-        // Set status from dto if provided, otherwise default to InProgress
-        if (dto.getStatus() != null && !dto.getStatus().isEmpty()) {
-            try {
-                changeRequest.setStatus(RequestStatus.valueOf(dto.getStatus()));
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid status: " + dto.getStatus());
-            }
-        } else {
-            changeRequest.setStatus(RequestStatus.InProgress);
-        }
-
+        changeRequest.setTimeRequest(new Date(System.currentTimeMillis()));
+        changeRequest.setStatus(RequestStatus.InProgress); // All requests start as InProgress
         changeRequest.setRequestCreator(creator);
         changeRequest.setRequestManager(manager);
 
         return changeRequestRepository.save(changeRequest);
     }
 
-    /**
-     * Approves a ChangeRequest.
-     * 
-     * @param requestId ID of the request to approve.
-     * @return The updated ChangeRequest.
-     */
+    // approves chnage request
     @Transactional
-    public ChangeRequest approveChangeRequest(int requestId) {
+    public ChangeRequest approveChangeRequest(int requestId, String managerEmail) {
+        
+        // Verify manager
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
+        if (manager == null) {
+            throw new IllegalArgumentException("Only the manager can decline requests.");
+        }
+
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
             throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+        }
+        if (request.getStatus() != RequestStatus.InProgress) {
+            throw new IllegalArgumentException("Only InProgress requests can be approved.");
         }
         request.setStatus(RequestStatus.Approved);
         return changeRequestRepository.save(request);
     }
 
-    /**
-     * Declines a ChangeRequest.
-     * 
-     * @param requestId ID of the request to decline.
-     * @return The updated ChangeRequest.
-     */
+    // declines a chnage request, must be in progress
     @Transactional
-    public ChangeRequest declineChangeRequest(int requestId) {
+    public ChangeRequest declineChangeRequest(int requestId, String managerEmail) {
+
+        // Verify manager
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
+        if (manager == null) {
+            throw new IllegalArgumentException("Only the manager can decline requests.");
+        }
+
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
             throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+        }
+        if (request.getStatus() != RequestStatus.InProgress) {
+            throw new IllegalArgumentException("Only InProgress requests can be declined.");
         }
         request.setStatus(RequestStatus.Declined);
         return changeRequestRepository.save(request);
     }
 
-    /**
-     * Retrieves a ChangeRequest by its ID.
-     * 
-     * @param requestId The ID of the request.
-     * @return The ChangeRequest.
-     */
-    @Transactional(readOnly = true)
+    // change request by id
+    @Transactional
     public ChangeRequest getChangeRequestById(int requestId) {
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
@@ -126,12 +110,8 @@ public class ChangeRequestService {
         return request;
     }
 
-    /**
-     * Retrieves all ChangeRequests.
-     * 
-     * @return List of ChangeRequests.
-     */
-    @Transactional(readOnly = true)
+    // gets all change requests
+    @Transactional
     public List<ChangeRequest> getAllChangeRequests() {
         Iterable<ChangeRequest> iterable = changeRequestRepository.findAll();
         List<ChangeRequest> list = new ArrayList<>();
@@ -139,18 +119,5 @@ public class ChangeRequestService {
             list.add(changeRequest);
         }
         return list;
-    }
-
-    /**
-     * Helper method to find the Owner.
-     * 
-     * @return The Owner in the system.
-     */
-    private Owner getSingleOwner() {
-        Iterable<Owner> owners = ownerRepository.findAll();
-        for (Owner owner : owners) {
-            return owner;  // Returns the first owner found
-        }
-        return null;  // Returns null if no owners found
     }
 }

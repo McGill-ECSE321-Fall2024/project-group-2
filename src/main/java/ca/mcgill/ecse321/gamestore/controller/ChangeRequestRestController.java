@@ -19,32 +19,21 @@ public class ChangeRequestRestController {
     @Autowired
     private ChangeRequestService changeRequestService;
 
-    /**
-     * Creates a new ChangeRequest.
-     * @param dto ChangeRequest data from the request body.
-     * @return The created ChangeRequest as a DTO.
-     */
+    // creates change request using request dto, returns repsonse dto
     @PostMapping
     public ChangeRequestResponseDto createChangeRequest(@RequestBody ChangeRequestRequestDto dto) {
         ChangeRequest changeRequest = changeRequestService.createChangeRequest(dto);
         return new ChangeRequestResponseDto(changeRequest);
     }
 
-    /**
-     * Retrieves a ChangeRequest by its ID.
-     * @param id The ID of the change request.
-     * @return The ChangeRequest as a DTO.
-     */
+    // gets chnage request by id, returns response dto
     @GetMapping("/{id}")
     public ChangeRequestResponseDto getChangeRequestById(@PathVariable Integer id) {
         ChangeRequest changeRequest = changeRequestService.getChangeRequestById(id);
         return new ChangeRequestResponseDto(changeRequest);
     }
 
-    /**
-     * Retrieves all ChangeRequests.
-     * @return A list of ChangeRequest DTOs.
-     */
+    // gets all change requests, returns list dto
     @GetMapping
     public ChangeRequestListDto getAllChangeRequests() {
         List<ChangeRequest> changeRequests = changeRequestService.getAllChangeRequests();
@@ -55,25 +44,17 @@ public class ChangeRequestRestController {
         return new ChangeRequestListDto(changeRequestDtos);
     }
 
-    /**
-     * Approves a ChangeRequest.
-     * @param id The ID of the change request to approve.
-     * @return The updated ChangeRequest as a DTO.
-     */
+    // approve change request, return response dto
     @PutMapping("/{id}/approve")
-    public ChangeRequestResponseDto approveChangeRequest(@PathVariable Integer id) {
-        ChangeRequest changeRequest = changeRequestService.approveChangeRequest(id);
+    public ChangeRequestResponseDto approveChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
+        ChangeRequest changeRequest = changeRequestService.approveChangeRequest(id, managerEmail);
         return new ChangeRequestResponseDto(changeRequest);
     }
 
-    /**
-     * Declines a ChangeRequest.
-     * @param id The ID of the change request to decline.
-     * @return The updated ChangeRequest as a DTO.
-     */
+    // decline change request, return response dto
     @PutMapping("/{id}/decline")
-    public ChangeRequestResponseDto declineChangeRequest(@PathVariable Integer id) {
-        ChangeRequest changeRequest = changeRequestService.declineChangeRequest(id);
+    public ChangeRequestResponseDto declineChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
+        ChangeRequest changeRequest = changeRequestService.declineChangeRequest(id, managerEmail);
         return new ChangeRequestResponseDto(changeRequest);
     }
 }

@@ -63,6 +63,7 @@ class ReviewRepositoryApplicationTests {
         orderRepository.deleteAll();
         paymentRepository.deleteAll();
         ownerRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
 

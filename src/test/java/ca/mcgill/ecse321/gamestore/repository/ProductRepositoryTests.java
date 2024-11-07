@@ -55,6 +55,7 @@ class ProductRepositoryApplicationTests {
         shoppingCartRepository.deleteAll();
         orderRepository.deleteAll();
         paymentRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
 
     /**
