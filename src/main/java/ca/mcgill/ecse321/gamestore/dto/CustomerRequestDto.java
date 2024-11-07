@@ -11,7 +11,6 @@ public class CustomerRequestDto {
     private String email;
     private String password;
 
-    // Default constructor for serialization/deserialization
     public CustomerRequestDto() {
     }
 

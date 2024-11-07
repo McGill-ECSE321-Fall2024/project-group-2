@@ -12,7 +12,7 @@ public class CustomerResponseDto {
     private String name;
     private String email;
 
-    // Default constructor for serialization/deserialization
+
     public CustomerResponseDto() {
     }
 

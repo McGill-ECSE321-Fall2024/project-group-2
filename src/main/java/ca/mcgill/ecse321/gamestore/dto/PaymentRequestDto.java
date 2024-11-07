@@ -8,7 +8,6 @@ public class PaymentRequestDto {
     private double total;
     private String details;
 
-    // Default constructor for serialization/deserialization
     public PaymentRequestDto() {}
 
     // Parameterized constructor for creating a request
