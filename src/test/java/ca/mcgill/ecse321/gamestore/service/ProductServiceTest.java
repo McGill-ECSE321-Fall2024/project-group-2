@@ -268,7 +268,7 @@ public class ProductServiceTest {
         assertEquals(category2, updatedProduct.getCategory());
     }
 
-    // Test updating an existing product category with a product ID that does not exist
+    // Test updating a product category with a product ID that does not exist
     @Test
     public void testUpdateProductCategory_ProductIdNotFound() {
         when(productRepository.findProductById(anyInt())).thenReturn(null);
