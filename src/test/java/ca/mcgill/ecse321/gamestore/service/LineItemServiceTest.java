@@ -48,7 +48,6 @@ public class LineItemServiceTest {
         validLineItem.setQuantity(VALID_QUANTITY);
         validLineItem.setPrice(VALID_PRICE);
 
-        // Use lenient to avoid unnecessary stubbing errors
         lenient().when(lineItemRepository.findLineItemById(anyInt())).thenAnswer(invocation -> {
             int id = invocation.getArgument(0);
             return (id == VALID_LINE_ITEM_ID) ? validLineItem : null;
@@ -182,17 +181,16 @@ public class LineItemServiceTest {
         validLineItem.setCart(cart);
         when(lineItemRepository.findLineItemById(VALID_LINE_ITEM_ID)).thenReturn(validLineItem);
 
-        // Ensure that `lineItemRepository.save` returns the updated LineItem with cart set to null
         when(lineItemRepository.save(any(LineItem.class))).thenAnswer(invocation -> {
             LineItem updatedLineItem = invocation.getArgument(0);
-            updatedLineItem.setCart(null);  // Simulate setting cart to null
+            updatedLineItem.setCart(null);
             return updatedLineItem;
         });
 
         LineItem lineItemWithoutCart = lineItemService.removeFromCart(VALID_LINE_ITEM_ID);
 
         assertNotNull(lineItemWithoutCart);
-        assertNull(lineItemWithoutCart.getCart());  // Ensure the cart is removed
+        assertNull(lineItemWithoutCart.getCart());
         verify(lineItemRepository, times(1)).save(validLineItem);
     }
 
@@ -202,17 +200,16 @@ public class LineItemServiceTest {
         validLineItem.setWishlist(wishlist);
         when(lineItemRepository.findLineItemById(VALID_LINE_ITEM_ID)).thenReturn(validLineItem);
 
-        // Ensure that `lineItemRepository.save` returns the updated LineItem with wishlist set to null
         when(lineItemRepository.save(any(LineItem.class))).thenAnswer(invocation -> {
             LineItem updatedLineItem = invocation.getArgument(0);
-            updatedLineItem.setWishlist(null);  // Simulate setting wishlist to null
+            updatedLineItem.setWishlist(null);
             return updatedLineItem;
         });
 
         LineItem lineItemWithoutWishlist = lineItemService.removeFromWishlist(VALID_LINE_ITEM_ID);
 
         assertNotNull(lineItemWithoutWishlist);
-        assertNull(lineItemWithoutWishlist.getWishlist());  // Ensure the wishlist is removed
+        assertNull(lineItemWithoutWishlist.getWishlist());
         verify(lineItemRepository, times(1)).save(validLineItem);
     }
 }
