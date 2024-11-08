@@ -45,7 +45,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(100.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        ResponseEntity<OrderResponseDto> response = restTemplate.postForEntity("/orders/create", orderRequest, OrderResponseDto.class);
+        ResponseEntity<OrderResponseDto> response = restTemplate.postForEntity("/orders/create", orderRequest, null);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
