@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 
 import java.sql.Date;
 
-// line 39 "model.ump"
-// line 167 "model.ump"
 @Entity
 
 public class Payment
@@ -89,10 +87,6 @@ public class Payment
 
   public void delete()
   {}
-
-  //public int getId() {
-    //return id;
-  //}
 
   public String toString()
   {
