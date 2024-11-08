@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamestore.model.Review;
 import ca.mcgill.ecse321.gamestore.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,12 +22,13 @@ public class ReviewRestController {
 
     // create review, return response dto
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto dto) {
         Review review = reviewService.createReview(dto);
         return new ReviewResponseDto(review);
     }
 
-    // get review by ID, return repsonse dto
+    // get review by ID, return response dto
     @GetMapping("/{id}")
     public ReviewResponseDto getReviewById(@PathVariable Integer id) {
         Review review = reviewService.getReviewById(id);
@@ -66,9 +68,11 @@ public class ReviewRestController {
         return new ReviewListDto(reviewDtos);
     }
 
-    // delete review, returns nothing (nothing in db) 
+    // delete review, returns confirmation message
     @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
         reviewService.deleteReview(id, managerEmail);
+        return "Review with ID " + id + " deleted successfully.";
     }
 }
