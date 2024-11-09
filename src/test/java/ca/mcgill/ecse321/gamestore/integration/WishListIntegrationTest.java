@@ -13,10 +13,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import ca.mcgill.ecse321.gamestore.dto.CategoryDto;
 import ca.mcgill.ecse321.gamestore.dto.WishListRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.WishListResponseDto;
-import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
 import ca.mcgill.ecse321.gamestore.repository.WishListRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

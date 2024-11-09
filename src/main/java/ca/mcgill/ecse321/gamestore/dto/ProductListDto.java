@@ -5,6 +5,10 @@ import java.util.List;
 public class ProductListDto {
     private List<ProductResponseDto> product;
 
+    public ProductListDto(){
+        
+    }
+
     public ProductListDto(List<ProductResponseDto> products) {
         this.product = products;
     }

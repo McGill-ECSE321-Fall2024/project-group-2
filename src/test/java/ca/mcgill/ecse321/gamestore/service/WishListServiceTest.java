@@ -87,6 +87,17 @@ public class WishListServiceTest {
         assertEquals(VALID_NAME2, updatedWishList.getWishName());
     }
 
+    // Test updating an existing wishList with a null name
+    @Test
+    public void testUpdateWishList_InvalidName() {
+        WishList wishList = new WishList(VALID_NAME);
+        when(wishListRepository.findWishListById(anyInt())).thenReturn(wishList);
+        GameStoreException exception = assertThrows(GameStoreException.class, () ->
+                wishListService.updateWishListName(1, null));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("The name cannot be empty!", exception.getMessage());
+    }
+
     // Test updating a wishList with an ID that does not exist
     @Test
     public void testUpdateWishList_NotFound() {

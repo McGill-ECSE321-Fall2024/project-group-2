@@ -3,8 +3,6 @@ package ca.mcgill.ecse321.gamestore.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.sql.Date;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.gamestore.dto.CategoryDto;
 import ca.mcgill.ecse321.gamestore.dto.CategoryListDto;
-import ca.mcgill.ecse321.gamestore.dto.PaymentRequestDto;
-import ca.mcgill.ecse321.gamestore.dto.PaymentResponseDto;
 import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -106,7 +102,7 @@ public class CategoryIntegrationTest {
         assertEquals(2, categories.getCategory().size());
     }
 
-    // test to update a valid Id category name witha a valid name
+    // test to update a valid Id category name with a valid name
     @Test
     public void testUpdateCategoryName_Success() {
         CategoryDto request = new CategoryDto(1, "Action");
