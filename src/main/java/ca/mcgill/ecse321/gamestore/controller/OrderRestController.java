@@ -19,7 +19,7 @@ public class OrderRestController {
 
     @PostMapping("/create")
     public OrderResponseDto createOrder(@RequestBody OrderRequestDto orderRequest) {
-        Payment payment = null;
+        Payment payment = new Payment(orderRequest.getOrderedDate(), orderRequest.getTotal(), "");
         Order order = orderService.createOrder(
                 orderRequest.getNumber(),
                 orderRequest.getOrderedDate(),

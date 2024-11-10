@@ -4,6 +4,7 @@ import java.sql.Date;
 import ca.mcgill.ecse321.gamestore.model.Order;
 import ca.mcgill.ecse321.gamestore.model.Order.OrderStatus;
 import ca.mcgill.ecse321.gamestore.model.Payment;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class OrderResponseDto {
 
@@ -13,6 +14,7 @@ public class OrderResponseDto {
     private Date shippedDate;
     private String shipTo;
     private double total;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private OrderStatus status;
     private Integer paymentId; // Now Integer to handle possible null
 
@@ -31,7 +33,7 @@ public class OrderResponseDto {
                 ((Payment) order.getPaymentOfOrder()).getId() : null;
 
     }
-
+    public OrderResponseDto() {}
     // Getters and Setters for DTO fields
     public int getOrderId() {
         return orderId;
