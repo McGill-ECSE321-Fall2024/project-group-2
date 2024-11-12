@@ -279,7 +279,7 @@ public class ReviewIntegrationTests {
 
         // Get reviews for the product
         ResponseEntity<ReviewListDto> response = client.getForEntity(
-            "/reviews/product/" + testProductId,
+            "/products/" + testProductId + "/reviews",
             ReviewListDto.class
         );
 
@@ -296,7 +296,7 @@ public class ReviewIntegrationTests {
     public void testGetReviewsByProduct_NonExistent() {
         // Try to get reviews for non-existent product
         ResponseEntity<String> response = client.getForEntity(
-            "/reviews/product/999",
+            "/products/999/reviews",
             String.class
         );
 
@@ -310,7 +310,7 @@ public class ReviewIntegrationTests {
     public void testGetReviewsByProduct_NoReviews() {
         // Get reviews for product without creating any
         ResponseEntity<ReviewListDto> response = client.getForEntity(
-            "/reviews/product/" + testProductId,
+            "/products/" + testProductId + "/reviews",
             ReviewListDto.class
         );
 
@@ -330,7 +330,7 @@ public class ReviewIntegrationTests {
 
         // Get reviews for the customer
         ResponseEntity<ReviewListDto> response = client.getForEntity(
-            "/reviews/customer/" + TEST_CUSTOMER_EMAIL,
+            "/customers/" + TEST_CUSTOMER_EMAIL + "/reviews",
             ReviewListDto.class
         );
 
@@ -347,7 +347,7 @@ public class ReviewIntegrationTests {
     public void testGetReviewsByCustomer_NonExistent() {
         // Try to get reviews for non-existent customer
         ResponseEntity<String> response = client.getForEntity(
-            "/reviews/customer/nonexistent@email.com",
+            "/customers/nonexistent@email.com/reviews",
             String.class
         );
 

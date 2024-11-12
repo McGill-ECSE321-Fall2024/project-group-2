@@ -9,6 +9,7 @@ import ca.mcgill.ecse321.gamestore.service.ChangeRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +46,29 @@ public class ChangeRequestRestController {
         return new ChangeRequestListDto(changeRequestDtos);
     }
 
-    // approve change request, return response dto
-    @PutMapping("/{id}/approve")
-    public ChangeRequestResponseDto approveChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
-        ChangeRequest changeRequest = changeRequestService.approveChangeRequest(id, managerEmail);
-        return new ChangeRequestResponseDto(changeRequest);
-    }
-
-    // decline change request, return response dto
-    @PutMapping("/{id}/decline")
-    public ChangeRequestResponseDto declineChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
-        ChangeRequest changeRequest = changeRequestService.declineChangeRequest(id, managerEmail);
-        return new ChangeRequestResponseDto(changeRequest);
+    // update change request status (approve/decline), return response dto
+    @PutMapping("/{id}/status")
+    public ChangeRequestResponseDto updateChangeRequestStatus(
+        @PathVariable Integer id, 
+        @RequestParam String managerEmail,
+        @RequestParam String status) {
+        status = status.toUpperCase();  
+        if (!status.equals("APPROVED") && !status.equals("DECLINED")) {
+            throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, 
+                "Invalid status. Must be either APPROVED or DECLINED"
+            );
+        }
+        
+        if (status.equals("APPROVED")) {
+            return new ChangeRequestResponseDto(
+                changeRequestService.approveChangeRequest(id, managerEmail)
+            );
+        } else {  // must be DECLINED since we checked above
+            return new ChangeRequestResponseDto(
+                changeRequestService.declineChangeRequest(id, managerEmail)
+            );
+        }
     }
 
 
