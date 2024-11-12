@@ -39,7 +39,7 @@ public class ReviewIntegrationTests {
     @Autowired
     private LineItemService lineItemService;
 
-    // Define test values as constants
+    
     private final String TEST_CUSTOMER_EMAIL = "test.customer@email.com";
     private final String TEST_MANAGER_EMAIL = "test.manager@email.com";
     private Integer testProductId;
@@ -91,6 +91,7 @@ public class ReviewIntegrationTests {
             reviewService.deleteReview(review.getId(), TEST_MANAGER_EMAIL)
         );
 
+
         // Delete other test data in order
         productService.deleteProduct(testProductId);
         lineItemService.deleteLineItem(testLineItemId);
@@ -107,7 +108,7 @@ public class ReviewIntegrationTests {
         request.setReviewWriterEmail(TEST_CUSTOMER_EMAIL);
         request.setProductId(testProductId);
         request.setRating(4);
-        request.setComments("Great product!");
+        request.setComment("Great product!");
 
         // Send POST request to create review
         ResponseEntity<ReviewResponseDto> response = client.postForEntity(
@@ -121,7 +122,7 @@ public class ReviewIntegrationTests {
         ReviewResponseDto created = response.getBody();
         assertNotNull(created);
         assertNotNull(created.getReviewId());
-        assertEquals(request.getComments(), created.getComments());
+        assertEquals(request.getComment(), created.getComments());
         assertEquals(request.getRating(), created.getRating());
         assertEquals(request.getReviewWriterEmail(), created.getReviewWriterEmail());
         assertEquals(request.getProductId(), created.getProductId());
@@ -191,7 +192,7 @@ public class ReviewIntegrationTests {
         request.setReviewWriterEmail(TEST_CUSTOMER_EMAIL);
         request.setProductId(testProductId);
         request.setRating(4);
-        request.setComments("Test review");
+        request.setComment("Test review");
 
         ResponseEntity<ReviewResponseDto> createResponse = client.postForEntity(
             "/reviews",
@@ -211,8 +212,22 @@ public class ReviewIntegrationTests {
         ReviewResponseDto retrieved = response.getBody();
         assertNotNull(retrieved);
         assertEquals(reviewId, retrieved.getReviewId());
-        assertEquals(request.getComments(), retrieved.getComments());
+        assertEquals(request.getComment(), retrieved.getComments());
         assertEquals(request.getRating(), retrieved.getRating());
+    }
+
+    // test getting a non-existent review
+    @Test
+    public void testGetReview_NonExistent() {
+        // Try to get non-existent review
+        ResponseEntity<String> response = client.getForEntity(
+            "/reviews/999",
+            String.class
+        );
+
+        // Check error response
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Review not found with ID: 999", response.getBody());
     }
 
     // Test getting all reviews
@@ -238,6 +253,23 @@ public class ReviewIntegrationTests {
         assertEquals(2, reviews.getReviews().size());
     }
 
+    // test getting all reviews when none exist
+    @Test
+    public void testGetAllReviews_NoReviews() {
+        // Get all reviews without creating any
+        ResponseEntity<ReviewListDto> response = client.getForEntity(
+            "/reviews",
+            ReviewListDto.class
+        );
+
+        // Check response - should be OK with empty list
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ReviewListDto reviews = response.getBody();
+        assertNotNull(reviews);
+        assertTrue(reviews.getReviews().isEmpty());
+    }
+    
+
     // Test getting reviews by product
     @Test
     public void testGetReviewsByProduct() {
@@ -259,6 +291,36 @@ public class ReviewIntegrationTests {
         assertEquals(testProductId, reviews.getReviews().get(0).getProductId());
     }
 
+    // test getting reviews for non-existent product
+    @Test
+    public void testGetReviewsByProduct_NonExistent() {
+        // Try to get reviews for non-existent product
+        ResponseEntity<String> response = client.getForEntity(
+            "/reviews/product/999",
+            String.class
+        );
+
+        // Check error response
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Product not found with ID: 999", response.getBody());
+    }
+
+    // test getting reviews for product with no reviews
+    @Test
+    public void testGetReviewsByProduct_NoReviews() {
+        // Get reviews for product without creating any
+        ResponseEntity<ReviewListDto> response = client.getForEntity(
+            "/reviews/product/" + testProductId,
+            ReviewListDto.class
+        );
+
+        // Check response - should be OK with empty list
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        ReviewListDto reviews = response.getBody();
+        assertNotNull(reviews);
+        assertTrue(reviews.getReviews().isEmpty());
+    }
+
     // test getting reviews by customer
     @Test
     public void testGetReviewsByCustomer() {
@@ -278,6 +340,20 @@ public class ReviewIntegrationTests {
         assertNotNull(reviews);
         assertFalse(reviews.getReviews().isEmpty());
         assertEquals(TEST_CUSTOMER_EMAIL, reviews.getReviews().get(0).getReviewWriterEmail());
+    }
+
+    // test getting reviews for non-existent customer
+    @Test
+    public void testGetReviewsByCustomer_NonExistent() {
+        // Try to get reviews for non-existent customer
+        ResponseEntity<String> response = client.getForEntity(
+            "/reviews/customer/nonexistent@email.com",
+            String.class
+        );
+
+        // Check error response
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Customer not found with email: nonexistent@email.com", response.getBody());
     }
     
 
@@ -312,17 +388,6 @@ public class ReviewIntegrationTests {
         );
         assertEquals(HttpStatus.NOT_FOUND, getResponse.getStatusCode());
     }
-
-    // Helper method to create a review request
-    private ReviewRequestDto createReviewRequest(String comments, int rating) {
-        ReviewRequestDto request = new ReviewRequestDto();
-        request.setReviewWriterEmail(TEST_CUSTOMER_EMAIL);
-        request.setProductId(testProductId);
-        request.setRating(rating);
-        request.setComments(comments);
-        return request;
-    }
-
     // test deleting review as non-manager
     @Test
     public void testDeleteReview_NonManager() {
@@ -346,5 +411,15 @@ public class ReviewIntegrationTests {
         // Check error response
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Only the manager can delete reviews.", response.getBody());
+    }
+
+     // Helper method to create a review request
+    private ReviewRequestDto createReviewRequest(String comments, int rating) {
+        ReviewRequestDto request = new ReviewRequestDto();
+        request.setReviewWriterEmail(TEST_CUSTOMER_EMAIL);
+        request.setProductId(testProductId);
+        request.setRating(rating);
+        request.setComment(comments);
+        return request;
     }
 }

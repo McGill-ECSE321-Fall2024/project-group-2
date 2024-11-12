@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse321.gamestore.dto.ChangeRequestRequestDto;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest.RequestStatus;
 import ca.mcgill.ecse321.gamestore.model.Employee;
@@ -14,6 +15,7 @@ import ca.mcgill.ecse321.gamestore.repository.EmployeeRepository;
 import ca.mcgill.ecse321.gamestore.repository.OwnerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,83 +31,90 @@ public class ChangeRequestService {
     @Autowired
     private OwnerRepository ownerRepository;
 
-    // creates chnage request w/ status set to in progress
+    // creates change request w/ status set to in progress
     @Transactional
     public ChangeRequest createChangeRequest(ChangeRequestRequestDto dto) {
         if (dto.getRequestCreatorEmail() == null || dto.getRequestCreatorEmail().isEmpty()) {
-            throw new IllegalArgumentException("Request creator email cannot be empty.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Request creator email cannot be empty.");
         }
 
-        // Fetch associated Employee (requestCreator)
+        // fetch associated employee (requestCreator)
         Employee creator = employeeRepository.findEmployeeByEmail(dto.getRequestCreatorEmail());
         if (creator == null) {
-            throw new IllegalArgumentException("Employee not found with email: " + dto.getRequestCreatorEmail());
+            throw new GameStoreException(HttpStatus.NOT_FOUND, 
+                "Employee not found with email: " + dto.getRequestCreatorEmail());
         }
 
-        // Fetch the owner (requestManager) using repository method
-        Owner manager = ownerRepository.findOwnerByEmail("owner@email.com"); 
+        // fetch the owner (requestManager) using repository method
+        Owner manager = ownerRepository.findOwnerByEmail("owner@email.com");
         if (manager == null) {
-            throw new IllegalStateException("No owner found in the system.");
+            throw new GameStoreException(HttpStatus.INTERNAL_SERVER_ERROR, 
+                "No owner found in the system.");
         }
 
-        // Create new ChangeRequest
+        // create new change request
         ChangeRequest changeRequest = new ChangeRequest();
         changeRequest.setTimeRequest(new Date(System.currentTimeMillis()));
-        changeRequest.setStatus(RequestStatus.InProgress); // All requests start as InProgress
+        changeRequest.setStatus(RequestStatus.InProgress); // all requests start as InProgress
         changeRequest.setRequestCreator(creator);
         changeRequest.setRequestManager(manager);
 
         return changeRequestRepository.save(changeRequest);
     }
 
-    // approves chnage request
+    // approves change request
     @Transactional
     public ChangeRequest approveChangeRequest(int requestId, String managerEmail) {
-        
-        // Verify manager
+        // verify manager
         Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
         if (manager == null) {
-            throw new IllegalArgumentException("Only the manager can decline requests.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, 
+                "Only the manager can approve requests.");
         }
 
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
-            throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, 
+                "ChangeRequest not found with ID: " + requestId);
         }
         if (request.getStatus() != RequestStatus.InProgress) {
-            throw new IllegalArgumentException("Only InProgress requests can be approved.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, 
+                "Only InProgress requests can be approved.");
         }
         request.setStatus(RequestStatus.Approved);
         return changeRequestRepository.save(request);
     }
 
-    // declines a chnage request, must be in progress
+    // declines a change request, must be in progress
     @Transactional
     public ChangeRequest declineChangeRequest(int requestId, String managerEmail) {
-
-        // Verify manager
+        // verify manager
         Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
         if (manager == null) {
-            throw new IllegalArgumentException("Only the manager can decline requests.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, 
+                "Only the manager can decline requests.");
         }
 
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
-            throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, 
+                "ChangeRequest not found with ID: " + requestId);
         }
         if (request.getStatus() != RequestStatus.InProgress) {
-            throw new IllegalArgumentException("Only InProgress requests can be declined.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, 
+                "Only InProgress requests can be declined.");
         }
         request.setStatus(RequestStatus.Declined);
         return changeRequestRepository.save(request);
     }
 
-    // change request by id
+    // gets change request by id
     @Transactional
     public ChangeRequest getChangeRequestById(int requestId) {
         ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
         if (request == null) {
-            throw new IllegalArgumentException("ChangeRequest not found with ID: " + requestId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, 
+                "ChangeRequest not found with ID: " + requestId);
         }
         return request;
     }
@@ -119,5 +128,23 @@ public class ChangeRequestService {
             list.add(changeRequest);
         }
         return list;
+    }
+
+    // deletes a change request, can only be done by manager
+    @Transactional
+    public void deleteChangeRequest(int requestId, String managerEmail) {
+        // verify manager
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
+        if (manager == null) {
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, 
+                "Only the manager can delete requests.");
+        }
+
+        ChangeRequest request = changeRequestRepository.findChangeRequestById(requestId);
+        if (request == null) {
+            throw new GameStoreException(HttpStatus.NOT_FOUND, 
+                "ChangeRequest not found with ID: " + requestId);
+        }
+        changeRequestRepository.deleteById(requestId);
     }
 }

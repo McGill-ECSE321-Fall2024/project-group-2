@@ -4,15 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 
 import ca.mcgill.ecse321.gamestore.dto.ChangeRequestRequestDto;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Employee;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
@@ -73,9 +74,10 @@ public class ChangeRequestServiceTest {
         ChangeRequestRequestDto dto = new ChangeRequestRequestDto();
 
         // Act & Assert
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+        GameStoreException e = assertThrows(GameStoreException.class, 
             () -> changeRequestService.createChangeRequest(dto));
         assertEquals("Request creator email cannot be empty.", e.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
     }
 
     // should throw error when there's no employee
@@ -89,9 +91,10 @@ public class ChangeRequestServiceTest {
         when(employeeRepository.findEmployeeByEmail(email)).thenReturn(null);
 
         // Act & Assert: Verify employee not found exception
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+        GameStoreException e = assertThrows(GameStoreException.class, 
             () -> changeRequestService.createChangeRequest(dto));
         assertEquals("Employee not found with email: " + email, e.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
         verify(employeeRepository).findEmployeeByEmail(email);
     }
 
@@ -109,9 +112,10 @@ public class ChangeRequestServiceTest {
         dto.setRequestCreatorEmail(email);
 
         // Act & Assert
-        IllegalStateException e = assertThrows(IllegalStateException.class, 
+        GameStoreException e = assertThrows(GameStoreException.class, 
             () -> changeRequestService.createChangeRequest(dto));
         assertEquals("No owner found in the system.", e.getMessage());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, e.getStatus());
         verify(ownerRepository).findOwnerByEmail("owner@email.com");
     }
 
@@ -160,9 +164,10 @@ public class ChangeRequestServiceTest {
         when(changeRequestRepository.findChangeRequestById(requestId)).thenReturn(request);
 
         // Act & Assert
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        GameStoreException e = assertThrows(GameStoreException.class,
             () -> changeRequestService.approveChangeRequest(requestId, managerEmail));
         assertEquals("Only InProgress requests can be approved.", e.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
     }
 
     // try to approve with non-manager
@@ -175,9 +180,10 @@ public class ChangeRequestServiceTest {
         when(ownerRepository.findOwnerByEmail(email)).thenReturn(null);
 
         // Act & Assert
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        GameStoreException e = assertThrows(GameStoreException.class,
             () -> changeRequestService.approveChangeRequest(requestId, email));
-        assertEquals("Only the manager can decline requests.", e.getMessage());
+        assertEquals("Only the manager can approve requests.", e.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
         verify(ownerRepository).findOwnerByEmail(email);
     }
 
@@ -238,9 +244,10 @@ public class ChangeRequestServiceTest {
         when(changeRequestRepository.findChangeRequestById(requestId)).thenReturn(null);
 
         // Act & Assert
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        GameStoreException e = assertThrows(GameStoreException.class,
             () -> changeRequestService.getChangeRequestById(requestId));
         assertEquals("ChangeRequest not found with ID: " + requestId, e.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
         verify(changeRequestRepository).findChangeRequestById(requestId);
     }
 
@@ -262,5 +269,46 @@ public class ChangeRequestServiceTest {
         assertNotNull(results);
         assertEquals(2, results.size());
         verify(changeRequestRepository).findAll();
+    }
+
+    // successful deletion by manager
+    @Test
+    public void testDeleteChangeRequest_Success() {
+        // Arrange
+        Integer requestId = 1;
+        String managerEmail = "owner@email.com";
+        
+        ChangeRequest request = new ChangeRequest();
+        request.setId(requestId);
+        Owner owner = new Owner("own1", "Test Owner", managerEmail, "password");
+        
+        when(ownerRepository.findOwnerByEmail(managerEmail)).thenReturn(owner);
+        when(changeRequestRepository.findChangeRequestById(requestId)).thenReturn(request);
+        doNothing().when(changeRequestRepository).deleteById(requestId);
+
+        // Act - should not throw any exception
+        assertDoesNotThrow(() -> changeRequestService.deleteChangeRequest(requestId, managerEmail));
+
+        // Assert
+        verify(changeRequestRepository).findChangeRequestById(requestId);
+        verify(changeRequestRepository).deleteById(requestId);
+        verify(ownerRepository).findOwnerByEmail(managerEmail);
+    }
+
+    // delete with non-manager
+    @Test
+    public void testDeleteChangeRequest_NotManager() {
+        // Arrange
+        Integer requestId = 1;
+        String email = "notowner@email.com";
+        
+        when(ownerRepository.findOwnerByEmail(email)).thenReturn(null);
+
+        // Act & Assert
+        GameStoreException e = assertThrows(GameStoreException.class,
+            () -> changeRequestService.deleteChangeRequest(requestId, email));
+        assertEquals("Only the manager can delete requests.", e.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
+        verify(ownerRepository).findOwnerByEmail(email);
     }
 }
