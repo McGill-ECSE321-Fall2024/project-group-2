@@ -46,7 +46,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(100.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        ResponseEntity<OrderResponseDto> response = restTemplate.postForEntity("/orders/create", orderRequest, null);
+        ResponseEntity<OrderResponseDto> response = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -68,7 +68,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(100.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders/create", orderRequest, OrderResponseDto.class).getBody();
+        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class).getBody();
         assertNotNull(createdOrder);
 
         ResponseEntity<OrderResponseDto> response = restTemplate.getForEntity("/orders/" + createdOrder.getOrderId(), OrderResponseDto.class);
@@ -88,7 +88,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(200.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders/create", orderRequest, OrderResponseDto.class).getBody();
+        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class).getBody();
         assertNotNull(createdOrder);
 
         ResponseEntity<OrderResponseDto> response = restTemplate.exchange(
@@ -113,7 +113,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(150.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders/create", orderRequest, OrderResponseDto.class).getBody();
+        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class).getBody();
         assertNotNull(createdOrder);
 
         orderRequest.setShippedDate(Date.valueOf(LocalDate.now().plusDays(3)));
@@ -144,7 +144,7 @@ public class OrderIntegrationTest {
         orderRequest.setTotal(250.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
-        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders/create", orderRequest, OrderResponseDto.class).getBody();
+        OrderResponseDto createdOrder = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class).getBody();
         assertNotNull(createdOrder);
 
         ResponseEntity<Boolean> deleteResponse = restTemplate.exchange(
@@ -163,4 +163,4 @@ public class OrderIntegrationTest {
         assertEquals("Order with ID " + createdOrder.getOrderId() + " not found.", getResponse.getBody());
     }
 }
-/*/
+*/
