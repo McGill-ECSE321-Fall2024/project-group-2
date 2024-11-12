@@ -3,7 +3,7 @@ package ca.mcgill.ecse321.gamestore.dto;
 public class ReviewRequestDto {
 
     private Integer rating;
-    private String comments;
+    private String comment;
     private String reviewWriterEmail; // Email of the Customer
     private Integer productId;        // ID of the Product
 
@@ -21,12 +21,12 @@ public class ReviewRequestDto {
         this.rating = rating;
     }
 
-    public String getComments() {
-        return comments;
+    public String getComment() {
+        return comment;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setComment(String comments) {
+        this.comment = comments;
     }
 
     public String getReviewWriterEmail() {
