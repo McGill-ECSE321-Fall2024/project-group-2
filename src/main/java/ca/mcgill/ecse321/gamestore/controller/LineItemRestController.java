@@ -93,7 +93,7 @@ public class LineItemRestController {
      * @param cartId The ID of the ShoppingCart to add to.
      * @return LineItemResponseDto with updated details of the LineItem.
      */
-    @PutMapping("/{lineItemId}/addToCart/{cartId}")
+    @PutMapping("/{lineItemId}/cart/{cartId}")
     public ResponseEntity<LineItemResponseDto> addToCart(@PathVariable int lineItemId, @PathVariable int cartId) {
         LineItem lineItem = lineItemService.addToCart(lineItemId, cartId);
         return ResponseEntity.ok(new LineItemResponseDto(lineItem));
@@ -106,7 +106,7 @@ public class LineItemRestController {
      * @param wishlistId The ID of the WishList to add to.
      * @return LineItemResponseDto with updated details of the LineItem.
      */
-    @PutMapping("/{lineItemId}/addToWishlist/{wishlistId}")
+    @PutMapping("/{lineItemId}/wishlist/{wishlistId}")
     public ResponseEntity<LineItemResponseDto> addToWishlist(@PathVariable int lineItemId, @PathVariable int wishlistId) {
         LineItem lineItem = lineItemService.addToWishlist(lineItemId, wishlistId);
         return ResponseEntity.ok(new LineItemResponseDto(lineItem));
@@ -118,7 +118,7 @@ public class LineItemRestController {
      * @param lineItemId The ID of the LineItem to remove from the cart.
      * @return LineItemResponseDto with updated details of the LineItem.
      */
-    @PutMapping("/{lineItemId}/removeFromCart")
+    @DeleteMapping("/{lineItemId}/cart")
     public ResponseEntity<LineItemResponseDto> removeFromCart(@PathVariable int lineItemId) {
         LineItem lineItem = lineItemService.removeFromCart(lineItemId);
         return ResponseEntity.ok(new LineItemResponseDto(lineItem));
@@ -130,7 +130,7 @@ public class LineItemRestController {
      * @param lineItemId The ID of the LineItem to remove from the wishlist.
      * @return LineItemResponseDto with updated details of the LineItem.
      */
-    @PutMapping("/{lineItemId}/removeFromWishlist")
+    @DeleteMapping("/{lineItemId}/wishlist")
     public ResponseEntity<LineItemResponseDto> removeFromWishlist(@PathVariable int lineItemId) {
         LineItem lineItem = lineItemService.removeFromWishlist(lineItemId);
         return ResponseEntity.ok(new LineItemResponseDto(lineItem));
