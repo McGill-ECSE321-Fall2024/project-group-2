@@ -66,7 +66,7 @@ public class ReviewService {
         // Create new Review
         Review review = new Review();
         review.setRating(dto.getRating());
-        review.setComments(dto.getComments());
+        review.setComments(dto.getComment());
 
         // Set current date as java.sql.Date
         Date sqlDate = new Date(System.currentTimeMillis());

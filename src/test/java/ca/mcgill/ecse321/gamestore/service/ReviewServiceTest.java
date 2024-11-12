@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamestore.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -12,7 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 
 import ca.mcgill.ecse321.gamestore.dto.ReviewRequestDto;
+import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Owner;
+import ca.mcgill.ecse321.gamestore.model.Product;
+import ca.mcgill.ecse321.gamestore.model.Review;
 import ca.mcgill.ecse321.gamestore.repository.ReviewRepository;
 import ca.mcgill.ecse321.gamestore.repository.ProductRepository;
 import ca.mcgill.ecse321.gamestore.repository.CustomerRepository;
@@ -39,7 +43,41 @@ public class ReviewServiceTest {
     // tests creation of review with all valid fields
     @Test
     public void testCreateValidReview() {
-        // [Rest of this test stays exactly the same as it tests the success case]
+        // Arrange
+        String email = "customer@email.com";
+        Integer productId = 1;
+        Integer rating = 4;
+        String comment = "Great product!";
+        
+        // Create test customer and product
+        Customer customer = new Customer("cust1", "Test Customer", email, "password");
+        Product product = new Product();
+        product.setId(productId);
+        
+        // Mock repository behaviors
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(customer);
+        when(productRepository.findProductById(productId)).thenReturn(product);
+        when(reviewRepository.save(any(Review.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Create DTO with required fields
+        ReviewRequestDto dto = new ReviewRequestDto();
+        dto.setReviewWriterEmail(email);
+        dto.setProductId(productId);
+        dto.setRating(rating);
+        dto.setComment(comment);
+
+        // Act
+        Review createdReview = reviewService.createReview(dto);
+
+        // Assert
+        assertNotNull(createdReview);
+        assertEquals(rating, createdReview.getRating());
+        assertEquals(comment, createdReview.getComments());
+        assertEquals(email, createdReview.getReviewWriter().getEmail());
+        assertEquals(productId, createdReview.getProduct().getId());
+        verify(reviewRepository).save(any(Review.class));
+        verify(customerRepository).findCustomerByEmail(email);
+        verify(productRepository).findProductById(productId);
     }
 
     // should throw error when email is missing
@@ -95,7 +133,55 @@ public class ReviewServiceTest {
         verify(customerRepository, times(1)).findCustomerByEmail("nonexistent@email.com");
     }
 
-    // [Success test methods stay exactly the same as they don't test exceptions]
+    // tests getting all reviews for a specific product
+    @Test
+    public void testGetReviewsByProduct_Success() {
+        // Arrange
+        Integer productId = 1;
+        Product product = new Product();
+        product.setId(productId);
+        
+        Review review1 = new Review();
+        review1.setRating(4);
+        review1.setProduct(product);
+        
+        Review review2 = new Review();
+        review2.setRating(5);
+        review2.setProduct(product);
+        
+        when(productRepository.findProductById(productId)).thenReturn(product);
+        when(reviewRepository.findAll()).thenReturn(List.of(review1, review2));
+
+        // Act
+        List<Review> reviews = reviewService.getReviewsByProduct(productId);
+
+        // Assert
+        assertNotNull(reviews);
+        assertEquals(2, reviews.size());
+        verify(productRepository).findProductById(productId);
+        verify(reviewRepository).findAll();
+    }
+
+    // test getting reviews for product with no reviews
+    @Test
+    public void testGetReviewsByProduct_NoReviews() {
+        // Arrange
+        Integer productId = 1;
+        Product product = new Product();
+        product.setId(productId);
+        
+        when(productRepository.findProductById(productId)).thenReturn(product);
+        when(reviewRepository.findAll()).thenReturn(List.of());
+
+        // Act
+        List<Review> reviews = reviewService.getReviewsByProduct(productId);
+
+        // Assert
+        assertNotNull(reviews);
+        assertTrue(reviews.isEmpty());
+        verify(productRepository).findProductById(productId);
+        verify(reviewRepository).findAll();
+    }
 
     // get reviews by product w/ no product --> throws error
     @Test
@@ -113,12 +199,40 @@ public class ReviewServiceTest {
         verify(productRepository, times(1)).findProductById(productId);
     }
 
+    // tests getting all reviews by a specific customer
+    @Test
+    public void testGetReviewsByCustomer_Success() {
+        // Arrange
+        String email = "customer@email.com";
+        Customer customer = new Customer("cust1", "Test Customer", email, "password");
+        
+        Review review1 = new Review();
+        review1.setRating(4);
+        review1.setReviewWriter(customer);
+        
+        Review review2 = new Review();
+        review2.setRating(5);
+        review2.setReviewWriter(customer);
+        
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(customer);
+        when(reviewRepository.findAll()).thenReturn(List.of(review1, review2));
+
+        // Act
+        List<Review> reviews = reviewService.getReviewsByCustomer(email);
+
+        // Assert
+        assertNotNull(reviews);
+        assertEquals(2, reviews.size());
+        verify(customerRepository).findCustomerByEmail(email);
+        verify(reviewRepository).findAll();
+    }
+
     // get reviews by customer, no customer --> throws error
     @Test
     public void testGetReviewsByCustomer_CustomerNotFound() {
         // Arrange: Setup scenario with non-existent customer
         String email = "nonexistent@email.com";
-        when(customerRepository.findAll()).thenReturn(List.of());
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(null);
 
         // Act & Assert: Verify customer not found exception
         GameStoreException e = assertThrows(GameStoreException.class, 
@@ -127,6 +241,125 @@ public class ReviewServiceTest {
         assertEquals("Customer not found with email: " + email, e.getMessage());
         assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
         verify(customerRepository, times(1)).findCustomerByEmail(email);
+    }
+
+    // test getting reviews for customer with no reviews
+    @Test
+    public void testGetReviewsByCustomer_NoReviews() {
+        // Arrange
+        String email = "customer@email.com";
+        Customer customer = new Customer("cust1", "Test Customer", email, "password");
+        
+        when(customerRepository.findCustomerByEmail(email)).thenReturn(customer);
+        when(reviewRepository.findAll()).thenReturn(List.of());
+
+        // Act
+        List<Review> reviews = reviewService.getReviewsByCustomer(email);
+
+        // Assert
+        assertNotNull(reviews);
+        assertTrue(reviews.isEmpty());
+        verify(customerRepository).findCustomerByEmail(email);
+        verify(reviewRepository).findAll();
+    }
+
+    // test getting a review by id with valid fields
+    @Test
+    public void testGetReviewById_Success() {
+        // Arrange
+        Integer reviewId = 1;
+        Review review = new Review();
+        review.setId(reviewId);
+        review.setRating(4);
+        review.setComments("Test review");
+        
+        when(reviewRepository.findReviewById(reviewId)).thenReturn(review);
+
+        // Act
+        Review result = reviewService.getReviewById(reviewId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(reviewId, result.getId());
+        assertEquals(4, result.getRating());
+        assertEquals("Test review", result.getComments());
+        verify(reviewRepository).findReviewById(reviewId);
+    }
+
+    // test getting a review that doesn't exist
+    @Test
+    public void testGetReviewById_NotFound() {
+        // Arrange
+        Integer reviewId = 999;
+        when(reviewRepository.findReviewById(reviewId)).thenReturn(null);
+
+        // Act & Assert
+        GameStoreException e = assertThrows(GameStoreException.class,
+            () -> reviewService.getReviewById(reviewId));
+        
+        assertEquals("Review not found with ID: " + reviewId, e.getMessage());
+        assertEquals(HttpStatus.NOT_FOUND, e.getStatus());
+        verify(reviewRepository).findReviewById(reviewId);
+    }
+    
+    // test getting all reviews when they exist
+    @Test
+    public void testGetAllReviews_Success() {
+        // Arrange
+        Review review1 = new Review();
+        review1.setRating(4);
+        review1.setComments("First review");
+        
+        Review review2 = new Review();
+        review2.setRating(5);
+        review2.setComments("Second review");
+        
+        when(reviewRepository.findAll()).thenReturn(List.of(review1, review2));
+
+        // Act
+        List<Review> reviews = reviewService.getAllReviews();
+
+        // Assert
+        assertNotNull(reviews);
+        assertEquals(2, reviews.size());
+        verify(reviewRepository).findAll();
+    }
+
+    // test getting all reviews when none exist
+    @Test
+    public void testGetAllReviews_Empty() {
+        // Arrange
+        when(reviewRepository.findAll()).thenReturn(List.of());
+
+        // Act
+        List<Review> reviews = reviewService.getAllReviews();
+
+        // Assert
+        assertNotNull(reviews);
+        assertTrue(reviews.isEmpty());
+        verify(reviewRepository).findAll();
+    }
+
+    // tests successful deletion of review by manager
+    @Test
+    public void testDeleteReview_Success() {
+        // Arrange
+        Integer reviewId = 1;
+        String managerEmail = "manager@email.com";
+        
+        Review review = new Review();
+        review.setId(reviewId);
+        
+        Owner manager = new Owner("manager1", "Manager", managerEmail, "password");
+        
+        when(ownerRepository.findOwnerByEmail(managerEmail)).thenReturn(manager);
+        when(reviewRepository.findReviewById(reviewId)).thenReturn(review);
+        
+        // Act & Assert
+        assertDoesNotThrow(() -> reviewService.deleteReview(reviewId, managerEmail));
+        verify(ownerRepository).findOwnerByEmail(managerEmail);  // Verifies manager lookup happened once
+        verify(reviewRepository).findReviewById(reviewId);       // Verifies review lookup happened once
+        verify(reviewRepository).deleteById(reviewId);           //  verifies deleteById was called 
     }
 
     // try and delete non-existent review --> throws error

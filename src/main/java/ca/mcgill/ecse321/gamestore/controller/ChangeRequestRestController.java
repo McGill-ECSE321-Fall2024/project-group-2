@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamestore.model.ChangeRequest;
 import ca.mcgill.ecse321.gamestore.service.ChangeRequestService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -56,5 +57,13 @@ public class ChangeRequestRestController {
     public ChangeRequestResponseDto declineChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
         ChangeRequest changeRequest = changeRequestService.declineChangeRequest(id, managerEmail);
         return new ChangeRequestResponseDto(changeRequest);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteChangeRequest(@PathVariable Integer id, @RequestParam String managerEmail) {
+        changeRequestService.deleteChangeRequest(id, managerEmail);
+        return "ChangeRequest with ID " + id + " deleted successfully.";
     }
 }
