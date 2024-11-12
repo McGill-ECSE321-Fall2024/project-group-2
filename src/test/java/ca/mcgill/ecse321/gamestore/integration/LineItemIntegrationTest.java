@@ -39,44 +39,44 @@ public class LineItemIntegrationTest {
     public void testCreateLineItem() {
         LineItem newLineItem = lineItemService.createLineItem(3, 20.00);
 
-        assertNotNull(newLineItem);
-        assertEquals(3, newLineItem.getQuantity());
-        assertEquals(20.00, newLineItem.getPrice());
+        assertNotNull(newLineItem, "The created LineItem should not be null.");
+        assertEquals(3, newLineItem.getQuantity(), "Quantity should be 3.");
+        assertEquals(20.00, newLineItem.getPrice(), "Price should be 20.00.");
     }
 
     @Test
     public void testReadLineItem() {
         LineItem foundLineItem = lineItemService.getLineItem(lineItem.getId());
 
-        assertNotNull(foundLineItem);
-        assertEquals(lineItem.getQuantity(), foundLineItem.getQuantity());
-        assertEquals(lineItem.getPrice(), foundLineItem.getPrice());
+        assertNotNull(foundLineItem, "The fetched LineItem should not be null.");
+        assertEquals(lineItem.getQuantity(), foundLineItem.getQuantity(), "Quantities should match.");
+        assertEquals(lineItem.getPrice(), foundLineItem.getPrice(), "Prices should match.");
     }
 
     @Test
     public void testUpdateLineItemQuantity() {
         LineItem updatedLineItem = lineItemService.updateLineItemQuantity(lineItem.getId(), 10);
 
-        assertNotNull(updatedLineItem);
-        assertEquals(10, updatedLineItem.getQuantity());
-        assertEquals(lineItem.getPrice(), updatedLineItem.getPrice());
+        assertNotNull(updatedLineItem, "Updated LineItem should not be null.");
+        assertEquals(10, updatedLineItem.getQuantity(), "Updated quantity should be 10.");
+        assertEquals(lineItem.getPrice(), updatedLineItem.getPrice(), "Price should remain unchanged.");
     }
 
     @Test
     public void testUpdateLineItemPrice() {
         LineItem updatedLineItem = lineItemService.updateLineItemPrice(lineItem.getId(), 15.00);
 
-        assertNotNull(updatedLineItem);
-        assertEquals(lineItem.getQuantity(), updatedLineItem.getQuantity());
-        assertEquals(15.00, updatedLineItem.getPrice());
+        assertNotNull(updatedLineItem, "Updated LineItem should not be null.");
+        assertEquals(lineItem.getQuantity(), updatedLineItem.getQuantity(), "Quantity should remain unchanged.");
+        assertEquals(15.00, updatedLineItem.getPrice(), "Updated price should be 15.00.");
     }
 
     @Test
     public void testDeleteLineItem() {
         boolean isDeleted = lineItemService.deleteLineItem(lineItem.getId());
 
-        assertTrue(isDeleted);
+        assertTrue(isDeleted, "The LineItem should be deleted successfully.");
         LineItem deletedLineItem = lineItemRepository.findById(lineItem.getId()).orElse(null);
-        assertNull(deletedLineItem);
+        assertNull(deletedLineItem, "The deleted LineItem should not be found in the repository.");
     }
 }
