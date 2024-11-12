@@ -137,12 +137,13 @@ public class ChangeRequestIntegrationTests {
 
         // approve the request
         ResponseEntity<ChangeRequestResponseDto> response = client.exchange(
-            "/change-requests/{id}/approve?managerEmail={email}",
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
             org.springframework.http.HttpMethod.PUT,
             null,
             ChangeRequestResponseDto.class,
             requestId,
-            TEST_MANAGER_EMAIL
+            TEST_MANAGER_EMAIL,
+            "APPROVED"
         );
 
         // check that the request was approved
@@ -162,12 +163,13 @@ public class ChangeRequestIntegrationTests {
 
         // try to approve with non-manager email
         ResponseEntity<String> response = client.exchange(    
-            "/change-requests/{id}/approve?managerEmail={email}",
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
             org.springframework.http.HttpMethod.PUT,
             null,
             String.class,                           
             requestId,
-            "notmanager@email.com"
+            "notmanager@email.com",
+            "APPROVED"
         );
 
         // check error response
@@ -183,22 +185,24 @@ public class ChangeRequestIntegrationTests {
         Integer requestId = createResponse.getBody().getId();
 
         client.exchange(
-            "/change-requests/{id}/approve?managerEmail={email}",
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
             org.springframework.http.HttpMethod.PUT,
             null,
             ChangeRequestResponseDto.class,
             requestId,
-            TEST_MANAGER_EMAIL
+            TEST_MANAGER_EMAIL,
+            "APPROVED"
         );
 
         // try to approve again
         ResponseEntity<String> response = client.exchange(
-            "/change-requests/{id}/approve?managerEmail={email}",
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
             org.springframework.http.HttpMethod.PUT,
             null,
             String.class,
             requestId,
-            TEST_MANAGER_EMAIL
+            TEST_MANAGER_EMAIL,
+            "APPROVED"
         );
 
         // check error response
@@ -215,12 +219,13 @@ public class ChangeRequestIntegrationTests {
 
         // decline the request
         ResponseEntity<ChangeRequestResponseDto> response = client.exchange(
-            "/change-requests/{id}/decline?managerEmail={email}",
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
             org.springframework.http.HttpMethod.PUT,
             null,
             ChangeRequestResponseDto.class,
             requestId,
-            TEST_MANAGER_EMAIL
+            TEST_MANAGER_EMAIL,
+            "DECLINED"
         );
 
         // check that the request was declined
@@ -229,6 +234,49 @@ public class ChangeRequestIntegrationTests {
         assertNotNull(declined);
         assertEquals(requestId, declined.getId());
         assertEquals("Declined", declined.getStatus());
+    }
+
+    // try to decline as non-manager
+    @Test
+    public void testDeclineChangeRequest_NotManager() {
+        // first create a change request
+        ResponseEntity<ChangeRequestResponseDto> createResponse = createTestChangeRequest();
+        Integer requestId = createResponse.getBody().getId();
+
+        // try to decline with non-manager email
+        ResponseEntity<String> response = client.exchange(    
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
+            org.springframework.http.HttpMethod.PUT,
+            null,
+            String.class,                           
+            requestId,
+            "notmanager@email.com",
+            "DECLINED"
+        );
+
+        // check error response
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Only the manager can decline requests.", response.getBody());
+    }
+
+    //test updating the chnage request w/ invalid status
+    @Test
+    public void testUpdateStatus_InvalidStatus() {
+        ResponseEntity<ChangeRequestResponseDto> createResponse = createTestChangeRequest();
+        Integer requestId = createResponse.getBody().getId();
+
+        ResponseEntity<String> response = client.exchange(
+            "/change-requests/{id}/status?managerEmail={email}&status={status}",
+            org.springframework.http.HttpMethod.PUT,
+            null,
+            String.class,
+            requestId,
+            TEST_MANAGER_EMAIL,
+            "INVALID_STATUS"
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().contains("Invalid status. Must be either APPROVED or DECLINED"));
     }
 
     // get change request by id successfully

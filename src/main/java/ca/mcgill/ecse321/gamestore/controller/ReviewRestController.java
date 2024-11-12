@@ -14,14 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reviews")
 public class ReviewRestController {
 
     @Autowired
     private ReviewService reviewService;
 
     // create review, return response dto
-    @PostMapping
+    @PostMapping("/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto dto) {
         Review review = reviewService.createReview(dto);
@@ -29,14 +28,14 @@ public class ReviewRestController {
     }
 
     // get review by ID, return response dto
-    @GetMapping("/{id}")
+    @GetMapping("/reviews/{id}")
     public ReviewResponseDto getReviewById(@PathVariable Integer id) {
         Review review = reviewService.getReviewById(id);
         return new ReviewResponseDto(review);
     }
 
     // get reviews, return as list dto
-    @GetMapping
+    @GetMapping("/reviews")
     public ReviewListDto getAllReviews() {
         List<Review> reviews = reviewService.getAllReviews();
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -47,7 +46,7 @@ public class ReviewRestController {
     }
 
     // get reviews by product, return list dto
-    @GetMapping("/product/{productId}")
+    @GetMapping("/products/{productId}/reviews")
     public ReviewListDto getReviewsByProduct(@PathVariable Integer productId) {
         List<Review> reviews = reviewService.getReviewsByProduct(productId);
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -58,7 +57,7 @@ public class ReviewRestController {
     }
 
     // get reviews by customer, return list dto
-    @GetMapping("/customer/{customerEmail}")
+    @GetMapping("/customers/{customerEmail}/reviews")
     public ReviewListDto getReviewsByCustomer(@PathVariable String customerEmail) {
         List<Review> reviews = reviewService.getReviewsByCustomer(customerEmail);
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -69,7 +68,7 @@ public class ReviewRestController {
     }
 
     // delete review, returns confirmation message
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/reviews/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
         reviewService.deleteReview(id, managerEmail);
