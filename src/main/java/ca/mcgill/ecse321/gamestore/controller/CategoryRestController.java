@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ca.mcgill.ecse321.gamestore.dto.CategoryListDto;
 import ca.mcgill.ecse321.gamestore.dto.CategoryDto;
 import ca.mcgill.ecse321.gamestore.model.Category;
 import ca.mcgill.ecse321.gamestore.service.CategoryService;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 
 @RestController
 public class CategoryRestController {
@@ -17,67 +20,53 @@ public class CategoryRestController {
     @Autowired
     CategoryService categoryService;
 
-    /**
-     * Create a new category.
-     *
-     * @param categoryDto The category to create.
-     * @return The created category.
-     */
-    @PostMapping(value = {"/category/create", "/category/create/"})
-    public CategoryDto createCategory(@RequestBody CategoryDto categoryDto) {
-        Category createdCategory = categoryService.createCategory(categoryDto.getName());
-        return new CategoryDto(createdCategory);
+    @PostMapping(value = {"/category", "/category/"})
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
+        try {
+            Category createdCategory = categoryService.createCategory(categoryDto.getName());
+            return new ResponseEntity<>(new CategoryDto(createdCategory), HttpStatus.CREATED);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
-    /**
-     * Return the category with the given ID.
-     *
-     * @param categoryId The primary key of the category to find.
-     * @return The category with the given ID.
-     */
-    @GetMapping(value = {"/category/{categoryId}", "/category/{categoryId}/"})
-    public CategoryDto getCategory(@PathVariable int categoryId) {
-        Category category = categoryService.getCategory(categoryId);
-        return new CategoryDto(category);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getCategory(@PathVariable int categoryId) {
+        try {
+            Category category = categoryService.getCategory(categoryId);
+            return new ResponseEntity<>(new CategoryDto(category), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
-    /**
-     * Return all the categories.
-     *
-     * @return All the categories.
-     */
     @GetMapping(value = {"/category", "/category/"})
-    public CategoryListDto getAllCategory() {
-        List<CategoryDto> categories = new ArrayList<CategoryDto>();
+    public ResponseEntity<CategoryListDto> getAllCategory() {
+        List<CategoryDto> categories = new ArrayList<>();
         for (Category category : categoryService.getAllCategory()) {
             categories.add(new CategoryDto(category));
         }
-        return new CategoryListDto(categories);
+        return new ResponseEntity<>(new CategoryListDto(categories), HttpStatus.OK);
     }
 
-    /**
-     * Delete the category with the given ID.
-     *
-     * @param categoryId The primary key of the category to delete.
-     * @return Boolean indicating whether the category has been sucessfully deleted or not.
-     */
-    @DeleteMapping(value = {"/category/{categoryId}/", "/category/{categoryId}"})
-    public boolean deleteCategory(@PathVariable int categoryId) {
-        boolean deleted = categoryService.deleteCategory(categoryId);
-        return deleted;
+    @DeleteMapping("/category/{categoryId}")
+    public ResponseEntity<?> deleteCategory(@PathVariable int categoryId) {
+        try {
+            categoryService.deleteCategory(categoryId);
+            return new ResponseEntity<>("Category was deleted successfully.", HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
-    /**
-     * Update the name of the category with the given ID.
-     *
-     * @param categoryId The primary key of the category to update.
-     * @param newName    The new name for the category.
-     * @return The updated category.
-     */
-    @PutMapping(value = {"/category/{categoryId}/name/{name}", "/category/{categoryId}/name/{name}/"})
-    public CategoryDto updateCategoryName(@PathVariable("categoryId") int categoryId, @PathVariable("name") String newName) {
-        Category category = categoryService.updateCategoryName(categoryId, newName);
-        return new CategoryDto(category);
+    @PutMapping("/category/{categoryId}")
+    public ResponseEntity<?> updateCategoryName(@PathVariable int categoryId, @RequestParam String newName) {
+        try {
+            Category category = categoryService.updateCategoryName(categoryId, newName);
+            return new ResponseEntity<>(new CategoryDto(category), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 }
 

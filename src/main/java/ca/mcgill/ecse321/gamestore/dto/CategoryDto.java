@@ -10,8 +10,8 @@ public class CategoryDto {
     public CategoryDto() {
     }
 
-    public CategoryDto(int categoryId, String name, int aNumberItems){
-        this.categoryId= categoryId;
+    public CategoryDto(int categoryId, String name){
+        this.categoryId=categoryId;
         this.name= name;
     }
 

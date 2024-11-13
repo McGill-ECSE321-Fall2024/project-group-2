@@ -3,17 +3,15 @@ package ca.mcgill.ecse321.gamestore.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerListDto;
+import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class OwnerRestController {
@@ -36,7 +34,7 @@ public class OwnerRestController {
     }
 
     // Endpoint to retrieve a specific owner by email
-    @GetMapping(value = { "/owners/{email}", "/owners/{email}/" })
+    @GetMapping(value = { "/owner/{email}", "/owner/{email}/" })
     public OwnerDto getOwner(@PathVariable("email") String email) {
         // Fetch the Owner model using the email
         Owner owner = service.getOwner(email);
@@ -47,7 +45,8 @@ public class OwnerRestController {
     }
 
     // Endpoint to create a new owner
-    @PostMapping(value = { "/owners/create", "/owners/create/" })
+    @PostMapping(value = { "/owner/", "/owner" })
+    @ResponseStatus(HttpStatus.CREATED)
     public OwnerDto createOwner(@RequestBody OwnerDto ownerDto) {
         // Create a new Owner using the provided data from OwnerDto
         Owner owner = service.createOwner(
@@ -62,14 +61,23 @@ public class OwnerRestController {
     }
 
     // Endpoint to update an owner's password
-    @PutMapping(value = { "/owners/update/{newPassword}", "/owners/update/{newPassword}/" })
-    public OwnerDto updateOwner(@RequestBody OwnerDto ownerDto, @PathVariable("newPassword") String newPassword) {
-        // Update the owner's password and fetch the updated Owner model
-        Owner owner = service.updateOwnerPassword(ownerDto.getEmail(), ownerDto.getPassword(), newPassword);
-        // Convert the updated Owner model to OwnerDto
-        OwnerDto ownerBody = new OwnerDto(owner);
-        // Return the updated OwnerDto
-        return ownerBody;
+    @PutMapping(value= {"/owner/{email}/","/owner/{email}"})
+    public OwnerDto updateCustomerPassword(
+            @PathVariable String email,
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword) {
+        // Updates customer password and returns the updated customer as a DTO
+        Owner updatedOwner = service.updateOwnerPassword(
+                email, oldPassword, newPassword
+        );
+        return new OwnerDto(updatedOwner);
+    }
+    @DeleteMapping("/owner/{email}")
+    public String deleteOwner(@PathVariable String email) {
+        // Calls service to delete customer by email
+        service.deleteOwner(email);
+        // Returns a confirmation message upon successful deletion
+        return "Owner with email " + email + " deleted successfully.";
     }
 
 }

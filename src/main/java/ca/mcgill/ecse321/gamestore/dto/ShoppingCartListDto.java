@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.gamestore.dto;
 import java.util.List;
 
 public class ShoppingCartListDto {
+    public ShoppingCartListDto(){}
     private List<ShoppingCartResponseDto> shoppingCart;
 
     public ShoppingCartListDto(List<ShoppingCartResponseDto> shoppingCart) {

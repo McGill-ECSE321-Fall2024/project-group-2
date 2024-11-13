@@ -7,31 +7,35 @@ import ca.mcgill.ecse321.gamestore.model.Review;
 import ca.mcgill.ecse321.gamestore.service.ReviewService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reviews")
-public class ReviewController {
+public class ReviewRestController {
 
     @Autowired
     private ReviewService reviewService;
 
-    @PostMapping
+    // create review, return response dto
+    @PostMapping("/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
     public ReviewResponseDto createReview(@RequestBody ReviewRequestDto dto) {
         Review review = reviewService.createReview(dto);
         return new ReviewResponseDto(review);
     }
 
-    @GetMapping("/{id}")
+    // get review by ID, return response dto
+    @GetMapping("/reviews/{id}")
     public ReviewResponseDto getReviewById(@PathVariable Integer id) {
         Review review = reviewService.getReviewById(id);
         return new ReviewResponseDto(review);
     }
 
-    @GetMapping
+    // get reviews, return as list dto
+    @GetMapping("/reviews")
     public ReviewListDto getAllReviews() {
         List<Review> reviews = reviewService.getAllReviews();
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -41,7 +45,8 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
-    @GetMapping("/product/{productId}")
+    // get reviews by product, return list dto
+    @GetMapping("/products/{productId}/reviews")
     public ReviewListDto getReviewsByProduct(@PathVariable Integer productId) {
         List<Review> reviews = reviewService.getReviewsByProduct(productId);
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -51,7 +56,8 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
-    @GetMapping("/customer/{customerEmail}")
+    // get reviews by customer, return list dto
+    @GetMapping("/customers/{customerEmail}/reviews")
     public ReviewListDto getReviewsByCustomer(@PathVariable String customerEmail) {
         List<Review> reviews = reviewService.getReviewsByCustomer(customerEmail);
         List<ReviewResponseDto> reviewDtos = new ArrayList<>();
@@ -61,14 +67,11 @@ public class ReviewController {
         return new ReviewListDto(reviewDtos);
     }
 
-    @PutMapping("/{id}")
-    public ReviewResponseDto updateReview(@PathVariable Integer id, @RequestBody ReviewRequestDto dto) {
-        Review review = reviewService.updateReview(id, dto);
-        return new ReviewResponseDto(review);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
+    // delete review, returns confirmation message
+    @DeleteMapping("/reviews/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteReview(@PathVariable Integer id, @RequestParam String managerEmail) {
         reviewService.deleteReview(id, managerEmail);
+        return "Review with ID " + id + " deleted successfully.";
     }
 }

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamestore.service;
 
 import ca.mcgill.ecse321.gamestore.dto.ReviewRequestDto;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.model.Product;
@@ -11,6 +12,7 @@ import ca.mcgill.ecse321.gamestore.repository.ProductRepository;
 import ca.mcgill.ecse321.gamestore.repository.ReviewRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,34 +39,34 @@ public class ReviewService {
     public Review createReview(ReviewRequestDto dto) {
         // Validate inputs
         if (dto.getReviewWriterEmail() == null || dto.getReviewWriterEmail().isEmpty()) {
-            throw new IllegalArgumentException("Review writer email cannot be empty.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Review writer email cannot be empty.");
         }
         if (dto.getProductId() == null) {
-            throw new IllegalArgumentException("Product ID cannot be null.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Product ID cannot be null.");
         }
         if (dto.getRating() == null) {
-            throw new IllegalArgumentException("Rating cannot be null.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Rating cannot be null.");
         }
         if (dto.getRating() < 1 || dto.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5.");
         }
 
         // Fetch associated Customer (reviewWriter)
-        Customer reviewWriter = findCustomerByEmail(dto.getReviewWriterEmail());
+        Customer reviewWriter = customerRepository.findCustomerByEmail(dto.getReviewWriterEmail());
         if (reviewWriter == null) {
-            throw new IllegalArgumentException("Customer not found with email: " + dto.getReviewWriterEmail());
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Customer not found with email: " + dto.getReviewWriterEmail());
         }
 
         // Fetch associated Product
         Product product = productRepository.findProductById(dto.getProductId());
         if (product == null) {
-            throw new IllegalArgumentException("Product not found with ID: " + dto.getProductId());
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Product not found with ID: " + dto.getProductId());
         }
 
         // Create new Review
         Review review = new Review();
         review.setRating(dto.getRating());
-        review.setComments(dto.getComments());
+        review.setComments(dto.getComment());
 
         // Set current date as java.sql.Date
         Date sqlDate = new Date(System.currentTimeMillis());
@@ -78,39 +80,15 @@ public class ReviewService {
     }
 
     @Transactional
-    public Review updateReview(Integer reviewId, ReviewRequestDto dto) {
-        // Validate review exists
-        Review review = reviewRepository.findReviewById(reviewId);
-        if (review == null) {
-            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
-        }
-        
-        // Validate inputs
-        if (dto.getRating() == null) {
-            throw new IllegalArgumentException("Rating cannot be null.");
-        }
-        if (dto.getRating() < 1 || dto.getRating() > 5) {
-            throw new IllegalArgumentException("Rating must be between 1 and 5.");
-        }
-
-        // Update review fields
-        review.setRating(dto.getRating());
-        review.setComments(dto.getComments());
-
-        // Save and return updated review
-        return reviewRepository.save(review);
-    }
-
-    @Transactional(readOnly = true)
     public Review getReviewById(Integer reviewId) {
         Review review = reviewRepository.findReviewById(reviewId);
         if (review == null) {
-            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Review not found with ID: " + reviewId);
         }
         return review;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getAllReviews() {
         Iterable<Review> iterable = reviewRepository.findAll();
         List<Review> reviews = new ArrayList<>();
@@ -120,12 +98,12 @@ public class ReviewService {
         return reviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByProduct(Integer productId) {
         // Fetch associated Product
         Product product = productRepository.findProductById(productId);
         if (product == null) {
-            throw new IllegalArgumentException("Product not found with ID: " + productId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Product not found with ID: " + productId);
         }
 
         // Fetch all reviews and filter by product
@@ -139,12 +117,12 @@ public class ReviewService {
         return productReviews;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Review> getReviewsByCustomer(String customerEmail) {
         // Fetch associated Customer
-        Customer customer = findCustomerByEmail(customerEmail);
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
         if (customer == null) {
-            throw new IllegalArgumentException("Customer not found with email: " + customerEmail);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Customer not found with email: " + customerEmail);
         }
 
         // Fetch all reviews and filter by customer
@@ -157,43 +135,22 @@ public class ReviewService {
         }
         return customerReviews;
     }
-
+    
+    // reviews can only be deleted by a manager
     @Transactional
     public void deleteReview(Integer reviewId, String managerEmail) {
         // Verify that the manager exists
-        Owner manager = findOwnerByEmail(managerEmail);
+        Owner manager = ownerRepository.findOwnerByEmail(managerEmail);
         if (manager == null) {
-            throw new IllegalArgumentException("Only the manager can delete reviews.");
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "Only the manager can delete reviews.");
         }
 
         // Verify review exists before deletion
         Review review = reviewRepository.findReviewById(reviewId);
         if (review == null) {
-            throw new IllegalArgumentException("Review not found with ID: " + reviewId);
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Review not found with ID: " + reviewId);
         }
         
         reviewRepository.deleteById(reviewId);
-    }
-
-    // Helper method to find Customer by email
-    private Customer findCustomerByEmail(String email) {
-        Iterable<Customer> customers = customerRepository.findAll();
-        for (Customer customer : customers) {
-            if (customer.getEmail().equals(email)) {
-                return customer;
-            }
-        }
-        return null;
-    }
-
-    // Helper method to find Owner by email
-    private Owner findOwnerByEmail(String email) {
-        Iterable<Owner> owners = ownerRepository.findAll();
-        for (Owner owner : owners) {
-            if (owner.getEmail().equals(email)) {
-                return owner;
-            }
-        }
-        return null;
     }
 }

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.gamestore.service;
 
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class OwnerServiceTest {
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @Mock
     private CustomerRepository customerRepository;
     @Mock
@@ -43,9 +48,12 @@ public class OwnerServiceTest {
     private static final String INVALID_EMAIL = "notanemail";
     private static final String EXISTING_EMAIL = "existing@example.com";
 
+    private static final String ENCODED_PASSWORD = "encodedpassword";
+
+
     @BeforeEach
     public void setUpMocks() {
-        // Mock ownerRepository.findOwnerByEmail to return specific Owner objects for certain emails
+        // Mock behavior for finding an email in the owner repository
         lenient().when(ownerRepository.findOwnerByEmail(anyString())).thenAnswer((InvocationOnMock invocation) -> {
             String email = invocation.getArgument(0);
             if (email.equals(EXISTING_EMAIL)) {
@@ -53,17 +61,29 @@ public class OwnerServiceTest {
             } else if (email.equals(VALID_EMAIL)) {
                 return new Owner(VALID_USER_ID, VALID_NAME, email, VALID_PASSWORD);
             }
-            return null; // Return null for non-existent emails
+            return null;
         });
 
-        // Mock ownerRepository.findAll to return a predefined list of Owner objects
+        // Mock behavior for finding an email in other repositories
+        lenient().when(personRepository.findPersonByEmail(EXISTING_EMAIL)).thenReturn(new Owner("existingID", "Existing Name", EXISTING_EMAIL, "existingpassword"));
+        lenient().when(accountRepository.findAccountByEmail(EXISTING_EMAIL)).thenReturn(null);
+
+        // Mock behavior for retrieving all owners
         lenient().when(ownerRepository.findAll()).thenReturn(List.of(
                 new Owner("user123", "John Doe", "john.doe@example.com", "password1"),
                 new Owner("user456", "Jane Doe", "jane.doe@example.com", "password2")
         ));
 
-        // Mock ownerRepository.save to return the Owner object that was passed in, simulating a save operation
+        // Mock behavior for saving an owner
         lenient().when(ownerRepository.save(any(Owner.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Mock password encoding behavior
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn(ENCODED_PASSWORD); // Simulate password encoding
+        lenient().when(passwordEncoder.matches(anyString(), anyString())).thenAnswer(invocation -> {
+            String rawPassword = invocation.getArgument(0);
+            String encodedPassword = invocation.getArgument(1);
+            return rawPassword.equals(encodedPassword); // Simple match check for tests
+        });
     }
 
     @Test
@@ -74,13 +94,13 @@ public class OwnerServiceTest {
         assertEquals(VALID_USER_ID, createdOwner.getUserID());
         assertEquals(VALID_NAME, createdOwner.getName());
         assertEquals("new.email@example.com", createdOwner.getEmail());
-        assertEquals(VALID_PASSWORD, createdOwner.getPassword());
+        assertEquals(ENCODED_PASSWORD, createdOwner.getPassword());
     }
 
     @Test
     public void testCreateOwner_InvalidEmail() {
         // Test creation of an owner with an invalid email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.createOwner(VALID_USER_ID, VALID_NAME, INVALID_EMAIL, VALID_PASSWORD));
         assertEquals("The email is invalid!", exception.getMessage());
     }
@@ -88,7 +108,7 @@ public class OwnerServiceTest {
     @Test
     public void testCreateOwner_ExistingEmail() {
         // Test creation of an owner with an existing email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.createOwner(VALID_USER_ID, VALID_NAME, EXISTING_EMAIL, VALID_PASSWORD));
         assertEquals("User with that email already exists!", exception.getMessage());
     }
@@ -104,9 +124,9 @@ public class OwnerServiceTest {
     @Test
     public void testGetOwner_NonExistingEmail() {
         // Test retrieving an owner by a non-existing email, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.getOwner("nonexistent@example.com"));
-        assertEquals("Manager Not Found", exception.getMessage());
+        assertEquals("Owner not found", exception.getMessage());
     }
 
     @Test
@@ -127,13 +147,13 @@ public class OwnerServiceTest {
         // Test updating an owner's password with the correct old password
         Owner updatedCustomer = ownerService.updateOwnerPassword(VALID_EMAIL, VALID_PASSWORD, "newPassword123");
         assertNotNull(updatedCustomer);  // Verify that the updated owner is not null
-        assertEquals("newPassword123", updatedCustomer.getPassword());
+        assertEquals(ENCODED_PASSWORD, updatedCustomer.getPassword());
     }
 
     @Test
     public void testUpdateOwnerPassword_IncorrectOldPassword() {
         // Test updating an owner's password with an incorrect old password, expecting an IllegalArgumentException
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(GameStoreException.class, () ->
                 ownerService.updateOwnerPassword(VALID_EMAIL, "wrongOldPassword", "newPassword123"));
         assertEquals("Incorrect old password!", exception.getMessage());
     }

@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.gamestore.service;
 
 import ca.mcgill.ecse321.gamestore.model.LineItem;
+import ca.mcgill.ecse321.gamestore.model.Order;
 import ca.mcgill.ecse321.gamestore.model.ShoppingCart;
 import ca.mcgill.ecse321.gamestore.model.WishList;
 import ca.mcgill.ecse321.gamestore.repository.LineItemRepository;
@@ -136,8 +137,11 @@ public class LineItemService {
         if (lineItem == null || lineItem.getCart() == null) {
             throw new IllegalArgumentException("LineItem or associated Cart not found");
         }
-
-        lineItem.setCart(null);
+        Order tempOrder = lineItem.getOrder();
+        WishList tempWishlist = lineItem.getWishlist();
+        lineItem.delete();
+        lineItem.setOrder(tempOrder);
+        lineItem.setWishlist(tempWishlist);
         return lineItemRepository.save(lineItem);
     }
 
@@ -150,8 +154,11 @@ public class LineItemService {
         if (lineItem == null || lineItem.getWishlist() == null) {
             throw new IllegalArgumentException("LineItem or associated WishList not found");
         }
-
-        lineItem.setWishlist(null);
+        Order tempOrder = lineItem.getOrder();
+        ShoppingCart tempCart = lineItem.getCart();
+        lineItem.delete();
+        lineItem.setCart(tempCart);
+        lineItem.setOrder(tempOrder);
         return lineItemRepository.save(lineItem);
     }
 }

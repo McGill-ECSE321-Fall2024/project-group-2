@@ -7,13 +7,13 @@ import ca.mcgill.ecse321.gamestore.model.ShoppingCart;
 import ca.mcgill.ecse321.gamestore.service.ShoppingCartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shoppingcarts")
 public class ShoppingCartRestController {
 
     // Injecting the ShoppingCartService to manage shopping cart operations
@@ -21,7 +21,7 @@ public class ShoppingCartRestController {
     private ShoppingCartService shoppingCartService;
 
     // Endpoint to retrieve all shopping carts
-    @GetMapping("/")
+    @GetMapping("/shoppingcart")
     public ShoppingCartListDto findAllShoppingCarts() {
         // Create a list to hold ShoppingCartResponseDto objects
         List<ShoppingCartResponseDto> shoppingCartDtos = new ArrayList<>();
@@ -36,7 +36,8 @@ public class ShoppingCartRestController {
     }
 
     // Endpoint to create a new shopping cart
-    @PostMapping(value = { "/create", "/create/" })
+    @PostMapping(value = { "/shoppingcart", "/shoppingcart/" })
+    @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartResponseDto createShoppingCart(@RequestBody ShoppingCartRequestDto shoppingCartRequestDto) {
         // Create a new shopping cart using the provided DTO
         // Call the service to create the shopping cart using the provided creation date
@@ -47,7 +48,7 @@ public class ShoppingCartRestController {
     }
 
     // Endpoint to retrieve a specific shopping cart by ID
-    @GetMapping(value = { "/{id}", "/{id}/" })
+    @GetMapping(value = { "/shoppingcart/{id}", "/shoppingcart/{id}/" })
     public ShoppingCartResponseDto getShoppingCart(@PathVariable int id) {
         // Fetch the ShoppingCart model using the provided ID
         ShoppingCart shoppingCart = shoppingCartService.getShoppingCart(id);

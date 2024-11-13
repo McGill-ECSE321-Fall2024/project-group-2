@@ -27,7 +27,7 @@ public class WishList
 
   public WishList(String wishName)
   {
-    wishName = wishName;
+    this.wishName = wishName;
   }
 
   //------------------------
@@ -45,7 +45,7 @@ public class WishList
   public boolean setWishName(String aWishName)
   {
     boolean wasSet = false;
-    wishName = aWishName;
+    this.wishName = aWishName;
     wasSet = true;
     return wasSet;
   }

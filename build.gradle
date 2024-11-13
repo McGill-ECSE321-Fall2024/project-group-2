@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.security:spring-security-core:5.7.4' // Add this line
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -26,10 +27,35 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// Configuring test task to use JUnit platform and enable detailed logging
 tasks.named('test') {
 	useJUnitPlatform()
 	testLogging {
-		exceptionFormat "full"
-		//...other configurations
+		exceptionFormat = "full"
+		events "passed", "failed", "skipped"
+	}
+	// Ensure JaCoCo test report is generated after tests
+	finalizedBy 'jacocoTestReport'
+}
+
+// Configuring the JaCoCo test report task
+tasks.named('jacocoTestReport') {
+	dependsOn test // Ensure tests run before generating the report
+	reports {
+		html.required.set(true)  // Generates HTML report for easy viewing
+		xml.required.set(false)  // XML report, set to true if needed for CI tools
+		csv.required.set(false)  // CSV report, set to true if needed
+	}
+}
+
+// Enforce code coverage minimum threshold (optional)
+tasks.named('jacocoTestCoverageVerification') {
+	dependsOn test
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.6 // Set to 60%, adjust as needed
+			}
+		}
 	}
 }
