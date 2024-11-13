@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/shoppingcarts")
 public class ShoppingCartRestController {
 
     // Injecting the ShoppingCartService to manage shopping cart operations

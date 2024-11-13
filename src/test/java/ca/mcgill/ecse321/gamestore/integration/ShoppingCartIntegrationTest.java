@@ -46,7 +46,7 @@ public class ShoppingCartIntegrationTest {
         ShoppingCartRequestDto shoppingCartRequestDto = new ShoppingCartRequestDto(Date.valueOf("2024-11-06"));
 
         ResponseEntity<ShoppingCartResponseDto> responseEntity = restTemplate.postForEntity(
-                "/shoppingcarts/shoppingcart", shoppingCartRequestDto, ShoppingCartResponseDto.class
+                "/shoppingcart/", shoppingCartRequestDto, ShoppingCartResponseDto.class
         );
 
         assertNotNull(responseEntity);
@@ -64,7 +64,7 @@ public class ShoppingCartIntegrationTest {
         shoppingCartService.createShoppingCart(Date.valueOf("2024-11-06"));
 
         ResponseEntity<ShoppingCartListDto> responseEntity = restTemplate.getForEntity(
-                "/shoppingcarts/shoppingcart", ShoppingCartListDto.class
+                "/shoppingcart", ShoppingCartListDto.class
         );
 
         assertNotNull(responseEntity);
@@ -83,7 +83,7 @@ public class ShoppingCartIntegrationTest {
         ShoppingCart createdShoppingCart = shoppingCartService.createShoppingCart(Date.valueOf("2024-11-06"));
 
         ResponseEntity<ShoppingCartResponseDto> responseEntity = restTemplate.getForEntity(
-                "/shoppingcarts/shoppingcart/" + createdShoppingCart.getId(), ShoppingCartResponseDto.class
+                "/shoppingcart/" + createdShoppingCart.getId(), ShoppingCartResponseDto.class
         );
 
         assertNotNull(responseEntity);
@@ -99,7 +99,7 @@ public class ShoppingCartIntegrationTest {
     @Test
     public void testGetNonExistingShoppingCartById() {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(
-                "/shoppingcarts/shoppingcart/999", String.class
+                "/shoppingcart/999", String.class
         );
 
         assertNotNull(responseEntity);
