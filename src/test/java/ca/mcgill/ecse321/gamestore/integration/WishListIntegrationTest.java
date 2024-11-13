@@ -65,7 +65,7 @@ public class WishListIntegrationTest {
         WishListResponseDto createdWishList = postResponse.getBody();
 
         ResponseEntity<WishListResponseDto> responseEntity = restTemplate.getForEntity(
-                "/wishList/" + createdWishList.getId(), WishListResponseDto.class);
+                "/wishlist/" + createdWishList.getId(), WishListResponseDto.class);
 
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -114,7 +114,7 @@ public class WishListIntegrationTest {
         WishListResponseDto createdWishList = postResponse.getBody();
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(
-                "/wishList/" + createdWishList.getId() + "?newName=",
+                "/wishlist/" + createdWishList.getId() + "?newName=",
                 org.springframework.http.HttpMethod.PUT,
                 null,
                 String.class
