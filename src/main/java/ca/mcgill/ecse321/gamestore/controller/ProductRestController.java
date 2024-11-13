@@ -146,10 +146,10 @@ public class ProductRestController {
      * @param newCategory The new category of the product to update.
      * @return The updated product.
      */
-    @PutMapping("/product/{productId}/category/{newCategory}")
-    public ResponseEntity<?> updateProductCategory(@PathVariable int productId, @PathVariable int newCategory){
+    @PutMapping("/product/{productId}/category/{newCategoryId}")
+    public ResponseEntity<?> updateProductCategory(@PathVariable int productId, @PathVariable int newCategoryId){
         try {
-            Product product = productService.updateProductCategory(productId, newCategory);
+            Product product = productService.updateProductCategory(productId, newCategoryId);
             return new ResponseEntity<>(new ProductResponseDto(product), HttpStatus.OK);
         } catch (GameStoreException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
