@@ -15,7 +15,7 @@ We are a team of developers working on this project with different roles to ensu
 | Name | Team Role | Effort (in hours) | Deliverable 2(hours)| 
 |------|-------|----------------|-------------|
 |Abdullah Taltello| Developer |48|48|
-|Farhad Guliyev| Developer |40| 40|
+|Farhad Guliyev| Developer |46| 46|
 |Sean O'Keefe| Developer|55| 55|
 |Mohamed El-Machmouchi|Project Manager|58|58|
 |Katrina Panwar| Quality Assurance Lead|58| 58|
