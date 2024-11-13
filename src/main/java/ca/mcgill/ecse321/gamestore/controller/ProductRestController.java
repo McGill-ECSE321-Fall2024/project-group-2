@@ -77,13 +77,13 @@ public class ProductRestController {
     /**
      * Return All the products with the given category.
      *
-     * @param CategoryId The category id.
+     * @param categoryId The category id.
      * @return A list of products belonging to the given category id.
      */
     @GetMapping("/product/category/{categoryId}")
-    public ResponseEntity<ProductListDto> getAllProductWithCategory(@PathVariable int CategoryId){
+    public ResponseEntity<ProductListDto> getAllProductWithCategory(@PathVariable int categoryId){
         List<ProductResponseDto> products = new ArrayList<ProductResponseDto>();
-        for (Product product : productService.getAllProductWithCategory(CategoryId)) {
+        for (Product product : productService.getAllProductWithCategory(categoryId)) {
             products.add(new ProductResponseDto(product));
         } return new ResponseEntity<>(new ProductListDto(products), HttpStatus.OK);
     }

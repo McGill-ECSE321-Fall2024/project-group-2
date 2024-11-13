@@ -36,5 +36,10 @@ public class WishListRequestDto {
         return true;
     }
 
+    public boolean setId(int listId){
+        this.listId= listId;
+        return true;
+    }
+
 
 }

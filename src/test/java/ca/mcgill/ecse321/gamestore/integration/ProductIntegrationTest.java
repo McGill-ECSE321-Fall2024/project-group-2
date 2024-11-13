@@ -124,7 +124,7 @@ public class ProductIntegrationTest {
     // test to get a product with a valid Id
     @Test
     public void testGetProductById() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter_game", lineItem, category);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -137,7 +137,7 @@ public class ProductIntegrationTest {
         ProductResponseDto retrievedProduct = responseEntity.getBody();
         assertNotNull(retrievedProduct);
         assertEquals("CSGO", retrievedProduct.getName());
-        assertEquals("Shooter game", retrievedProduct.getDescription());    
+        assertEquals("Shooter_game", retrievedProduct.getDescription());    
     }
 
     // test to get a product with an invalid Id
