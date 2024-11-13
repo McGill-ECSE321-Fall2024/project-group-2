@@ -48,10 +48,10 @@ public class WishListRestController {
      * @param newName The new name
      * @return The created wishlist.
      */
-    @PutMapping("/wishlist/{wishlistId}")
-    public ResponseEntity<?> updateWishListName(@PathVariable int wishListId, @RequestParam String newName){
+    @PutMapping("/wishlist/{listId}")
+    public ResponseEntity<?> updateWishListName(@PathVariable int listId, @RequestParam String newName){
         try {
-            WishList wishList = wishListService.updateWishListName(wishListId, newName);
+            WishList wishList = wishListService.updateWishListName(listId, newName);
             return new ResponseEntity<>(new WishListResponseDto(wishList), HttpStatus.OK);
         } catch (GameStoreException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());

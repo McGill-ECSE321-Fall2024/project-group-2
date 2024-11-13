@@ -182,7 +182,6 @@ public class ProductIntegrationTest {
         restTemplate.postForEntity("/product", request2, ProductResponseDto.class);
 
         ResponseEntity<ProductListDto> response = restTemplate.getForEntity("/product/category/"+category.getId(), ProductListDto.class);
-
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ProductListDto products = response.getBody();

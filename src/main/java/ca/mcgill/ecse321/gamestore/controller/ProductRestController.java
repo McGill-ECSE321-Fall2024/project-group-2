@@ -37,7 +37,7 @@ public class ProductRestController {
     @PostMapping("/product")
     public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto){
          try {
-            Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItemOfProduct(), productDto.getCategory());
+            Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItem(), productDto.getCategory());
             return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
         } catch (GameStoreException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
@@ -54,7 +54,7 @@ public class ProductRestController {
     public ResponseEntity<?> getProduct(@PathVariable int productId){
         try {
             Product createdProduct = productService.getProduct(productId);
-            return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
+            return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.OK);
         } catch (GameStoreException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
         }
@@ -77,12 +77,12 @@ public class ProductRestController {
     /**
      * Return All the products with the given category.
      *
-     * @param categoryId The category id.
+     * @param CategoryId The category id.
      * @return A list of products belonging to the given category id.
      */
     @GetMapping("/product/category/{categoryId}")
     public ResponseEntity<ProductListDto> getAllProductWithCategory(@PathVariable int categoryId){
-        List<ProductResponseDto> products = new ArrayList<ProductResponseDto>();
+        List<ProductResponseDto> products = new ArrayList<>();
         for (Product product : productService.getAllProductWithCategory(categoryId)) {
             products.add(new ProductResponseDto(product));
         } return new ResponseEntity<>(new ProductListDto(products), HttpStatus.OK);

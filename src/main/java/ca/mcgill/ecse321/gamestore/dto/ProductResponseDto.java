@@ -44,7 +44,7 @@ public class ProductResponseDto {
         return this.description;
     }
 
-    public LineItem getLineItemOfProduct(){
+    public LineItem getLineItem(){
         return this.lineItem;
     }
 
@@ -68,7 +68,7 @@ public class ProductResponseDto {
         return true;
     }
 
-    public boolean setLineItemOfProduct(LineItem lineItem){
+    public boolean setLineItem(LineItem lineItem){
         this.lineItem= lineItem;
         return true;
     }
