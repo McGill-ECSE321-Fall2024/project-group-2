@@ -30,28 +30,23 @@ public class PaymentIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    // Clear the database before and after each test
     @BeforeEach
     @AfterEach
     public void clearDatabase() {
         paymentRepository.deleteAll();
     }
 
-    // Set the timezone to UTC before all tests to avoid date discrepancies
     @BeforeAll
     public static void setUpTimezone() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
-    /**
-     * Test for creating a payment successfully.
-     */
     @Test
     public void testCreatePayment_Success() {
         LocalDate paidDate = LocalDate.of(2023, 10, 10);
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf(paidDate), 100.0, "Order #123");
 
-        ResponseEntity<PaymentResponseDto> response = restTemplate.postForEntity("/api/payment/create", request, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> response = restTemplate.postForEntity("/api/payment/", request, PaymentResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -64,52 +59,40 @@ public class PaymentIntegrationTest {
         assertEquals("Order #123", createdPayment.getDetails());
     }
 
-    /**
-     * Test for creating a payment with an invalid date (null).
-     */
     @Test
     public void testCreatePayment_InvalidDate() {
         PaymentRequestDto request = new PaymentRequestDto(null, 100.0, "Order #124");
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/create", request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/", request, String.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Payment date cannot be null.", response.getBody());
     }
 
-    /**
-     * Test for creating a payment with a negative total.
-     */
     @Test
     public void testCreatePayment_InvalidTotal() {
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf("2023-10-10"), -100.0, "Order #125");
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/create", request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/", request, String.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Payment total must be greater than zero.", response.getBody());
     }
 
-    /**
-     * Test for creating a payment with empty details.
-     */
     @Test
     public void testCreatePayment_InvalidDetails() {
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf("2023-10-10"), 100.0, " ");
-        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/create", request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/payment/", request, String.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Payment details cannot be empty.", response.getBody());
     }
 
-    /**
-     * Test for retrieving a payment by ID.
-     */
     @Test
     public void testGetPaymentById() {
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf("2023-10-10"), 100.0, "Order #126");
-        ResponseEntity<PaymentResponseDto> postResponse = restTemplate.postForEntity("/api/payment/create", request, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> postResponse = restTemplate.postForEntity("/api/payment/", request, PaymentResponseDto.class);
 
         assertNotNull(postResponse);
         assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
@@ -126,9 +109,6 @@ public class PaymentIntegrationTest {
         assertEquals(createdPayment.getPaymentId(), retrievedPayment.getPaymentId());
     }
 
-    /**
-     * Test for retrieving a payment by an invalid ID.
-     */
     @Test
     public void testGetPaymentById_NotFound() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/payment/999", String.class);
@@ -138,15 +118,12 @@ public class PaymentIntegrationTest {
         assertEquals("No payment found with ID: 999", response.getBody());
     }
 
-    /**
-     * Test for retrieving all payments.
-     */
     @Test
     public void testGetAllPayments() {
         PaymentRequestDto request1 = new PaymentRequestDto(Date.valueOf("2023-10-10"), 100.0, "Order #127");
         PaymentRequestDto request2 = new PaymentRequestDto(Date.valueOf("2023-10-11"), 200.0, "Order #128");
-        restTemplate.postForEntity("/api/payment/create", request1, PaymentResponseDto.class);
-        restTemplate.postForEntity("/api/payment/create", request2, PaymentResponseDto.class);
+        restTemplate.postForEntity("/api/payment/", request1, PaymentResponseDto.class);
+        restTemplate.postForEntity("/api/payment/", request2, PaymentResponseDto.class);
 
         ResponseEntity<PaymentResponseDto[]> response = restTemplate.getForEntity("/api/payment/all", PaymentResponseDto[].class);
 
@@ -157,14 +134,11 @@ public class PaymentIntegrationTest {
         assertEquals(2, payments.length);
     }
 
-    /**
-     * Test for updating a payment successfully.
-     */
     @Test
     public void testUpdatePayment_Success() {
         LocalDate initialDate = LocalDate.of(2023, 10, 10);
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf(initialDate), 100.0, "Order #123");
-        ResponseEntity<PaymentResponseDto> response = restTemplate.postForEntity("/api/payment/create", request, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> response = restTemplate.postForEntity("/api/payment/", request, PaymentResponseDto.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -174,7 +148,7 @@ public class PaymentIntegrationTest {
         LocalDate newDate = LocalDate.of(2023, 12, 1);
         PaymentRequestDto updateRequest = new PaymentRequestDto(Date.valueOf(newDate), 200.0, "Updated Order #123");
         ResponseEntity<PaymentResponseDto> updateResponse = restTemplate.exchange(
-                "/api/payment/update/" + createdPayment.getPaymentId(),
+                "/api/payment/" + createdPayment.getPaymentId(),
                 HttpMethod.PUT,
                 new HttpEntity<>(updateRequest),
                 PaymentResponseDto.class
@@ -190,29 +164,23 @@ public class PaymentIntegrationTest {
         assertEquals("Updated Order #123", updatedPayment.getDetails());
     }
 
-    /**
-     * Test for updating a payment with an invalid ID.
-     */
     @Test
     public void testUpdatePayment_NotFound() {
         PaymentRequestDto updatedRequest = new PaymentRequestDto(Date.valueOf("2023-12-01"), 150.0, "Non-existing Order");
-        ResponseEntity<String> response = restTemplate.exchange("/api/payment/update/999", HttpMethod.PUT, new HttpEntity<>(updatedRequest), String.class);
+        ResponseEntity<String> response = restTemplate.exchange("/api/payment/999", HttpMethod.PUT, new HttpEntity<>(updatedRequest), String.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("No payment found with ID: 999", response.getBody());
     }
 
-    /**
-     * Test for deleting a payment by ID.
-     */
     @Test
     public void testDeletePayment_Success() {
         PaymentRequestDto request = new PaymentRequestDto(Date.valueOf("2023-10-10"), 100.0, "Order #130");
-        PaymentResponseDto createdPayment = restTemplate.postForEntity("/api/payment/create", request, PaymentResponseDto.class).getBody();
+        PaymentResponseDto createdPayment = restTemplate.postForEntity("/api/payment/", request, PaymentResponseDto.class).getBody();
         assertNotNull(createdPayment);
 
-        ResponseEntity<Void> response = restTemplate.exchange("/api/payment/delete/" + createdPayment.getPaymentId(), HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange("/api/payment/" + createdPayment.getPaymentId(), HttpMethod.DELETE, null, Void.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -222,17 +190,15 @@ public class PaymentIntegrationTest {
         assertEquals("No payment found with ID: " + createdPayment.getPaymentId(), getResponse.getBody());
     }
 
-    /**
-     * Test for deleting a payment with an invalid ID.
-     */
     @Test
     public void testDeletePayment_NotFound() {
-        ResponseEntity<String> response = restTemplate.exchange("/api/payment/delete/999", HttpMethod.DELETE, null, String.class);
+        ResponseEntity<String> response = restTemplate.exchange("/api/payment/999", HttpMethod.DELETE, null, String.class);
 
         assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("No payment found with ID: 999", response.getBody());
     }
 }
+
 
 

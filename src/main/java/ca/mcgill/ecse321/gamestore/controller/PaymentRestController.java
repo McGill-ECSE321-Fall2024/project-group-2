@@ -28,7 +28,7 @@ public class PaymentRestController {
      * @param paymentRequestDto The payment details.
      * @return ResponseEntity containing the created payment as PaymentResponseDto and HTTP status.
      */
-    @PostMapping("/api/payment/create")
+    @PostMapping("/api/payment/")
     public ResponseEntity<PaymentResponseDto> createPayment(@RequestBody PaymentRequestDto paymentRequestDto) {
         Payment payment = paymentService.createPayment(
                 paymentRequestDto.getPaidDate(),
@@ -83,7 +83,7 @@ public class PaymentRestController {
      * @param paymentRequestDto The updated payment details.
      * @return ResponseEntity containing the updated payment as PaymentResponseDto and HTTP status.
      */
-    @PutMapping("/api/payment/update/{id}")
+    @PutMapping("/api/payment/{id}")
     public ResponseEntity<PaymentResponseDto> updatePayment(@PathVariable("id") int id, @RequestBody PaymentRequestDto paymentRequestDto) {
         Payment updatedPayment = paymentService.updatePayment(
                 id,
@@ -104,12 +104,13 @@ public class PaymentRestController {
      * @param id The payment ID.
      * @return ResponseEntity with HTTP status indicating the outcome of the delete operation.
      */
-    @DeleteMapping("/api/payment/delete/{id}")
+    @DeleteMapping("/api/payment/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable("id") int id) {
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
     }
 }
+
 
 
 

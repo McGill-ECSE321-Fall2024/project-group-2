@@ -56,16 +56,29 @@ public class PaymentService {
         paymentRepository.delete(payment);
     }
 
-    private void validatePaymentInputs(Date paidDate, double total, String details) {
+    private void validatePaymentDate(Date paidDate) {
         if (paidDate == null) {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "Payment date cannot be null.");
         }
+    }
+
+    private void validatePaymentTotal(double total) {
         if (total <= 0) {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "Payment total must be greater than zero.");
         }
+    }
+
+    private void validatePaymentDetails(String details) {
         if (details == null || details.trim().isEmpty()) {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "Payment details cannot be empty.");
         }
     }
+
+    private void validatePaymentInputs(Date paidDate, double total, String details) {
+        validatePaymentDate(paidDate);
+        validatePaymentTotal(total);
+        validatePaymentDetails(details);
+    }
+
 }
 
