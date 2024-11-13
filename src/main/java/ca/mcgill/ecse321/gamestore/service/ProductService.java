@@ -83,6 +83,9 @@ public class ProductService {
             if (product==null){
                 throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find product with the given Id!");
             }
+            else if (name == null || name.trim().isEmpty()){
+                throw new GameStoreException(HttpStatus.BAD_REQUEST, "The name cannot be empty!");
+            }
             else{
                 product.setName(name);
                 return product;
@@ -94,6 +97,9 @@ public class ProductService {
         Product product = productRepository.findProductById(productId);
             if (product==null){
                 throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find product with the given Id!");
+            }
+            else if (descrtiption == null || descrtiption.trim().isEmpty()){
+                throw new GameStoreException(HttpStatus.BAD_REQUEST, "The description cannot be empty!");
             }
             else{
                 product.setDescription(descrtiption);

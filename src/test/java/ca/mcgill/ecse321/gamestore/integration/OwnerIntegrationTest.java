@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.gamestore.integration;
 
-import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Owner;

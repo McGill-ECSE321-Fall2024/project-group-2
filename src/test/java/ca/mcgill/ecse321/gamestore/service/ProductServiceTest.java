@@ -29,9 +29,6 @@ public class ProductServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
-    private LineItemRepository lineItemRepository;
-
     @InjectMocks
     private ProductService productService;
 
@@ -224,6 +221,23 @@ public class ProductServiceTest {
         assertEquals("Can't find product with the given Id!", exception.getMessage());
     }
 
+    // Test updating an existing product name with a null name
+    @Test
+    public void testUpdateProductName_InvalidName() {
+        // Create test category and lineItem and product
+        Category category = new Category("Sport");
+        LineItem lineItem= new LineItem();
+        lineItem.setPrice(90);
+        lineItem.setQuantity(20);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        when(productRepository.findProductById(anyInt())).thenReturn(product);
+
+        GameStoreException exception = assertThrows(GameStoreException.class, () ->
+                productService.updateProductName(1, null));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("The name cannot be empty!", exception.getMessage());
+    }
+
     // Test updating an existing product description
     @Test
     public void testUpdateProductDescription_Success() {
@@ -248,6 +262,23 @@ public class ProductServiceTest {
                 productService.updateProductDescription(999, VALID_DESCRIPTION2));
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
         assertEquals("Can't find product with the given Id!", exception.getMessage());
+    }
+
+    // Test updating an existing product name with a null name
+    @Test
+    public void testUpdateProductDescription_InvalidDescription() {
+        // Create test category and lineItem and product
+        Category category = new Category("Sport");
+        LineItem lineItem= new LineItem();
+        lineItem.setPrice(90);
+        lineItem.setQuantity(20);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        when(productRepository.findProductById(anyInt())).thenReturn(product);
+
+        GameStoreException exception = assertThrows(GameStoreException.class, () ->
+                productService.updateProductDescription(1, null));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("The description cannot be empty!", exception.getMessage());
     }
 
     // Test updating an existing product category

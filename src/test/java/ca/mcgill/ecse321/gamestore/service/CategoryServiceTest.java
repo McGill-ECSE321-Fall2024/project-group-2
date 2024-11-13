@@ -103,7 +103,7 @@ public class CategoryServiceTest {
         assertEquals(VALID_NAME2, updatedCategory.getName());
     }
 
-    // Test updating a category with an ID that does not exist
+    // Test updating a category name with an ID that does not exist
     @Test
     public void testUpdateCategory_NotFound() {
         when(categoryRepository.findCategoryById(anyInt())).thenReturn(null);
@@ -112,6 +112,20 @@ public class CategoryServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
         assertEquals("Can't find category with the given Id!", exception.getMessage());
     }
+
+    // Test updating a category name with a null name
+    @Test
+    public void testUpdateCategory_InvalidName() {
+        Category category = new Category(VALID_NAME);
+        when(categoryRepository.findCategoryById(anyInt())).thenReturn(category);
+
+        GameStoreException exception = assertThrows(GameStoreException.class, () ->
+                categoryService.updateCategoryName(1, null));
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+        assertEquals("The name cannot be empty!", exception.getMessage());
+    }
+
 
     // Test deleting an existing category
     @Test

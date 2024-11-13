@@ -20,7 +20,7 @@ public class CategoryRestController {
     @Autowired
     CategoryService categoryService;
 
-    @PostMapping(value = {"/category", "/category/"})
+    @PostMapping("/category")
     public ResponseEntity<?> createCategory(@RequestBody CategoryDto categoryDto) {
         try {
             Category createdCategory = categoryService.createCategory(categoryDto.getName());
@@ -40,7 +40,7 @@ public class CategoryRestController {
         }
     }
 
-    @GetMapping(value = {"/category", "/category/"})
+    @GetMapping("/category")
     public ResponseEntity<CategoryListDto> getAllCategory() {
         List<CategoryDto> categories = new ArrayList<>();
         for (Category category : categoryService.getAllCategory()) {

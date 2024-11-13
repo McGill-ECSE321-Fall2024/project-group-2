@@ -3,20 +3,26 @@ package ca.mcgill.ecse321.gamestore.dto;
 import java.util.List;
 
 public class CustomerListDto {
-    private List<CustomerResponseDto> customer;
+    private List<CustomerResponseDto> customers;  // Changed the variable name to 'customers'
 
     // No-argument constructor
     public CustomerListDto() {
     }
-    public CustomerListDto(List<CustomerResponseDto> customer) {
-        this.customer = customer;
+
+    // Constructor
+    public CustomerListDto(List<CustomerResponseDto> customers) {
+        this.customers = customers;
     }
 
-    public List<CustomerResponseDto> getCustomer() {
-        return this.customer;
+    // Getter
+    public List<CustomerResponseDto> getCustomers() {  // Changed to 'getCustomers'
+        return this.customers;
     }
 
-    public void setCustomer(List<CustomerResponseDto> customer){
-        this.customer= customer;
+    // Setter
+    public void setCustomers(List<CustomerResponseDto> customers) {  // Changed to 'setCustomers'
+        this.customers = customers;
     }
 }
+
+

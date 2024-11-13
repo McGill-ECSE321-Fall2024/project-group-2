@@ -1,17 +1,20 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import ca.mcgill.ecse321.gamestore.dto.ProductResponseDto;
-import ca.mcgill.ecse321.gamestore.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.gamestore.dto.WishListRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.WishListResponseDto;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.WishList;
 import ca.mcgill.ecse321.gamestore.service.WishListService;
 
@@ -27,16 +30,32 @@ public class WishListRestController {
      * @param wishListDto The wishlist to create.
      * @return The created wishlist.
      */
-    @PostMapping(value= {"/wishlist/create", "/wishlist/create/"})
-    public WishListResponseDto createWishList(@RequestBody WishListRequestDto wishListDto){
-        WishList createdWishList = wishListService.createWishList(wishListDto.getWishName());
-        return new WishListResponseDto(createdWishList);
+    @PostMapping("/wishlist")
+    public ResponseEntity<?> createWishList(@RequestBody WishListRequestDto wishListDto){
+        try {
+            WishList createdWishList = wishListService.createWishList(wishListDto.getWishName());
+            return new ResponseEntity<>(new WishListResponseDto(createdWishList), HttpStatus.CREATED);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
-    @PostMapping(value= {"/product/{wishListId}/name/{newName}", "/product/{wishListId}/name/{newName}/"})
-    public WishListResponseDto updateWishListName(@PathVariable int wishListId, @PathVariable String newName){
-        WishList wishList= wishListService.getWishList(wishListId);
-        wishListService.updateWishListName(wishListId,newName);
-        return new WishListResponseDto(wishList);
+
+
+    /**
+     * Create a new wishlist.
+     *
+     * @param wishListId The primary key of the wishlist to update.
+     * @param newName The new name
+     * @return The created wishlist.
+     */
+    @PutMapping("/wishlist/{wishlistId}")
+    public ResponseEntity<?> updateWishListName(@PathVariable int wishListId, @RequestParam String newName){
+        try {
+            WishList wishList = wishListService.updateWishListName(wishListId, newName);
+            return new ResponseEntity<>(new WishListResponseDto(wishList), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     /**
@@ -45,10 +64,14 @@ public class WishListRestController {
      * @param listId The primary key of the wishlist to find.
      * @return The wishlist with the given ID.
      */
-    @GetMapping(value={"/wishlist/{listId}", "/wishlist/{listId}/"})
-    public WishListResponseDto getWishList(@PathVariable int listId){
-        WishList wishList= wishListService.getWishList(listId);
-        return new WishListResponseDto(wishList);
+    @GetMapping("/wishlist/{listId}")
+    public ResponseEntity<?> getWishList(@PathVariable int listId){
+        try {
+            WishList wishList = wishListService.getWishList(listId);
+            return new ResponseEntity<>(new WishListResponseDto(wishList), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     /**
@@ -57,10 +80,14 @@ public class WishListRestController {
      * @param listId The primary key of the wishlist to delete.
      * @return Boolean indicating whether the wishlist has been sucessfully deleted or not.
      */
-    @DeleteMapping(value = {"/wishlist/{listId}/", "/wishlist/{listId}"})
-    public boolean deleteWishList(@PathVariable int listId) {
-        boolean deleted = wishListService.deleteWishList(listId);
-        return deleted;
+    @DeleteMapping("/wishlist/{listId}")
+    public ResponseEntity<?> deleteWishList(@PathVariable int listId) {
+        try {
+            wishListService.deleteWishList(listId);
+            return new ResponseEntity<>("WishList was deleted successfully.", HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
 }

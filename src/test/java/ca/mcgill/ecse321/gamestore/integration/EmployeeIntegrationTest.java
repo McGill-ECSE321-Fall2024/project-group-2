@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.gamestore.integration;
 
 import ca.mcgill.ecse321.gamestore.dto.EmployeeRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.EmployeeResponseDto;
-import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Employee;
 import ca.mcgill.ecse321.gamestore.service.EmployeeService;
@@ -67,7 +66,7 @@ public class EmployeeIntegrationTest {
         );
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(
-                "/customers", employeeDto, String.class
+                "/employee", employeeDto, String.class
         );
 
         assertNotNull(responseEntity);
