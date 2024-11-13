@@ -4,15 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.gamestore.dto.ProductListDto;
 import ca.mcgill.ecse321.gamestore.dto.ProductRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.ProductResponseDto;
+import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Product;
 import ca.mcgill.ecse321.gamestore.service.ProductService;
 
@@ -28,10 +34,14 @@ public class ProductRestController {
      * @param productDto The product to create.
      * @return The created product.
      */
-    @PostMapping(value= {"/product/create", "/product/create/"})
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productDto){
-        Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItemOfProduct(),productDto.getCategory());
-        return new ProductResponseDto(createdProduct);
+    @PostMapping("/product")
+    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto){
+         try {
+            Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItemOfProduct(), productDto.getCategory());
+            return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     /**
@@ -40,10 +50,14 @@ public class ProductRestController {
      * @param productId The primary key of the product to find.
      * @return The product with the given ID.
      */
-    @GetMapping(value={"/product/{productId}", "/product/{productId}/"})
-    public ProductResponseDto getProduct(@PathVariable int productId){
-        Product product= productService.getProduct(productId);
-        return new ProductResponseDto(product);
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<?> getProduct(@PathVariable int productId){
+        try {
+            Product createdProduct = productService.getProduct(productId);
+            return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
 
@@ -53,25 +67,26 @@ public class ProductRestController {
      *
      * @return All the products with the given ID.
      */
-    @GetMapping(value={"/product", "/product/"})
-    public ProductListDto getAllProduct(){
-        List<ProductResponseDto> products = new ArrayList<ProductResponseDto>();
+    @GetMapping("/product")
+    public ResponseEntity<ProductListDto> getAllProduct(){
+        List<ProductResponseDto> products = new ArrayList<>();
         for (Product product : productService.getAllProduct()) {
             products.add(new ProductResponseDto(product));
-        } return new ProductListDto(products);}
-
+        } return new ResponseEntity<>(new ProductListDto(products), HttpStatus.OK);
+    }
     /**
      * Return All the products with the given category.
      *
      * @param CategoryId The category id.
      * @return A list of products belonging to the given category id.
      */
-    @GetMapping(value={"/product/category/{categoryId}", "/product/category/{categoryId}/"})
-    public ProductListDto getAllProductWithCategory(@PathVariable int CategoryId){
+    @GetMapping("/product/category/{categoryId}")
+    public ResponseEntity<ProductListDto> getAllProductWithCategory(@PathVariable int CategoryId){
         List<ProductResponseDto> products = new ArrayList<ProductResponseDto>();
         for (Product product : productService.getAllProductWithCategory(CategoryId)) {
             products.add(new ProductResponseDto(product));
-        } return new ProductListDto(products);}
+        } return new ResponseEntity<>(new ProductListDto(products), HttpStatus.OK);
+    }
 
     /**
      * Delete the product with the given ID.
@@ -79,10 +94,14 @@ public class ProductRestController {
      * @param productId The primary key of the product to delete.
      * @return Boolean indicating whether the product was successfully deleted or not.
      */
-    @PostMapping(value= {"/product/{productId}/delete", "/product/{productId}/delete/"})
-    public boolean deleteProduct(@PathVariable int productId){
-        boolean deleted= productService.deleteProduct(productId);
-        return deleted;
+    @DeleteMapping("/product/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable int productId){
+        try {
+            productService.deleteProduct(productId);
+            return new ResponseEntity<>("Product was deleted successfully.", HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
 
@@ -93,11 +112,14 @@ public class ProductRestController {
      * @param newName The new name of the product to update.
      * @return The updated product.
      */
-    @PostMapping(value= {"/product/{productId}/name/{newName}", "/product/{productId}/name/{newName}/"})
-    public ProductResponseDto updateProductName(@PathVariable int productId, @PathVariable String newName){
-        Product product= productService.getProduct(productId);
-        productService.updateProductName(productId,newName);
-        return new ProductResponseDto(product);
+    @PutMapping("/product/name/{productId}")
+    public ResponseEntity<?> updateProductName(@PathVariable int productId, @RequestParam String newName){
+        try {
+            Product product = productService.updateProductName(productId, newName);
+            return new ResponseEntity<>(new ProductResponseDto(product), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     /**
@@ -107,11 +129,14 @@ public class ProductRestController {
      * @param newDescription The new name of the product to update.
      * @return The updated product.
      */
-    @PostMapping(value= {"/product/{productId}/description/{newDescription}", "/product/{productId}/description/{newDescription}/"})
-    public ProductResponseDto updateProductDescription(@PathVariable int productId, @PathVariable String newDescription){
-        Product product= productService.getProduct(productId);
-        productService.updateProductDescription(productId,newDescription);
-        return new ProductResponseDto(product);
+    @PutMapping("/product/description/{productId}")
+    public ResponseEntity<?> updateProductDescription(@PathVariable int productId, @RequestParam String newDescription){
+        try {
+            Product product = productService.updateProductDescription(productId, newDescription);
+            return new ResponseEntity<>(new ProductResponseDto(product), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     /**
@@ -121,11 +146,14 @@ public class ProductRestController {
      * @param newCategory The new category of the product to update.
      * @return The updated product.
      */
-    @PostMapping(value= {"/product/{productId}/category/{newCategory}", "/product/{productId}/category/{newCategory}/"})
-    public ProductResponseDto updateProductCategory(@PathVariable int productId, @PathVariable int newCategory){
-        Product product= productService.getProduct(productId);
-        productService.updateProductCategory(productId,newCategory);
-        return new ProductResponseDto(product);
+    @PutMapping("/product/{productId}/category/{newCategoryId}")
+    public ResponseEntity<?> updateProductCategory(@PathVariable int productId, @PathVariable int newCategoryId){
+        try {
+            Product product = productService.updateProductCategory(productId, newCategoryId);
+            return new ResponseEntity<>(new ProductResponseDto(product), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
 

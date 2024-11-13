@@ -5,6 +5,10 @@ import java.util.List;
 public class CategoryListDto {
     private List<CategoryDto> category;
 
+    public CategoryListDto(){
+        
+    }
+
     public CategoryListDto(List<CategoryDto> category) {
         this.category = category;
     }

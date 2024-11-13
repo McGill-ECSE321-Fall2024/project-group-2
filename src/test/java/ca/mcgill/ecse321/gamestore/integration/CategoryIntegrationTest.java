@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import ca.mcgill.ecse321.gamestore.dto.CategoryDto;
+import ca.mcgill.ecse321.gamestore.dto.CategoryListDto;
 import ca.mcgill.ecse321.gamestore.repository.CategoryRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -31,6 +32,7 @@ public class CategoryIntegrationTest {
         categoryRepository.deleteAll();
     }
 
+    // test to create a category successfully
     @Test
     public void testCreateCategory_Success() {
         CategoryDto request = new CategoryDto(1, "Action");
@@ -44,6 +46,7 @@ public class CategoryIntegrationTest {
         assertEquals("Action", createdCategory.getName());
     }
 
+    // test to create a category with a null name
     @Test
     public void testCreateCategory_InvalidName() {
         CategoryDto request = new CategoryDto(1, null);
@@ -54,6 +57,7 @@ public class CategoryIntegrationTest {
         assertEquals("The name cannot be empty!", response.getBody());
     }
 
+    // test to get a category with a valid Id
     @Test
     public void testGetCategoryById() {
         CategoryDto request = new CategoryDto(1, "Action");
@@ -71,6 +75,7 @@ public class CategoryIntegrationTest {
         assertEquals("Action", retrievedCategory.getName());
     }
 
+    // test to get a category with an invalid Id
     @Test
     public void testGetCategoryById_NotFound() {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity("/category/99", String.class);
@@ -80,6 +85,24 @@ public class CategoryIntegrationTest {
         assertEquals("Can't find category with the given Id!", responseEntity.getBody());
     }
 
+    // test to get all categories
+    @Test
+    public void testGetAllCategories() {
+        CategoryDto request1 = new CategoryDto(1, "Action");
+        CategoryDto request2 = new CategoryDto(2, "RPG");
+        restTemplate.postForEntity("/category", request1, CategoryDto.class);
+        restTemplate.postForEntity("/category", request2, CategoryDto.class);
+
+        ResponseEntity<CategoryListDto> response = restTemplate.getForEntity("/category", CategoryListDto.class);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        CategoryListDto categories = response.getBody();
+        assertNotNull(categories);
+        assertEquals(2, categories.getCategory().size());
+    }
+
+    // test to update a valid Id category name with a valid name
     @Test
     public void testUpdateCategoryName_Success() {
         CategoryDto request = new CategoryDto(1, "Action");
@@ -101,6 +124,7 @@ public class CategoryIntegrationTest {
         assertEquals("RPG", updatedCategory.getName());
     }
 
+    // test to update a category name with a null name
     @Test
     public void testUpdateCategoryName_InvalidName() {
         CategoryDto request = new CategoryDto(1, "Action");
@@ -119,6 +143,7 @@ public class CategoryIntegrationTest {
         assertEquals("The name cannot be empty!", responseEntity.getBody());
     }
 
+    // test to update a category name with an invalid Id
     @Test
     public void testUpdateCategoryName_NotFound() {
         ResponseEntity<String> responseEntity = restTemplate.exchange(
@@ -133,6 +158,7 @@ public class CategoryIntegrationTest {
         assertEquals("Can't find category with the given Id!", responseEntity.getBody());
     }
 
+    // test to delete a category with a valid Id
     @Test
     public void testDeleteCategory_Success() {
         CategoryDto request = new CategoryDto(1, "Action");
@@ -147,6 +173,7 @@ public class CategoryIntegrationTest {
         assertEquals("Category was deleted successfully.", responseEntity.getBody());
     }
 
+    // test to delete a category with an invalid Id
     @Test
     public void testDeleteCategory_NotFound() {
         ResponseEntity<String> responseEntity = restTemplate.exchange(
