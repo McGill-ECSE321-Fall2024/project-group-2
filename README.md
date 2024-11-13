@@ -14,11 +14,11 @@ We are a team of developers working on this project with different roles to ensu
 
 | Name | Team Role | Effort (in hours) | Deliverable 2(hours)| 
 |------|-------|----------------|-------------|
-|Abdullah Taltello| Tester|12|11|
-|Farhad Guliyev| Build System Manager|12| 11|
-|Sean O'Keefe| Database Administrator|13| 13|
-|Mohamed El-Machmouchi|Project Manager|15|15|
-|Katrina Panwar| Quality Assurance Lead|15| 15|
+|Abdullah Taltello| Developer |48|48|
+|Farhad Guliyev| Developer |40| 40|
+|Sean O'Keefe| Developer|55| 55|
+|Mohamed El-Machmouchi|Project Manager|58|58|
+|Katrina Panwar| Quality Assurance Lead|58| 58|
 
 # Project Scope:
 The goal of this project is to create a fully functional web application for an independent game store, offering services to both the management team and the customers. Core features include:
