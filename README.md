@@ -4,13 +4,13 @@ Furthermore, it will provide a seamless experience for customers looking to buy 
 
 # Team Introduction:
 We are a team of developers working on this project with different roles to ensure smooth progress and successful delivery of all project milestones.
-| Name | Team Role | Effort (in hours) | Deliverable 1(hours)| 
+| Name | Team Role | Effort (in hours) | Deliverable 1(hours)| Deliverable 2(hours)| 
 |------|-------|----------------|-------------|
-|Abdullah Taltello| Tester|12|12|
-|Farhad Guliyev| Build and Integration Manager|12.5| 12.5|
-|Sean O'Keefe| Database Administrator|13| 13|
-|Mohamed El-Machmouchi| Persistence Layer Developer|14.5|14.5|
-|Katrina Panwar| Backend Developer |13| 13|
+|Abdullah Taltello| Tester|12|12|10
+|Farhad Guliyev| Build and Integration Manager|12.5| 12.5|10
+|Sean O'Keefe| Database Administrator|13| 13|11
+|Mohamed El-Machmouchi| Persistence Layer Developer|14.5|14.5|15
+|Katrina Panwar| Backend Developer |13| 13|15
 
 | Name | Team Role | Effort (in hours) | Deliverable 2(hours)| 
 |------|-------|----------------|-------------|
