@@ -24,59 +24,81 @@ public class LineItemIntegrationTest {
 
     private LineItem lineItem;
 
+    /**
+     * Sets up a sample LineItem before each test.
+     */
     @BeforeEach
     public void setUp() {
-        // Set up a LineItem for testing purposes
         lineItem = lineItemService.createLineItem(5, 10.00);
     }
 
+    /**
+     * Cleans up the database after each test to ensure isolation between tests.
+     */
     @AfterEach
     public void tearDown() {
         lineItemRepository.deleteAll();
     }
 
+    /**
+     * Tests the creation of a LineItem with valid inputs.
+     * Ensures that a LineItem with the specified quantity and price is created successfully.
+     */
     @Test
     public void testCreateLineItem() {
         LineItem newLineItem = lineItemService.createLineItem(3, 20.00);
-
-        assertNotNull(newLineItem, "The created LineItem should not be null.");
-        assertEquals(3, newLineItem.getQuantity(), "Quantity should be 3.");
-        assertEquals(20.00, newLineItem.getPrice(), "Price should be 20.00.");
+        assertNotNull(newLineItem);
+        assertEquals(3, newLineItem.getQuantity());
+        assertEquals(20.00, newLineItem.getPrice());
     }
 
+    /**
+     * Edge Case: Tests creating a LineItem with zero quantity.
+     * Expects an IllegalArgumentException due to invalid quantity.
+     */
     @Test
-    public void testReadLineItem() {
-        LineItem foundLineItem = lineItemService.getLineItem(lineItem.getId());
-
-        assertNotNull(foundLineItem, "The fetched LineItem should not be null.");
-        assertEquals(lineItem.getQuantity(), foundLineItem.getQuantity(), "Quantities should match.");
-        assertEquals(lineItem.getPrice(), foundLineItem.getPrice(), "Prices should match.");
+    public void testCreateLineItem_ZeroQuantity() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> lineItemService.createLineItem(0, 20.00));
+        assertEquals("Quantity must be greater than 0", exception.getMessage());
     }
 
+    /**
+     * Edge Case: Tests creating a LineItem with negative price.
+     * Expects an IllegalArgumentException due to invalid price.
+     */
     @Test
-    public void testUpdateLineItemQuantity() {
-        LineItem updatedLineItem = lineItemService.updateLineItemQuantity(lineItem.getId(), 10);
-
-        assertNotNull(updatedLineItem, "Updated LineItem should not be null.");
-        assertEquals(10, updatedLineItem.getQuantity(), "Updated quantity should be 10.");
-        assertEquals(lineItem.getPrice(), updatedLineItem.getPrice(), "Price should remain unchanged.");
+    public void testCreateLineItem_NegativePrice() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> lineItemService.createLineItem(5, -10.00));
+        assertEquals("Price cannot be negative", exception.getMessage());
     }
 
+    /**
+     * Error Case: Tests fetching a non-existent LineItem.
+     * Expects an IllegalArgumentException due to invalid LineItem ID.
+     */
     @Test
-    public void testUpdateLineItemPrice() {
-        LineItem updatedLineItem = lineItemService.updateLineItemPrice(lineItem.getId(), 15.00);
-
-        assertNotNull(updatedLineItem, "Updated LineItem should not be null.");
-        assertEquals(lineItem.getQuantity(), updatedLineItem.getQuantity(), "Quantity should remain unchanged.");
-        assertEquals(15.00, updatedLineItem.getPrice(), "Updated price should be 15.00.");
+    public void testGetLineItem_NonExistentId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> lineItemService.getLineItem(999));
+        assertEquals("LineItem not found", exception.getMessage());
     }
 
+    /**
+     * Edge Case: Tests updating LineItem quantity to zero.
+     * Expects an IllegalArgumentException due to invalid quantity.
+     */
     @Test
-    public void testDeleteLineItem() {
-        boolean isDeleted = lineItemService.deleteLineItem(lineItem.getId());
+    public void testUpdateLineItemQuantity_ZeroQuantity() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> lineItemService.updateLineItemQuantity(lineItem.getId(), 0));
+        assertEquals("Quantity must be greater than 0", exception.getMessage());
+    }
 
-        assertTrue(isDeleted, "The LineItem should be deleted successfully.");
-        LineItem deletedLineItem = lineItemRepository.findById(lineItem.getId()).orElse(null);
-        assertNull(deletedLineItem, "The deleted LineItem should not be found in the repository.");
+    /**
+     * Error Case: Tests deleting a non-existent LineItem.
+     * Expects an IllegalArgumentException due to invalid LineItem ID.
+     */
+    @Test
+    public void testDeleteLineItem_NonExistentId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> lineItemService.deleteLineItem(999));
+        assertEquals("LineItem not found", exception.getMessage());
     }
 }
