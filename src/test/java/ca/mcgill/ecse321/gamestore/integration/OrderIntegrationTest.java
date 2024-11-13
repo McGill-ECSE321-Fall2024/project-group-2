@@ -1,4 +1,4 @@
-/*
+
 package ca.mcgill.ecse321.gamestore.integration;
 
 import ca.mcgill.ecse321.gamestore.dto.OrderRequestDto;
@@ -17,7 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.Date;
+
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +41,7 @@ public class OrderIntegrationTest {
     public void testCreateOrder() {
         OrderRequestDto orderRequest = new OrderRequestDto();
         orderRequest.setNumber(1);
-        orderRequest.setOrderedDate(Date.valueOf(LocalDate.now()));
+        orderRequest.setOrderedDate(LocalDate.now());
         orderRequest.setShipTo("123 Main St");
         orderRequest.setTotal(100.0);
         orderRequest.setStatus(OrderStatus.Pending);
@@ -63,7 +63,7 @@ public class OrderIntegrationTest {
     public void testGetOrderById() {
         OrderRequestDto orderRequest = new OrderRequestDto();
         orderRequest.setNumber(1);
-        orderRequest.setOrderedDate(Date.valueOf(LocalDate.now()));
+        orderRequest.setOrderedDate(LocalDate.now());
         orderRequest.setShipTo("123 Main St");
         orderRequest.setTotal(100.0);
         orderRequest.setStatus(OrderStatus.Pending);
@@ -83,7 +83,7 @@ public class OrderIntegrationTest {
     public void testUpdateOrderStatus() {
         OrderRequestDto orderRequest = new OrderRequestDto();
         orderRequest.setNumber(2);
-        orderRequest.setOrderedDate(Date.valueOf(LocalDate.now()));
+        orderRequest.setOrderedDate(LocalDate.now());
         orderRequest.setShipTo("123 Main St");
         orderRequest.setTotal(200.0);
         orderRequest.setStatus(OrderStatus.Pending);
@@ -108,16 +108,19 @@ public class OrderIntegrationTest {
     public void testUpdateShippingDetails() {
         OrderRequestDto orderRequest = new OrderRequestDto();
         orderRequest.setNumber(3);
-        orderRequest.setOrderedDate(Date.valueOf(LocalDate.now()));
+        orderRequest.setOrderedDate(LocalDate.now());
         orderRequest.setShipTo("123 Main St");
         orderRequest.setTotal(150.0);
         orderRequest.setStatus(OrderStatus.Pending);
 
         OrderResponseDto createdOrder = restTemplate.postForEntity("/orders", orderRequest, OrderResponseDto.class).getBody();
         assertNotNull(createdOrder);
-
-        orderRequest.setShippedDate(Date.valueOf(LocalDate.now().plusDays(3)));
+        
+        LocalDate futureShipDate = LocalDate.now().plusDays(3);
+        orderRequest.setShippedDate(futureShipDate);
         orderRequest.setShipTo("456 Elm St");
+
+        System.out.println("Test - Original ship date: " + orderRequest.getShippedDate());
 
         HttpEntity<OrderRequestDto> requestEntity = new HttpEntity<>(orderRequest);
 
@@ -127,6 +130,8 @@ public class OrderIntegrationTest {
                 requestEntity,
                 OrderResponseDto.class
         );
+
+        System.out.println("Test - Received ship date: " + response.getBody().getShippedDate());
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -139,7 +144,7 @@ public class OrderIntegrationTest {
     public void testDeleteOrder() {
         OrderRequestDto orderRequest = new OrderRequestDto();
         orderRequest.setNumber(4);
-        orderRequest.setOrderedDate(Date.valueOf(LocalDate.now()));
+        orderRequest.setOrderedDate(LocalDate.now());
         orderRequest.setShipTo("123 Main St");
         orderRequest.setTotal(250.0);
         orderRequest.setStatus(OrderStatus.Pending);
@@ -163,4 +168,3 @@ public class OrderIntegrationTest {
         assertEquals("Order with ID " + createdOrder.getOrderId() + " not found.", getResponse.getBody());
     }
 }
-*/

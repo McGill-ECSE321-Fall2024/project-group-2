@@ -1,17 +1,22 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
+
 import ca.mcgill.ecse321.gamestore.model.Order;
 import ca.mcgill.ecse321.gamestore.model.Order.OrderStatus;
-import ca.mcgill.ecse321.gamestore.model.Payment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class OrderResponseDto {
 
     private int orderId;
     private int number;
-    private Date orderedDate;
-    private Date shippedDate;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate orderedDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate shippedDate;
     private String shipTo;
     private double total;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -22,15 +27,16 @@ public class OrderResponseDto {
     public OrderResponseDto(Order order) {
         this.orderId = order.getId();
         this.number = order.getNumber();
-        this.orderedDate = order.getOrderedDate();
-        this.shippedDate = order.getShippedDate();
+        this.orderedDate = convertToLocalDate(order.getOrderedDate());
+        this.shippedDate = convertToLocalDate(order.getShippedDate());
         this.shipTo = order.getShipTo();
         this.total = order.getTotal();
         this.status = order.getStatus();
 
         // Safely assign payment ID if it exists
-        this.paymentId = (order.getPaymentOfOrder() != null) ?
-                ((Payment) order.getPaymentOfOrder()).getId() : null;
+        if (order.getPaymentOfOrder() != null) {
+            this.paymentId = order.getPaymentOfOrder().getId();
+        }
 
     }
     public OrderResponseDto() {}
@@ -51,19 +57,19 @@ public class OrderResponseDto {
         this.number = number;
     }
 
-    public Date getOrderedDate() {
+    public LocalDate getOrderedDate() {
         return orderedDate;
     }
 
-    public void setOrderedDate(Date orderedDate) {
+    public void setOrderedDate(LocalDate orderedDate) {
         this.orderedDate = orderedDate;
     }
 
-    public Date getShippedDate() {
+    public LocalDate getShippedDate() {
         return shippedDate;
     }
 
-    public void setShippedDate(Date shippedDate) {
+    public void setShippedDate(LocalDate shippedDate) {
         this.shippedDate = shippedDate;
     }
 
@@ -98,4 +104,13 @@ public class OrderResponseDto {
     public void setPaymentId(Integer paymentId) {
         this.paymentId = paymentId;
     }
+
+    private LocalDate convertToLocalDate(java.sql.Date date) {
+        if (date != null) {
+            return date.toLocalDate();
+        } else {
+            return null;
+        }
+    }
+
 }

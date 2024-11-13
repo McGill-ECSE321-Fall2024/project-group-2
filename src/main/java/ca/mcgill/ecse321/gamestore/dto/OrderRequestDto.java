@@ -1,14 +1,19 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
-import java.sql.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import ca.mcgill.ecse321.gamestore.model.Order.OrderStatus;
 
 public class OrderRequestDto {
 
     private int number;
-    private Date orderedDate;
-    private Date shippedDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate orderedDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate shippedDate;
     private String shipTo;
     private double total;
     private OrderStatus status;
@@ -24,19 +29,20 @@ public class OrderRequestDto {
         this.number = number;
     }
 
-    public Date getOrderedDate() {
+
+    public LocalDate getOrderedDate() {
         return orderedDate;
     }
 
-    public void setOrderedDate(Date orderedDate) {
+    public void setOrderedDate(LocalDate orderedDate) {
         this.orderedDate = orderedDate;
     }
 
-    public Date getShippedDate() {
+    public LocalDate getShippedDate() {
         return shippedDate;
     }
 
-    public void setShippedDate(Date shippedDate) {
+    public void setShippedDate(LocalDate shippedDate) {
         this.shippedDate = shippedDate;
     }
 
@@ -71,4 +77,5 @@ public class OrderRequestDto {
     public void setPaymentId(int paymentId) {
         this.paymentId = paymentId;
     }
+
 }
