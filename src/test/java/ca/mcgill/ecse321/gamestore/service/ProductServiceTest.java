@@ -29,9 +29,6 @@ public class ProductServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
-    private LineItemRepository lineItemRepository;
-
     @InjectMocks
     private ProductService productService;
 
