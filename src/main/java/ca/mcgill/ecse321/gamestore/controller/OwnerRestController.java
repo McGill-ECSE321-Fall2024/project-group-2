@@ -3,22 +3,25 @@ package ca.mcgill.ecse321.gamestore.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerListDto;
-import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.OwnerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class OwnerRestController {
 
     // Injecting the OwnerService to handle business logic
     @Autowired
     private OwnerService service;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Endpoint to retrieve all owners
     @GetMapping("/owner")
@@ -80,4 +83,22 @@ public class OwnerRestController {
         return "Owner with email " + email + " deleted successfully.";
     }
 
+    @PostMapping("/owner/login")
+    @ResponseStatus(HttpStatus.OK)
+    public OwnerDto ownerLogin(@RequestParam String email, @RequestParam String password) {
+        Owner owner = service.getOwner(email);
+
+        // Check if the owner exists
+        if (owner == null) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Validate the password
+        if (!passwordEncoder.matches(password, owner.getPassword())) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Return owner details without the password
+        return new OwnerDto(owner);
+    }
 }

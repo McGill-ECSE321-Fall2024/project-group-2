@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamestore.model.Customer;
 import ca.mcgill.ecse321.gamestore.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class CustomerRestController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // POST MAPPINGS
     @PostMapping(value = { "/customer", "/customer/" })
@@ -88,6 +92,26 @@ public class CustomerRestController {
                 .collect(Collectors.toList());
         return new CustomerListDto(customerList);
     }
+
+    @PostMapping("/customer/login")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerResponseDto customerLogin(@RequestParam String email, @RequestParam String password) {
+        Customer customer = customerService.getCustomer(email);
+
+        // Check if the customer exists
+        if (customer == null) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Validate the password
+        if (!passwordEncoder.matches(password, customer.getPassword())) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Return customer details without the password
+        return new CustomerResponseDto(customer);
+    }
+
 }
 
 

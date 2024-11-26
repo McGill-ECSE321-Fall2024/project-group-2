@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import SignInView from '../views/SignInView.vue'; // Import the SignIn View
+import CustomerDashboard from "../views/CustomerDashboard.vue";
+import OwnerDashboard from "../views/OwnerDashboard.vue";
+import EmployeeDashboard from "../views/EmployeeDashboard.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +18,9 @@ const router = createRouter({
       name: 'signin',
       component: SignInView,
     },
+    { path: "/customer-dashboard", name: "CustomerDashboard", component: CustomerDashboard },
+    { path: "/employee-dashboard", name: "EmployeeDashboard", component: EmployeeDashboard },
+    { path: "/owner-dashboard", name: "OwnerDashboard", component: OwnerDashboard }
   ],
 });
 

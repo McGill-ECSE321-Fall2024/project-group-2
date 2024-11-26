@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,11 +17,15 @@ import java.util.stream.Collectors;
 /**
  * REST Controller for Employee-related operations.
  */
+@CrossOrigin(origins = "*")
 @RestController
 public class EmployeeRestController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Get all employees.
@@ -89,6 +94,25 @@ public class EmployeeRestController {
         employeeService.deleteEmployee(email);
         return "Employee with email " + email + " deleted successfully.";
 
+    }
+
+    @PostMapping("/employee/login")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponseDto employeeLogin(@RequestParam String email, @RequestParam String password) {
+        Employee employee = employeeService.getEmployee(email);
+
+        // Check if the employee exists
+        if (employee == null) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Validate the password
+        if (!passwordEncoder.matches(password, employee.getPassword())) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        // Return employee details without the password
+        return new EmployeeResponseDto(employee);
     }
 
 }

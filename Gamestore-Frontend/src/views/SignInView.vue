@@ -82,60 +82,53 @@ export default {
     },
 
     /**
-     * Handles the sign-in process
+     * Handles the sign-in process for Customer, Employee, and Owner
      */
     async submitSignIn() {
       this.loginError = ""; // Reset error message
-      try {
-        // Try to sign in as a customer
-        let response = await axiosClient.get(`/customer/${this.email}`);
-        if (response.status === 200 && response.data.password === this.password) {
-          this.storeUserDetails(response.data, "customer");
-          return;
+
+      // Define the roles and their respective login endpoints
+      const roles = [
+        { role: "customer", dashboard: "/customer-dashboard" },
+        { role: "employee", dashboard: "/employee-dashboard" },
+        { role: "owner", dashboard: "/owner-dashboard" }, // Updated path for owner
+      ];
+
+      // Try logging in for each role
+      for (let { role, dashboard } of roles) {
+        try {
+          console.log(`Attempting login as ${role}`, { email: this.email, password: this.password });
+
+          const response = await axiosClient.post(
+            `/${role}/login?email=${encodeURIComponent(this.email)}&password=${encodeURIComponent(this.password)}`
+          );
+
+          console.log(`${role.charAt(0).toUpperCase() + role.slice(1)} login successful:`, response.data);
+
+          // Store the email and role in localStorage
+          localStorage.setItem("userEmail", this.email);
+          localStorage.setItem("userRole", role);
+
+          // Redirect to the appropriate dashboard
+          await this.$router.push(dashboard);
+          console.log(`Redirected to ${dashboard}`);
+          return; // Exit loop after successful login
+        } catch (error) {
+          console.error(`${role} login failed. Error:`, error.response?.data || "Unexpected error");
         }
-      } catch (error) {
-        console.error("Customer login failed:", error.message);
       }
 
-      try {
-        // Try to sign in as an employee
-        let response = await axiosClient.get(`/employee/${this.email}`);
-        if (response.status === 200 && response.data.password === this.password) {
-          this.storeUserDetails(response.data, "employee");
-          return;
-        }
-      } catch (error) {
-        console.error("Employee login failed:", error.message);
-      }
-
-      try {
-        // Try to sign in as an owner
-        let response = await axiosClient.get(`/owner/${this.email}`);
-        if (response.status === 200 && response.data.password === this.password) {
-          this.storeUserDetails(response.data, "owner");
-          return;
-        }
-      } catch (error) {
-        console.error("Owner login failed:", error.message);
-      }
-
-      // If all attempts fail
-      this.loginError = "Invalid email or password.";
-    },
-
-    /**
-     * Stores user details in local storage and redirects
-     */
-    storeUserDetails(userData, role) {
-      localStorage.setItem("userEmail", this.email);
-      localStorage.setItem("userRole", role);
-      this.$router.push(`/${role}`).then(() => {
-        window.location.reload();
-      });
+      // If all attempts fail, show error message
+      this.loginError = "Invalid email or password. Please try again.";
     },
   },
 };
 </script>
+
+<style>
+/* Add your styles here */
+</style>
+
 
 <style>
 
