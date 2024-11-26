@@ -8,7 +8,7 @@
           <h1>Game Store</h1>
         </div>
         <div class="header-right">
-          <button>Sign In</button>
+          <router-link to="/signin" class="sign-in-button">Sign In</router-link>
           <button class="download-btn">Download</button>
         </div>
       </div>
@@ -119,15 +119,21 @@ export default {
         { id: 3, name: "Path of Exile 2", price: "Available 12/06/24", image: picture9 },
       ],
       categories: [
-              { id: 1, name: "Action", image: picture10 },
-              { id: 2, name: "Action-Adventure", image: picture12 },
-              { id: 3, name: "Adventure", image: picture13 },
-              { id: 4, name: "Fighting", image: picture14 },
-              { id: 5, name: "Horror", image: picture15 },
+        { id: 1, name: "Action", image: picture10 },
+        { id: 2, name: "Action-Adventure", image: picture12 },
+        { id: 3, name: "Adventure", image: picture13 },
+        { id: 4, name: "Fighting", image: picture14 },
+        { id: 5, name: "Horror", image: picture15 },
       ],
     };
   },
+  methods: {
+    goToSignIn() {
+      this.$router.push('/signin'); // Navigate to the SignInView page
+    },
+  },
 };
+
 </script>
 
 <style scoped>
@@ -286,6 +292,20 @@ footer {
   border-radius: 8px;
   margin-bottom: 8px;
 }
+
+.sign-in-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-decoration: none; /* Remove underline from link */
+}
+.sign-in-button:hover {
+  background-color: #555;
+}
+
 </style>
 
 
