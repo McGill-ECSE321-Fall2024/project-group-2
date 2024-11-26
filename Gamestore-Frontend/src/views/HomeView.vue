@@ -135,12 +135,13 @@ export default {
 
 /* Logo Styling */
 .logo {
-  height: 40px;
-  width: 40px;
-  margin-right: 12px; /* Add spacing between the logo and the heading */
+  height: 50px;
+  width: 50px;
+  margin-right: 10px; /* Add spacing between the logo and the heading */
   display: inline-block;
   vertical-align: middle; /* Align logo vertically with text */
-  border-radius: 15px;
+  border-radius: 28px;
+  margin-left: 10px;
 }
 
 #homepage {

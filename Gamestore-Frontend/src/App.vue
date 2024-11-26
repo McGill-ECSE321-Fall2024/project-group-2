@@ -1,12 +1,13 @@
 <script setup>
 import HomeView from './views/HomeView.vue';
+import SignInView from './views/SignInView.vue';
 </script>
 
 <template>
-  <header>
-      <HomeView />
-  </header>
+      <SignInView/>
 </template>
+
+
 
 
 
