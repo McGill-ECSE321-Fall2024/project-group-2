@@ -5,6 +5,12 @@ import EmployeeView from '../views/EmployeeView.vue' // Ensure this view is impo
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+      {
+        path: '/account',  // Changed to a unique path for the games view
+        name: 'account',
+        // route level code-splitting
+        component: () => import('../views/AccountView.vue'),
+      },
     {
       path: '/employee',
       name: 'employees',
