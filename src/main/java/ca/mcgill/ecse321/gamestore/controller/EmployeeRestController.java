@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 /**
  * REST Controller for Employee-related operations.
  */
-@CrossOrigin(origins = "*")
 @RestController
 public class EmployeeRestController {
 
@@ -96,25 +95,20 @@ public class EmployeeRestController {
 
     }
 
-    @PostMapping("/employee/login")
+
+@PostMapping("/employee/login")
     @ResponseStatus(HttpStatus.OK)
     public EmployeeResponseDto employeeLogin(@RequestParam String email, @RequestParam String password) {
         Employee employee = employeeService.getEmployee(email);
 
-        // Check if the employee exists
-        if (employee == null) {
-            throw new IllegalArgumentException("Invalid email or password.");
-        }
-
-        // Validate the password
         if (!passwordEncoder.matches(password, employee.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password.");
         }
 
-        // Return employee details without the password
         return new EmployeeResponseDto(employee);
     }
-
 }
+
+
 
 

@@ -74,9 +74,14 @@ public class EmployeeServiceTest {
         // Mock behavior for saving an employee
         lenient().when(employeeRepository.save(any(Employee.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Remove the password encoding behavior
+        // Mock password encoding behavior
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn(ENCODED_PASSWORD); // Simulate password encoding
+        lenient().when(passwordEncoder.matches(anyString(), anyString())).thenAnswer(invocation -> {
+            String rawPassword = invocation.getArgument(0);
+            String encodedPassword = invocation.getArgument(1);
+            return rawPassword.equals(encodedPassword); // Simple match check for tests
+        });
     }
-
 
     // Test the creation of a new employee with valid data
     @Test
@@ -86,7 +91,7 @@ public class EmployeeServiceTest {
         assertEquals(VALID_USER_ID, createdEmployee.getUserID());
         assertEquals(VALID_NAME, createdEmployee.getName());
         assertEquals("new.email@example.com", createdEmployee.getEmail());
-        assertEquals(VALID_PASSWORD, createdEmployee.getPassword()); // Ensure password is encoded
+        assertEquals(ENCODED_PASSWORD, createdEmployee.getPassword()); // Ensure password is encoded
     }
 
     // Test that an exception is thrown for an invalid email format
@@ -133,7 +138,7 @@ public class EmployeeServiceTest {
     public void testUpdateEmployeePassword_Success() {
         Employee updatedEmployee = employeeService.updateEmployeePassword(VALID_EMAIL, VALID_PASSWORD, "newPassword123");
         assertNotNull(updatedEmployee);
-        assertEquals("newPassword123", updatedEmployee.getPassword()); // Ensure new password is encoded
+        assertEquals(ENCODED_PASSWORD, updatedEmployee.getPassword()); // Ensure new password is encoded
     }
 
     // Test that an exception is thrown if the old password does not match

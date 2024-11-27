@@ -4,6 +4,7 @@ import SignInView from '../views/SignInView.vue'; // Import the SignIn View
 import EmployeeView from '../views/EmployeeView.vue' // Ensure this view is imported
 import CustomerView from '../views/CustomerView.vue' // Ensure this view is imported
 import OwnerView from '../views/OwnerView.vue' // Ensure this view is imported
+import AccountView from '../views/AccountView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,7 @@ const router = createRouter({
         path: '/account',  // Changed to a unique path for the games view
         name: 'account',
         // route level code-splitting
-        component: () => import('../views/AccountView.vue'),
+        component: AccountView,
       },
     {
       path: '/', // Default route for the home page

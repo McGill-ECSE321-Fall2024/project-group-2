@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  * Controller to expose CRUD operations for Customer entity.
  */
 @RestController
-@CrossOrigin(origins = " *")
 public class CustomerRestController {
 
     @Autowired

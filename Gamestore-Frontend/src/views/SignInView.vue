@@ -50,7 +50,7 @@
 
     <!-- Register Link -->
     <div class="register-container">
-      <router-link to="/registration" class="register-link">Register</router-link>
+      <router-link to="/account" class="register-link">Register</router-link>
     </div>
   </div>
 </template>

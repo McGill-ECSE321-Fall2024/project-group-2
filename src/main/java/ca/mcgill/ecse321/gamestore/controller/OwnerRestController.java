@@ -1,8 +1,5 @@
 package ca.mcgill.ecse321.gamestore.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ca.mcgill.ecse321.gamestore.dto.OwnerDto;
 import ca.mcgill.ecse321.gamestore.dto.OwnerListDto;
 import ca.mcgill.ecse321.gamestore.model.Owner;
@@ -12,79 +9,112 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * REST Controller for Owner-related operations.
+ */
+
 @RestController
 public class OwnerRestController {
 
-    // Injecting the OwnerService to handle business logic
     @Autowired
     private OwnerService service;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Endpoint to retrieve all owners
+    /**
+     * Get all owners.
+     *
+     * @return OwnerListDto containing a list of OwnerDto.
+     */
     @GetMapping("/owner")
+    @ResponseStatus(HttpStatus.OK) // Returns 200 OK when successful
     public OwnerListDto findAllOwner() {
-        // Create a list to hold OwnerDto objects
-        List<OwnerDto> owner = new ArrayList<OwnerDto>();
-        // Loop through all Owner models and convert them to OwnerDto
+        List<OwnerDto> owners = new ArrayList<>();
         for (Owner model : service.findAllOwner()) {
-            owner.add(new OwnerDto(model));
+            owners.add(new OwnerDto(model));
         }
-        // Return the list of OwnerDto wrapped in OwnerListDto
-        return new OwnerListDto(owner);
+        return new OwnerListDto(owners);
     }
 
-    // Endpoint to retrieve a specific owner by email
+    /**
+     * Get an owner by email.
+     *
+     * @param email Owner's email.
+     * @return OwnerDto.
+     */
     @GetMapping(value = { "/owner/{email}", "/owner/{email}/" })
+    @ResponseStatus(HttpStatus.OK) // Returns 200 OK when the owner is found
     public OwnerDto getOwner(@PathVariable("email") String email) {
-        // Fetch the Owner model using the email
         Owner owner = service.getOwner(email);
-        // Convert the Owner model to OwnerDto
-        OwnerDto ownerBody = new OwnerDto(owner);
-        // Return the OwnerDto
-        return ownerBody;
+        if (owner == null) {
+            throw new IllegalArgumentException("Owner not found.");
+        }
+        return new OwnerDto(owner);
     }
 
-    // Endpoint to create a new owner
+    /**
+     * Create a new owner.
+     *
+     * @param ownerDto OwnerDto containing the owner details.
+     * @return OwnerDto of the created owner.
+     */
     @PostMapping(value = { "/owner/", "/owner" })
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) // Returns 201 Created when successful
     public OwnerDto createOwner(@RequestBody OwnerDto ownerDto) {
-        // Create a new Owner using the provided data from OwnerDto
         Owner owner = service.createOwner(
                 ownerDto.getUserID(),
                 ownerDto.getName(),
                 ownerDto.getEmail(),
                 ownerDto.getPassword());
-        // Convert the newly created Owner model to OwnerDto
-        OwnerDto ownerBody = new OwnerDto(owner);
-        // Return the OwnerDto
-        return ownerBody;
+        return new OwnerDto(owner);
     }
 
-    // Endpoint to update an owner's password
-    @PutMapping(value= {"/owner/{email}/","/owner/{email}"})
-    public OwnerDto updateCustomerPassword(
+    /**
+     * Update an owner's password.
+     *
+     * @param email       Owner's email.
+     * @param oldPassword Owner's old password.
+     * @param newPassword Owner's new password.
+     * @return OwnerDto of the updated owner.
+     */
+    @PutMapping(value = { "/owner/{email}/", "/owner/{email}" })
+    @ResponseStatus(HttpStatus.OK) // Returns 200 OK when the password is updated
+    public OwnerDto updateOwnerPassword(
             @PathVariable String email,
             @RequestParam String oldPassword,
             @RequestParam String newPassword) {
-        // Updates customer password and returns the updated customer as a DTO
         Owner updatedOwner = service.updateOwnerPassword(
                 email, oldPassword, newPassword
         );
         return new OwnerDto(updatedOwner);
     }
+
+    /**
+     * Delete an owner by email.
+     *
+     * @param email Owner's email.
+     * @return Success message as String.
+     */
     @DeleteMapping("/owner/{email}")
+    @ResponseStatus(HttpStatus.OK) // Returns 200 OK when the owner is deleted
     public String deleteOwner(@PathVariable String email) {
-        // Calls service to delete customer by email
         service.deleteOwner(email);
-        // Returns a confirmation message upon successful deletion
         return "Owner with email " + email + " deleted successfully.";
     }
 
+    /**
+     * Owner login endpoint.
+     *
+     * @param email    Owner's email.
+     * @param password Owner's password.
+     * @return OwnerDto of the logged-in owner.
+     */
     @PostMapping("/owner/login")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.OK) // Returns 200 OK when login is successful
     public OwnerDto ownerLogin(@RequestParam String email, @RequestParam String password) {
         Owner owner = service.getOwner(email);
 
@@ -98,7 +128,7 @@ public class OwnerRestController {
             throw new IllegalArgumentException("Invalid email or password.");
         }
 
-        // Return owner details without the password
         return new OwnerDto(owner);
     }
 }
+
