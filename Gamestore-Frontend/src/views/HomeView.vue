@@ -4,7 +4,7 @@
     <header>
       <div class="header-top">
         <div class="header-left">
-        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+          <img src="@/assets/logo.png" alt="Logo" class="logo" />
           <h1>Game Store</h1>
         </div>
         <div class="header-right">
@@ -23,26 +23,57 @@
     <main>
       <!-- Top Sellers Section -->
       <section class="top-sellers">
-        <h2>Top Sellers</h2>
+        <h2>Top Sellers ></h2>
         <div class="card-container">
           <div class="game-card" v-for="game in topSellers" :key="game.id">
-          <img :src="game.image" :alt="game.name" class="game-image" />
+            <img :src="game.image" :alt="game.name" class="game-image" />
             <h3>{{ game.name }}</h3>
             <p>{{ game.price }}</p>
           </div>
         </div>
       </section>
 
-      <!-- Most Played Section -->
-      <section class="most-played">
-        <h2>Most Played</h2>
-        <div class="card-container">
-          <div class="game-card" v-for="game in mostPlayed" :key="game.id">
-          <img :src="game.image" :alt="game.name" class="game-image" />
-            <h3>{{ game.name }}</h3>
-            <p>{{ game.price }}</p>
+      <!-- Trending and Top New Releases Section -->
+      <section class="horizontal-section">
+        <!-- Top New Releases -->
+        <div class="vertical-section">
+          <h2>Top New Releases ></h2>
+          <div class="vertical-card-container">
+            <div class="game-card" v-for="game in topSellers" :key="game.id">
+              <img :src="game.image" :alt="game.name" class="game-image" />
+              <h3>{{ game.name }}</h3>
+              <p>{{ game.price }}</p>
+            </div>
           </div>
         </div>
+
+        <div class="vertical-divider"></div>
+
+        <!-- Trending -->
+        <div class="vertical-section">
+          <h2>Trending</h2>
+          <div class="vertical-card-container">
+            <div class="game-card" v-for="game in mostPlayed" :key="game.id">
+              <img :src="game.image" :alt="game.name" class="game-image" />
+              <h3>{{ game.name }}</h3>
+              <p>{{ game.price }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vertical-divider"></div>
+
+        <!-- Trending -->
+                <div class="vertical-section">
+                  <h2>Trending</h2>
+                  <div class="vertical-card-container">
+                    <div class="game-card" v-for="game in mostPlayed" :key="game.id">
+                      <img :src="game.image" :alt="game.name" class="game-image" />
+                      <h3>{{ game.name }}</h3>
+                      <p>{{ game.price }}</p>
+                    </div>
+                  </div>
+                </div>
       </section>
 
       <!-- Top Upcoming Wishlisted Section -->
@@ -50,24 +81,24 @@
         <h2>Top Upcoming Wishlisted</h2>
         <div class="card-container">
           <div class="game-card" v-for="game in topUpcoming" :key="game.id">
-          <img :src="game.image" :alt="game.name" class="game-image" />
+            <img :src="game.image" :alt="game.name" class="game-image" />
             <h3>{{ game.name }}</h3>
             <p>{{ game.price }}</p>
           </div>
         </div>
       </section>
 
-      <!-- Categories Section -->
-      <section class="categories">
-        <h2>Categories</h2>
-        <div class="card-container">
-          <div class="game-card" v-for="category in categories" :key="category.id">
-          <img :src="category.image" :alt="category.name" class="game-image" />
-            <h3>{{ category.name }}</h3>
-          </div>
-        </div>
-      </section>
-    </main>
+    <!-- Categories Section -->
+          <section class="categories">
+            <h2>Categories</h2>
+            <div class="card-container">
+              <div class="game-card" v-for="category in categories" :key="category.id">
+              <img :src="category.image" :alt="category.name" class="game-image" />
+                <h3>{{ category.name }}</h3>
+              </div>
+            </div>
+          </section>
+        </main>
 
     <!-- Footer -->
     <footer>
@@ -256,26 +287,54 @@ section h2 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
-  text-align: center;
+  text-align: left;
 }
 
 /* Card Container */
 .card-container {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 cards in a row */
+  gap: 1px; /* Space between cards */
+  justify-content: center; /* Center the grid */
 }
 
 .game-card {
-  background-color: #222; /* Darker card background */
+  background-color: #000; /* Darker card background */
   color: white;
+  font-size: 12px;
   border-radius: 8px;
-  padding: 16px;
+  padding: 3px;
   text-align: center;
-  width: calc(33.33% - 16px); /* Three cards per row */
-  max-width: 300px;
+  max-width: 200px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.vertical-section {
+  flex: 1;
+  text-align: center;
+  width: 20px;
+}
+
+.vertical-divider {
+  width: 1px;
+  background-color: #555;
+  margin: 0 16px;
+}
+
+.vertical-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100px;
+  align-items: center;
+  margin-left: 130px;
+}
+
+.horizontal-section {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 32px;
 }
 
 /* Footer */
