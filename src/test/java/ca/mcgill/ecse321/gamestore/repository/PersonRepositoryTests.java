@@ -25,6 +25,15 @@ class PersonRepositoryApplicationTests {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private OwnerRepository ownerRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     /**
      * Clears the database before and after each test to ensure a clean environment.
      * This method deletes all Person entities.
@@ -33,6 +42,9 @@ class PersonRepositoryApplicationTests {
     @AfterEach
     public void clearDatabase() {
         personRepository.deleteAll();
+        customerRepository.deleteAll();
+        employeeRepository.deleteAll();
+        ownerRepository.deleteAll();
     }
 
 

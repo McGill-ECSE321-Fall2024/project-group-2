@@ -7,6 +7,7 @@ import ca.mcgill.ecse321.gamestore.model.Owner;
 import ca.mcgill.ecse321.gamestore.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,11 +18,13 @@ import java.util.stream.Collectors;
  * REST Controller for Employee-related operations.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders= {"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 public class EmployeeRestController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Get all employees.
@@ -68,12 +71,12 @@ public class EmployeeRestController {
     }
 
 
-    @PutMapping(value= {"/employee/{email}"})
+    @PutMapping(value= {"/employee/{email}/","/owner/{email}"})
     public EmployeeResponseDto updateEmployeePassword(
             @PathVariable String email,
             @RequestParam String oldPassword,
             @RequestParam String newPassword) {
-        // Updates employee password and returns the updated customer as a DTO
+        // Updates customer password and returns the updated customer as a DTO
         Employee updatedEmployee = employeeService.updateEmployeePassword(
                 email, oldPassword, newPassword
         );
@@ -92,6 +95,20 @@ public class EmployeeRestController {
 
     }
 
+
+@PostMapping("/employee/login")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponseDto employeeLogin(@RequestParam String email, @RequestParam String password) {
+        Employee employee = employeeService.getEmployee(email);
+
+        if (!passwordEncoder.matches(password, employee.getPassword())) {
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        return new EmployeeResponseDto(employee);
+    }
 }
+
+
 
 
