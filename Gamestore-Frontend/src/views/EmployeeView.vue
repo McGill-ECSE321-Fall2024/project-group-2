@@ -45,6 +45,7 @@
       <ul>
         <li v-for="employee in employees" :key="employee.email">
           <strong>{{ employee.name }}</strong> ({{ employee.email }}) - UserID: {{ employee.userID }}
+          <button @click="deleteEmployee(employee.email)">Delete</button>
         </li>
       </ul>
     </div>
@@ -106,24 +107,63 @@ export default {
     // Update employee password
     updatePassword() {
       const { email, oldPassword, newPassword } = this.updateEmployee;
-      const url = `http://localhost:8080/employee/${email}/`;
-      const params = new URLSearchParams({ oldPassword, newPassword });
 
-      fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: params
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          alert("Password updated successfully!");
-          this.updateEmployee = { email: "", oldPassword: "", newPassword: "" };
-        })
-        .catch((error) => {
+      // Check if the new password is provided
+      if (!newPassword || !newPassword.trim()) {
+        alert("The new password cannot be empty.");
+        return;
+      }
+
+      // Create the URL for the PUT request
+      const url = `http://localhost:8080/employee/${email}?oldPassword=${oldPassword}&newPassword=${newPassword}`;
+
+      // Use async/await and fetch to make the API request
+      (async () => {
+        try {
+          const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json" // This is still required, even for query params
+            }
+          });
+
+          // Check if the response is ok (status 200-299)
+          if (response.ok) {
+            const data = await response.json();
+            alert("Password updated successfully!");
+            // Clear form after successful update
+            this.updateEmployee = { email: "", oldPassword: "", newPassword: "" };
+          } else {
+            // Handle specific errors by reading the response's status and message
+            const errorData = await response.json();
+            alert(`Error updating password: ${errorData.message || 'An unknown error occurred.'}`);
+          }
+        } catch (error) {
           console.error("Error updating password:", error);
-        });
+          alert("Failed to update password. Please try again later.");
+        }
+      })();
+    },
+
+    // Delete employee by email
+    deleteEmployee(email) {
+      if (confirm(`Are you sure you want to delete the employee with email ${email}?`)) {
+        fetch(`http://localhost:8080/employee/${email}`, {
+          method: "DELETE"
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert("Employee deleted successfully!");
+              this.fetchEmployees(); // Refresh the employee list
+            } else {
+              alert("Failed to delete the employee.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting employee:", error);
+            alert("Failed to delete employee. Please try again later.");
+          });
+      }
     }
   },
   mounted() {
@@ -152,6 +192,7 @@ input {
   padding: 8px;
   margin: 5px 0;
   border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
 button {
@@ -178,4 +219,18 @@ li {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+
+button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c82333;
+}
 </style>
+

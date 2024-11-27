@@ -8,6 +8,12 @@ import OwnerView from '../views/OwnerView.vue' // Ensure this view is imported
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+      {
+        path: '/account',  // Changed to a unique path for the games view
+        name: 'account',
+        // route level code-splitting
+        component: () => import('../views/AccountView.vue'),
+      },
     {
       path: '/', // Default route for the home page
       name: 'home',
