@@ -89,13 +89,13 @@ export default {
 
       // Define the roles and their respective login endpoints
       const roles = [
-        { role: "customer", dashboard: "/customer-dashboard" },
-        { role: "employee", dashboard: "/employee-dashboard" },
-        { role: "owner", dashboard: "/owner-dashboard" }, // Updated path for owner
+        { role: "customer", view: "/customer" }, // Redirects to CustomerView
+        { role: "employee", view: "/employees" }, // Redirects to EmployeeView
+        { role: "owner", view: "/owner" }, // Redirects to OwnerView
       ];
 
       // Try logging in for each role
-      for (let { role, dashboard } of roles) {
+      for (let { role, view } of roles) {
         try {
           console.log(`Attempting login as ${role}`, { email: this.email, password: this.password });
 
@@ -109,9 +109,9 @@ export default {
           localStorage.setItem("userEmail", this.email);
           localStorage.setItem("userRole", role);
 
-          // Redirect to the appropriate dashboard
-          await this.$router.push(dashboard);
-          console.log(`Redirected to ${dashboard}`);
+          // Redirect to the appropriate view
+          await this.$router.push(view);
+          console.log(`Redirected to ${view}`);
           return; // Exit loop after successful login
         } catch (error) {
           console.error(`${role} login failed. Error:`, error.response?.data || "Unexpected error");
@@ -124,6 +124,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 /* Add your styles here */

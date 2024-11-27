@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "OwnerDashboard",
+  name: "OwnerView",
 };
 </script>
 
