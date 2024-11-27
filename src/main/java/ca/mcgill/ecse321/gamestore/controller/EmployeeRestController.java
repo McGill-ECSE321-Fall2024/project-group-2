@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * REST Controller for Employee-related operations.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")  // Allow requests from Vue.js
 public class EmployeeRestController {
 
     @Autowired
