@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * REST Controller for Employee-related operations.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")  // Allow requests from Vue.js
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders= {"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 public class EmployeeRestController {
 
     @Autowired
@@ -68,12 +68,12 @@ public class EmployeeRestController {
     }
 
 
-    @PutMapping(value= {"/employee/{email}/","/owner/{email}"})
+    @PutMapping(value= {"/employee/{email}"})
     public EmployeeResponseDto updateEmployeePassword(
             @PathVariable String email,
             @RequestParam String oldPassword,
             @RequestParam String newPassword) {
-        // Updates customer password and returns the updated customer as a DTO
+        // Updates employee password and returns the updated customer as a DTO
         Employee updatedEmployee = employeeService.updateEmployeePassword(
                 email, oldPassword, newPassword
         );

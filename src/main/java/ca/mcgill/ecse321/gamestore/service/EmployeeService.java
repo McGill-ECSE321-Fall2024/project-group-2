@@ -89,17 +89,15 @@ public class EmployeeService {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "The email is invalid!");
         }
 
-        // Hash the password before saving to the database
-        String hashedPassword = passwordEncoder.encode(password);
+
 
         // Create and save the new employee
-        Employee employee = new Employee(userID, name, email.trim(), hashedPassword);
+        Employee employee = new Employee(userID, name, email.trim(), password);
         employeeRepository.save(employee);
         return employee; // Return the newly created employee
     }
-
-    // Update an employee's password
     @Transactional
+    // Update an employee's password
     public Employee updateEmployeePassword(String email, String oldPassword, String newPassword) {
         // Find the employee by email
         Employee employee = employeeRepository.findEmployeeByEmail(email.trim());
@@ -113,16 +111,16 @@ public class EmployeeService {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "The new password cannot be empty!");
         }
 
-        // Verify the old password with the hashed password
-        if (!passwordEncoder.matches(oldPassword, employee.getPassword())) {
+        // Verify the old password directly (not hashed)
+        if (!oldPassword.equals(employee.getPassword())) {
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "Incorrect old password!");
         }
 
-        // Hash the new password and update it
-        String hashedNewPassword = passwordEncoder.encode(newPassword);
-        employee.setPassword(hashedNewPassword);
+        // Update the password without hashing
+        employee.setPassword(newPassword);
         return employeeRepository.save(employee); // Save the employee with the updated password
     }
+
 
     // Delete an employee by email
     @Transactional
