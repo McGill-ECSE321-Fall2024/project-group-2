@@ -1,5 +1,4 @@
 package ca.mcgill.ecse321.gamestore.integration;
-
 import ca.mcgill.ecse321.gamestore.dto.CustomerRequestDto;
 import ca.mcgill.ecse321.gamestore.dto.CustomerResponseDto;
 import ca.mcgill.ecse321.gamestore.dto.CustomerListDto;

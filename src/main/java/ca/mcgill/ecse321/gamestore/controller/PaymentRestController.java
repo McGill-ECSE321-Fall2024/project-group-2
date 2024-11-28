@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Controller class for handling /api/payments endpoint requests.
  */
-@CrossOrigin(origins = "*")
+
 @RestController
 public class PaymentRestController {
 
