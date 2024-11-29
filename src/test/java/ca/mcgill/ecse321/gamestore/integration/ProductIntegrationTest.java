@@ -52,7 +52,7 @@ public class ProductIntegrationTest {
         lineItemRepository.deleteAll();
         categoryRepository.deleteAll();
     }
-     // Set up test data before each test
+    // Set up test data before each test
     @BeforeEach
     public void setupTestData() {
         // Create a test category
@@ -74,7 +74,7 @@ public class ProductIntegrationTest {
         ProductResponseDto createdProduct = response.getBody();
         assertNotNull(createdProduct);
         assertEquals("CSGO", createdProduct.getName());
-        assertEquals("Shooter game", createdProduct.getDescription());    
+        assertEquals("Shooter game", createdProduct.getDescription());
     }
 
     // test to create a product with a null name
@@ -137,7 +137,7 @@ public class ProductIntegrationTest {
         ProductResponseDto retrievedProduct = responseEntity.getBody();
         assertNotNull(retrievedProduct);
         assertEquals("CSGO", retrievedProduct.getName());
-        assertEquals("Shooter_game", retrievedProduct.getDescription());    
+        assertEquals("Shooter_game", retrievedProduct.getDescription());
     }
 
     // test to get a product with an invalid Id
@@ -348,8 +348,8 @@ public class ProductIntegrationTest {
     // test to update a product category with an invalid id
     @Test
     public void testUpdateProductCategory_NotFound() {
-         //Create another category
-         Category category2= categoryService.createCategory("RPG");
+        //Create another category
+        Category category2= categoryService.createCategory("RPG");
         ResponseEntity<String> responseEntity = restTemplate.exchange(
                 "/product/99/category/"+category2.getId(),
                 org.springframework.http.HttpMethod.PUT,

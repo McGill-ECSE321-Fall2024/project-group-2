@@ -24,7 +24,7 @@ import ca.mcgill.ecse321.gamestore.service.ProductService;
 
 @RestController
 public class ProductRestController {
-    
+
     @Autowired
     private ProductService productService;
 
@@ -36,7 +36,7 @@ public class ProductRestController {
      */
     @PostMapping("/product")
     public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto){
-         try {
+        try {
             Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItem(), productDto.getCategory());
             return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
         } catch (GameStoreException e) {
