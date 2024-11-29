@@ -199,48 +199,36 @@ export default {
       },
       shippingMethod: 'standard',
       cartItems: [
-        {
-          id: 1,
-          name: "Cyberpunk 2077",
-          price: 79.99,
-          quantity: 1,
-          image: picture3
-        },
-        {
-          id: 2,
-          name: "EA Sports FC 24",
-          price: 89.99,
-          quantity: 1,
-          image: picture1
-        }
+        { id: 1, name: "Cyberpunk 2077", price: 79.99, quantity: 1, image: picture3 },
+        { id: 2, name: "EA Sports FC 24", price: 89.99, quantity: 1, image: picture1 }
       ]
-    }
+    };
   },
   computed: {
     subtotal() {
-      return this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      return this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     },
     tax() {
-      return this.subtotal * 0.13 // 13% tax
+      return this.subtotal * 0.13; // 13% tax
     },
     total() {
-      const shippingCost = this.shippingMethod === 'express' ? 15 : 0
-      return this.subtotal + this.tax + shippingCost
+      const shippingCost = this.shippingMethod === 'express' ? 15 : 0;
+      return this.subtotal + this.tax + shippingCost;
     },
     isFormValid() {
-      const { firstName, lastName, address, city, postalCode, province, phone } = this.shippingInfo
-      return firstName && lastName && address && city && postalCode && province && phone
+      const { firstName, lastName, address, city, postalCode, province, phone } = this.shippingInfo;
+      return firstName && lastName && address && city && postalCode && province && phone;
     }
   },
   methods: {
     handleShipping() {
       if (this.isFormValid) {
-        // Navigate to payment page
-        this.$router.push('/payment')
+        // Navigate to the payment page
+        this.$router.push('/payment');
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
