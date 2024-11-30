@@ -5,7 +5,10 @@ import EmployeeView from '../views/EmployeeView.vue'; // Ensure this view is imp
 import CustomerView from '../views/CustomerView.vue'; // Ensure this view is imported
 import OwnerView from '../views/OwnerView.vue'; // Ensure this view is imported
 import AccountView from '../views/AccountView.vue';
-import BrowseView from '../views/BrowseView.vue'; // Import the Payment View
+import CheckoutView from '../views/CheckoutView.vue'; // Import the Checkout View
+import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
+import OrderCompleteView from "@/views/OrderCompleteView.vue"; // Import the Order complete view
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,10 +44,21 @@ const router = createRouter({
       name: 'owner',
       component: OwnerView
     },
-     { path: '/browse',
-     name: 'browse',
-     component: BrowseView
-     },
+    {
+      path: '/checkout', // Route for the Checkout page
+      name: 'checkout',
+      component: CheckoutView
+    },
+    {
+      path: '/payment', // Route for the Payment page
+      name: 'payment',
+      component: PaymentView
+    },
+    {
+      path: '/ordercomplete',
+      name: 'ordercomplete',
+      component: OrderCompleteView
+    }
   ],
 });
 
