@@ -8,6 +8,8 @@ import AccountView from '../views/AccountView.vue';
 import CheckoutView from '../views/CheckoutView.vue'; // Import the Checkout View
 import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
 import OrderCompleteView from "@/views/OrderCompleteView.vue"; // Import the Order complete view
+import BrowseView from '../views/BrowseView.vue'; // Import the Payment View
+import DashBoardView from '../views/DashBoardView.vue'; // Import the Payment View
 
 
 const router = createRouter({
@@ -58,7 +60,15 @@ const router = createRouter({
       path: '/ordercomplete',
       name: 'ordercomplete',
       component: OrderCompleteView
-    }
+    },
+    { path: '/browse',
+         name: 'browse',
+         component: BrowseView
+    },
+    { path: '/dashboard',
+      name: 'Dashboard',
+      component: DashBoardView
+    },
   ],
 });
 

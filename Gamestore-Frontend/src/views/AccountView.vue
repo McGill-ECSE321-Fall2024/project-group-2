@@ -21,23 +21,6 @@
         <button type="submit">Create Account</button>
       </form>
     </div>
-
-    <!-- Update Customer Password Form -->
-    <div>
-      <h2>Update Your Password</h2>
-      <form @submit.prevent="updatePassword">
-        <label for="updateEmail">Email: </label><br>
-        <input type="email" v-model="updateCustomer.email" placeholder="Enter your Email" required /><br>
-
-        <label for="oldPassword">Old Password: </label><br>
-        <input type="password" v-model="updateCustomer.oldPassword" placeholder="Enter your Old Password" required /><br>
-
-        <label for="newPassword">New Password: </label><br>
-        <input type="password" v-model="updateCustomer.newPassword" placeholder="Enter your New Password" required /><br><br>
-
-        <button type="submit">Update Password</button>
-      </form>
-    </div>
   </div>
 </template>
 
