@@ -6,6 +6,7 @@ import OwnerView from '../views/OwnerView.vue'; // Ensure this view is imported
 import AccountView from '../views/AccountView.vue';
 import CheckoutView from '../views/CheckoutView.vue'; // Import the Checkout View
 import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
+import OrderCompleteView from "@/views/OrderCompleteView.vue"; // Import the Order complete view
 
 
 const router = createRouter({
@@ -47,6 +48,11 @@ const router = createRouter({
       path: '/payment', // Route for the Payment page
       name: 'payment',
       component: PaymentView
+    },
+    {
+      path: '/ordercomplete',
+      name: 'ordercomplete',
+      component: OrderCompleteView
     }
   ],
 });
