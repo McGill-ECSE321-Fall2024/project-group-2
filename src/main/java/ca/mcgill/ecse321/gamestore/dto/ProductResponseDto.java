@@ -1,35 +1,37 @@
 package ca.mcgill.ecse321.gamestore.dto;
 
-import ca.mcgill.ecse321.gamestore.model.Category;
-import ca.mcgill.ecse321.gamestore.model.LineItem;
 import ca.mcgill.ecse321.gamestore.model.Product;
 
 public class ProductResponseDto {
     private int productId;
     private String name;
     private String description;
-    private LineItem lineItem;
-    private Category category;
-
+    private String imageURL;
+    private int lineItem_id;
+    private int category_id;
+    
     //CONSTRUCTERS
     public ProductResponseDto(){
     }
 
-    public ProductResponseDto(int productId, String name, String description, LineItem lineItem, Category category){
+    public ProductResponseDto(int productId, String name, String description, String imageURL, int lineItem_id, int category_id){
         this.productId= productId;
         this.name= name;
+        this.imageURL= imageURL;
         this.description= description;
-        this.lineItem= lineItem;
-        this.category= category;
+        this.lineItem_id= lineItem_id;
+        this.category_id= category_id;
     }
 
     public ProductResponseDto(Product product){
         this.productId= product.getId();
         this.name= product.getName();
+        this.imageURL= product.getImage();
         this.description= product.getDescription();
-        this.lineItem= product.getLineItemOfProduct();
-        this.category= product.getCategory();
+        this.lineItem_id= product.getLineItemOfProduct().getId();
+        this.category_id= product.getCategory().getId();
     }
+
 
     //GETTERS
     public int getId(){
@@ -44,12 +46,16 @@ public class ProductResponseDto {
         return this.description;
     }
 
-    public LineItem getLineItem(){
-        return this.lineItem;
+    public String getImageURL(){
+        return this.imageURL;
     }
 
-    public Category getCategory(){
-        return this.category;
+    public int getLineItem_id(){
+        return this.lineItem_id;
+    }
+
+    public int getCategory_id(){
+        return this.category_id;
     }
 
     //SETTERS
@@ -68,13 +74,18 @@ public class ProductResponseDto {
         return true;
     }
 
-    public boolean setLineItem(LineItem lineItem){
-        this.lineItem= lineItem;
+    public boolean setImageURL(String imageURL){
+        this.imageURL= imageURL;
         return true;
     }
 
-    public boolean setCategory(Category category){
-        this.category= category;
+    public boolean setLineItem_id(int lineItem_id){
+        this.lineItem_id= lineItem_id;
+        return true;
+    }
+
+    public boolean setCategory_id(int category_id){
+        this.category_id= category_id;
         return true;
     }
 

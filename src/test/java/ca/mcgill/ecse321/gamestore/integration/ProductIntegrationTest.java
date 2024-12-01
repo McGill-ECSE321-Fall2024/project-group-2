@@ -46,6 +46,9 @@ public class ProductIntegrationTest {
 
     private Category category;
     private LineItem lineItem;
+    private int category_id;
+    private int lineItem_id;
+
     @AfterEach
     public void clearDatabase() {
         productRepository.deleteAll();
@@ -57,15 +60,17 @@ public class ProductIntegrationTest {
     public void setupTestData() {
         // Create a test category
         category = categoryService.createCategory("Action");
+        category_id= category.getId();
         // Create a test lineItem
         lineItem = lineItemService.createLineItem(1, 10.0);
+        lineItem_id= lineItem.getId();
     }
 
 
     // test to create a product successfullys
     @Test
     public void testCreateProduct_Success() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> response = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
 
         assertNotNull(response);
@@ -80,7 +85,7 @@ public class ProductIntegrationTest {
     // test to create a product with a null name
     @Test
     public void testCreateProduct_InvalidName() {
-        ProductRequestDto request = new ProductRequestDto(1, null, "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, null, "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<String> response = restTemplate.postForEntity("/product", request, String.class);
 
         assertNotNull(response);
@@ -91,7 +96,7 @@ public class ProductIntegrationTest {
     // test to create a product with a null description
     @Test
     public void testCreateProduct_InvalidDescription() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", null, lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", null, "www", lineItem_id, category_id);
         ResponseEntity<String> response = restTemplate.postForEntity("/product", request, String.class);
 
         assertNotNull(response);
@@ -99,21 +104,11 @@ public class ProductIntegrationTest {
         assertEquals("The description cannot be empty!", response.getBody());
     }
 
-    // test to create a product with a null lineItem
-    @Test
-    public void testCreateProduct_InvalidLineItem() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", null, category);
-        ResponseEntity<String> response = restTemplate.postForEntity("/product", request, String.class);
-
-        assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("LineItem cannot be empty!", response.getBody());
-    }
 
     // test to create a product with a null category
     @Test
     public void testCreateProduct_InvalidCategory() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, null);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, 99);
         ResponseEntity<String> response = restTemplate.postForEntity("/product", request, String.class);
 
         assertNotNull(response);
@@ -124,7 +119,7 @@ public class ProductIntegrationTest {
     // test to get a product with a valid Id
     @Test
     public void testGetProductById() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter_game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter_game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -155,11 +150,13 @@ public class ProductIntegrationTest {
     public void testGetAllProducts() {
         // Create a second test category
         Category category2 = categoryService.createCategory("RPG");
+        int category2_id= category2.getId();
         // Create a second test lineItem
         LineItem lineItem2 = lineItemService.createLineItem(1, 90.0);
-        ProductRequestDto request1 = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        int lineItem2_id= lineItem2.getId();
+        ProductRequestDto request1 = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         restTemplate.postForEntity("/product", request1, ProductResponseDto.class);
-        ProductRequestDto request2 = new ProductRequestDto(2, "GTA", "Open world", lineItem2, category2);
+        ProductRequestDto request2 = new ProductRequestDto(2, "GTA", "Open world", "www", lineItem2_id, category2_id);
         restTemplate.postForEntity("/product", request2, ProductResponseDto.class);
 
         ResponseEntity<ProductListDto> response = restTemplate.getForEntity("/product", ProductListDto.class);
@@ -174,11 +171,9 @@ public class ProductIntegrationTest {
     // test to get all products with category
     @Test
     public void testGetAllProductsWithCategory() {
-        // Create a second test lineItem
-        LineItem lineItem2 = lineItemService.createLineItem(1, 90.0);
-        ProductRequestDto request1 = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request1 = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         restTemplate.postForEntity("/product", request1, ProductResponseDto.class);
-        ProductRequestDto request2 = new ProductRequestDto(2, "GTA", "Open world", lineItem2, category);
+        ProductRequestDto request2 = new ProductRequestDto(2, "GTA", "Open world", "www", lineItem_id, category_id);
         restTemplate.postForEntity("/product", request2, ProductResponseDto.class);
 
         ResponseEntity<ProductListDto> response = restTemplate.getForEntity("/product/category/"+category.getId(), ProductListDto.class);
@@ -192,7 +187,7 @@ public class ProductIntegrationTest {
     // test to update a valid Id product name with a valid name
     @Test
     public void testUpdateProductName_Success() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -214,7 +209,7 @@ public class ProductIntegrationTest {
     // test to update a product name with a null name
     @Test
     public void testUpdateProductName_InvalidName() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -248,7 +243,7 @@ public class ProductIntegrationTest {
     // test to update a valid Id product description with a valid description
     @Test
     public void testUpdateProductDescription_Success() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -270,7 +265,7 @@ public class ProductIntegrationTest {
     // test to update a product description with a null description
     @Test
     public void testUpdateProductDescription_InvalidDescription() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -306,7 +301,7 @@ public class ProductIntegrationTest {
     public void testUpdateProductCategory_Success() {
         //Create another category
         Category category2= categoryService.createCategory("RPG");
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -322,14 +317,14 @@ public class ProductIntegrationTest {
 
         ProductResponseDto updatedProduct = responseEntity.getBody();
         assertNotNull(updatedProduct);
-        assertEquals("RPG", updatedProduct.getCategory().getName());
+        assertEquals(category2.getId(), updatedProduct.getCategory_id());
     }
 
 
     // test to update a product category with a null category
     @Test
     public void testUpdateProductCategory_InvalidCategory() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 
@@ -365,7 +360,7 @@ public class ProductIntegrationTest {
     // test to delete a product with a valid Id
     @Test
     public void testDeleteProduct_Success() {
-        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", lineItem, category);
+        ProductRequestDto request = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
         ResponseEntity<ProductResponseDto> postResponse = restTemplate.postForEntity("/product", request, ProductResponseDto.class);
         ProductResponseDto createdProduct = postResponse.getBody();
 

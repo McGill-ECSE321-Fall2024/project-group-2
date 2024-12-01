@@ -21,6 +21,10 @@ public class ProductService {
     ProductRepository productRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    CategoryService categoryService;
+    @Autowired
+    LineItemService lineItemService;
 
     @Transactional
     public Product getProduct(int productId){
@@ -45,21 +49,21 @@ public class ProductService {
 
 
     @Transactional
-    public Product createProduct(String name, String description, LineItem lineItem, Category category){
-        if (category==null){
-             throw new GameStoreException(HttpStatus.BAD_REQUEST, "The category cannot be empty!");
-        }
-        else if (lineItem==null){
-            throw new GameStoreException(HttpStatus.BAD_REQUEST, "LineItem cannot be empty!");
-        }
-        else if (description==null||description.trim().isEmpty()){
+    public Product createProduct(String name, String description, String imageURL, int lineItem_id, int category_id){
+        Category category= categoryService.getCategory(category_id);
+        LineItem lineItem= lineItemService.getLineItem(lineItem_id);
+
+        if (description==null||description.trim().isEmpty()){
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "The description cannot be empty!");
         }
         else if (name==null||name.trim().isEmpty()){
             throw new GameStoreException(HttpStatus.BAD_REQUEST, "The name cannot be empty!");
         }
+        else if (imageURL==null||imageURL.trim().isEmpty()){
+            throw new GameStoreException(HttpStatus.BAD_REQUEST, "The name cannot be empty!");
+        }
         else{
-            Product product= new Product(name, description, lineItem, category);
+            Product product= new Product(name, description, imageURL, lineItem, category);
             productRepository.save(product);
             return product;
         }

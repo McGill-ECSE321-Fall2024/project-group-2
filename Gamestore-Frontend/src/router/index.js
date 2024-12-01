@@ -7,6 +7,8 @@ import OwnerView from '../views/OwnerView.vue'; // Ensure this view is imported
 import AccountView from '../views/AccountView.vue';
 import CheckoutView from '../views/CheckoutView.vue'; // Import the Checkout View
 import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
+import StaffView from '@/views/StaffView.vue';
+import OrderView from '@/views/OrderView.vue';
 
 
 const router = createRouter({
@@ -22,6 +24,16 @@ const router = createRouter({
       path: '/', // Default route for the home page
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/staff', // Default route for the home page
+      name: 'staff',
+      component: StaffView,
+    },
+    {
+      path: "/orders",
+      name: "orders",
+      component: OrderView,
     },
     {
       path: '/signin', // Route for the SignIn page

@@ -40,6 +40,16 @@ public class CategoryRestController {
         }
     }
 
+    @GetMapping("/category/name/{categoryName}")
+    public ResponseEntity<?> getCategoryByName(@PathVariable String categoryName) {
+        try {
+            Category category = categoryService.getCategoryByName(categoryName);
+            return new ResponseEntity<>(new CategoryDto(category), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
+    }
+
     @GetMapping("/category")
     public ResponseEntity<CategoryListDto> getAllCategory() {
         List<CategoryDto> categories = new ArrayList<>();
