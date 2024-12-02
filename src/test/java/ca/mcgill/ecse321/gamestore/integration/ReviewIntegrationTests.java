@@ -77,8 +77,9 @@ public class ReviewIntegrationTests {
         Product product = productService.createProduct(
             "Test Product",
             "Test Description",
-            lineItem,
-            category
+            "www",
+            testLineItemId,
+            testCategoryId
         );
         testProductId = product.getId();
     }

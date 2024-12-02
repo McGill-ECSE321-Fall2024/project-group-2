@@ -89,7 +89,7 @@ class ProductRepositoryApplicationTests {
         categoryRepository.save(category);
 
         // Create and save a Product entity
-        Product product= new Product("Game","Play",lineItem,category);
+        Product product= new Product("Game","Play", "www",lineItem,category);
         productRepository.save(product);
 
         // Retrieve the Product entity from the repository by its ID

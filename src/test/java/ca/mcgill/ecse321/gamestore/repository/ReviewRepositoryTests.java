@@ -97,7 +97,7 @@ class ReviewRepositoryApplicationTests {
         categoryRepository.save(category);
 
         // Create and save a Product entity
-        Product product= new Product("Game","Play",lineItem,category);
+        Product product= new Product("Game","Play", "www",lineItem,category);
         productRepository.save(product);
         // Create and save a Customer entity
         Customer customer = new Customer("Moe23","Mohamed","m.mashmoushi22@gmail.com","passowrd");

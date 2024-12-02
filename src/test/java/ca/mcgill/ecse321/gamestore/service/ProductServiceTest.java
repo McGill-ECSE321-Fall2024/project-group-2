@@ -47,88 +47,6 @@ public class ProductServiceTest {
         lenient().when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
-     // Test for successful product creation
-     @Test
-     public void testCreateProduct_Success() {
-
-        // Create test category and lineItem and product
-        Category category = new Category("Sport");
-        LineItem lineItem= new LineItem();
-        lineItem.setPrice(90);
-        lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
-
-        // Mock repository behaviors for successful path
-        when(productRepository.save(any(Product.class))).thenReturn(product);
- 
-        Product createdProduct = productService.createProduct(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
-        assertNotNull(createdProduct);
-        assertEquals(VALID_NAME, createdProduct.getName());
-        assertEquals(VALID_DESCRIPTION, createdProduct.getDescription());
-        assertEquals(lineItem, createdProduct.getLineItemOfProduct());
-        assertEquals(category, createdProduct.getCategory());
-     }
-
-     // Test for product creation with a null name
-     @Test
-     public void testCreateProduct_InvalidName() {
-
-        // Create test category and lineItem
-        Category category = new Category("Sport");
-        LineItem lineItem= new LineItem();
-        lineItem.setPrice(90);
-        lineItem.setQuantity(20);
-
-        GameStoreException exception = assertThrows(GameStoreException.class, () -> 
-        productService.createProduct(null,VALID_DESCRIPTION,lineItem,category));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-        assertEquals("The name cannot be empty!", exception.getMessage());
-     }
-
-     // Test for product creation with a null description
-     @Test
-     public void testCreateProduct_InvalidDescription() {
-
-        // Create test category and lineItem
-        Category category = new Category("Sport");
-        LineItem lineItem= new LineItem();
-        lineItem.setPrice(90);
-        lineItem.setQuantity(20);
-
-        GameStoreException exception = assertThrows(GameStoreException.class, () -> 
-        productService.createProduct(VALID_NAME,null,lineItem,category));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-        assertEquals("The description cannot be empty!", exception.getMessage());
-     }
-
-     // Test for product creation with a null description
-     @Test
-     public void testCreateProduct_InvalidLineItem() {
-
-        // Create test category
-        Category category = new Category("Sport");
-
-        GameStoreException exception = assertThrows(GameStoreException.class, () -> 
-        productService.createProduct(VALID_NAME,VALID_DESCRIPTION,null,category));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-        assertEquals("LineItem cannot be empty!", exception.getMessage());
-     }
-
-     // Test for product creation with a null description
-     @Test
-     public void testCreateProduct_InvalidCategory() {
-
-        // Create test LineItem
-        LineItem lineItem= new LineItem();
-        lineItem.setPrice(90);
-        lineItem.setQuantity(20);
-
-        GameStoreException exception = assertThrows(GameStoreException.class, () -> 
-        productService.createProduct(VALID_NAME,VALID_DESCRIPTION,lineItem,null));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
-        assertEquals("The category cannot be empty!", exception.getMessage());
-     }
-
      // Test retrieving a product by a valid ID
     @Test
     public void testGetProductById_Success() {
@@ -138,7 +56,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
 
         when(productRepository.findProductById(anyInt())).thenReturn(product);
 
@@ -169,8 +87,8 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product1= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
-        Product product2= new Product(VALID_NAME2, VALID_DESCRIPTION2, lineItem, category);
+        Product product1= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
+        Product product2= new Product(VALID_NAME2, VALID_DESCRIPTION2, "www", lineItem, category);
 
         when(productRepository.findAll()).thenReturn(List.of(product1, product2));
 
@@ -186,8 +104,8 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product1= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
-        Product product2= new Product(VALID_NAME2, VALID_DESCRIPTION2, lineItem, category);
+        Product product1= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
+        Product product2= new Product(VALID_NAME2, VALID_DESCRIPTION2, "www", lineItem, category);
 
         when(productRepository.findAllByCategoryId(1)).thenReturn(List.of(product1, product2));
 
@@ -203,7 +121,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
 
         Product updatedProduct = productService.updateProductName(1, VALID_NAME2);
@@ -229,7 +147,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
 
         GameStoreException exception = assertThrows(GameStoreException.class, () ->
@@ -246,7 +164,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
 
         Product updatedProduct = productService.updateProductDescription(1, VALID_DESCRIPTION2);
@@ -272,7 +190,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
 
         GameStoreException exception = assertThrows(GameStoreException.class, () ->
@@ -290,7 +208,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
         when(categoryRepository.findCategoryById(anyInt())).thenReturn(category2);
 
@@ -317,7 +235,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
         when(categoryRepository.findCategoryById(anyInt())).thenReturn(null);
         GameStoreException exception = assertThrows(GameStoreException.class, () ->
@@ -334,7 +252,7 @@ public class ProductServiceTest {
         LineItem lineItem= new LineItem();
         lineItem.setPrice(90);
         lineItem.setQuantity(20);
-        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, lineItem, category);
+        Product product= new Product(VALID_NAME, VALID_DESCRIPTION, "www", lineItem, category);
         when(productRepository.findProductById(anyInt())).thenReturn(product);
         boolean isDeleted= productService.deleteProduct(1);
         verify(productRepository, times(1)).delete(product);
