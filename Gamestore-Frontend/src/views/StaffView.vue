@@ -34,6 +34,8 @@
           <input v-model="newGame.quantity" type="number" min="0" required />
         </div>
         <button class="btn-primary" type="submit">Submit</button>
+        <p v-if="errorMessageP1" class="error-message">{{ errorMessageP1 }}</p>
+        <p v-if="successMessageP1" class="success-message">{{ successMessageP1 }}</p>
       </form>
     </section>
 
@@ -53,6 +55,8 @@
             <input v-model="editGameRequest.name" type="text" required />
           </div>
           <button class="btn-primary" type="submit">Submit</button>
+          <p v-if="errorMessageP2" class="error-message">{{ errorMessageP2 }}</p>
+          <p v-if="successMessageP2" class="success-message">{{ successMessageP2 }}</p>
         </form>
       </div>
 
@@ -69,6 +73,8 @@
             <textarea v-model="editGameRequest.description" required></textarea>
           </div>
           <button class="btn-primary" type="submit">Submit</button>
+          <p v-if="errorMessageP3" class="error-message">{{ errorMessageP3 }}</p>
+          <p v-if="successMessageP3" class="success-message">{{ successMessageP3 }}</p>
         </form>
       </div>
     </section>
@@ -82,6 +88,8 @@
           <input v-model="deleteGameId" type="text" required />
         </div>
         <button class="btn-primary" type="submit">Submit</button>
+        <p v-if="errorMessageP4" class="error-message">{{ errorMessageP4 }}</p>
+        <p v-if="successMessageP4" class="success-message">{{ successMessageP4 }}</p>
       </form>
     </section>
 
@@ -130,10 +138,33 @@
       <p v-if="successMessage3" class="success-message">{{ successMessage3 }}</p>
     </section>
 
+    <!-- View Orders -->
     <section class="form-section">
-      <h2>View Orders</h2>
-      <button class="btn-primary" @click="redirectToOrderView">Go to Order Management</button>
+      <h2>View and Edit Order</h2>
+      <form @submit.prevent="redirectToOrderView" class="form-grid">
+      <div>
+        <label>Order ID:</label>
+        <input v-model="orderId" type="text" placeholder="Enter Order ID" required />
+      </div>
+      <button class="btn-primary" type="submit">Submit</button>
+      <p v-if="orderErrorMessage" class="error-message">{{ orderErrorMessage }}</p>
+      </form>
     </section>
+
+     <!-- Create Requests -->
+     <section class="form-section">
+      <h2>Send a Request</h2>
+      <form @submit.prevent="createRequest" class="form-grid">
+        <div>
+        <label>Request email address:</label>
+        <input v-model="email" type="text" placeholder="Enter email address" required />
+      </div>
+      <button class="btn-primary" type="submit">Submit</button>
+      <p v-if="changeRequestErrorMessage" class="error-message">{{ changeRequestErrorMessage }}</p>
+      <p v-if="changeRequestSuccessMessage" class="success-message">{{ changeRequestSuccessMessage }}</p>
+      </form>
+    </section>
+
   </div>
 </template>
 
@@ -160,13 +191,14 @@ export default {
       price: 0,
       image: "",
     });
-
+    const email= ref("");
     const categories = ref([]); // Example categories
     const newCategory = ref({ name: "" });
     const editGameRequest = ref({ id: "", name: "", description: "" });
     const deleteGameId = ref("");
     const updateCategoryRequest = ref({ id: "", name: "" });
     const deleteCategoryId = ref("");
+    const orderId = ref("");
 
     // Category Status Messages
     const errorMessage = ref(null);
@@ -175,6 +207,23 @@ export default {
     const successMessage2 = ref(null);
     const errorMessage3 = ref(null);
     const successMessage3 = ref(null);
+
+    // Product Status Messages
+    const errorMessageP1 = ref(null);
+    const successMessageP1 = ref(null);
+    const errorMessageP2 = ref(null);
+    const successMessageP2 = ref(null);
+    const errorMessageP3 = ref(null);
+    const successMessageP3 = ref(null);
+    const errorMessageP4 = ref(null);
+    const successMessageP4 = ref(null);
+
+    // Order Status Message
+    const orderErrorMessage = ref(null);
+
+    // Change_requests message
+    const changeRequestErrorMessage= ref(null);
+    const changeRequestSuccessMessage= ref (null);
 
     // Fetch categories from the backend
     const fetchCategories = async () => {
@@ -188,8 +237,15 @@ export default {
 
     fetchCategories();
 
-    const redirectToOrderView = () => {
-      router.push({ name: "orders" });
+    const redirectToOrderView = async () => {
+      orderErrorMessage.value= null;
+      try{
+        const response = await axiosClient.get("/orders/"+orderId.value);
+        router.push({ name: "order_management", params: { id: orderId.value } });
+      }
+      catch  (error) {
+        orderErrorMessage.value = error.response.data || "An error occurred.";
+      }
     };
 
     const onImageUpload = (event) => {
@@ -205,16 +261,53 @@ export default {
     };
 
     const addGame = async () => {
+      successMessageP1.value= null;
+      errorMessageP1.value= null;
       try {
         const new_line_item= {price: newGame.value.price, quantity: newGame.value.quantity};
         const new_line_item2=  await axiosClient.post("/lineitems", new_line_item);
         const choosen_cat= await axiosClient.get("/category/name/"+ newGame.value.category);
         const new_game= {name: newGame.value.name, description: newGame.value.description, imageURL: newGame.value.image,
           lineItem_id: new_line_item2.data.lineItemId, category_id: choosen_cat.data.id};
-        console.log(new_game)
         await axiosClient.post("/product", new_game);
+        successMessageP1.value = "Product added successfully!";
       } catch (error) {
-        errorMessage.value = error.response.data || "An error occurred.";
+        errorMessageP1.value = error.response.data || "An error occurred.";
+      }
+    };
+
+    const editGameName= async () => {
+      successMessageP2.value= null;
+      errorMessageP2.value= null;
+      try{
+        await axiosClient.put("/product/name/"+editGameRequest.value.id+"?newName="+editGameRequest.value.name);
+        successMessageP2.value = "Product name updated successfully!"; 
+      }
+      catch (error) {
+        errorMessageP2.value = error.response.data || "An error occurred.";
+      }
+    };
+
+    const editGameDescription= async () => {
+      successMessageP3.value= null;
+      errorMessageP3.value= null;
+      try{
+        await axiosClient.put("/product/description/"+editGameRequest.value.id+"?newDescription="+editGameRequest.value.description);
+        successMessageP3.value = "Product description updated successfully!"; 
+      }
+      catch (error) {
+        errorMessageP3.value = error.response.data || "An error occurred.";
+      }
+    };
+
+    const deleteGame = async () => {
+      successMessageP4.value= null;
+      errorMessageP4.value= null;
+      try {
+        await axiosClient.delete("/product/"+deleteGameId.value);
+        successMessageP4.value = "Product deleted successfully!";
+      } catch (error) {
+        errorMessageP4.value = error.response.data || "An error occurred.";
       }
     };
 
@@ -252,6 +345,17 @@ export default {
       }
     };
 
+    const createRequest = async () => {
+      changeRequestErrorMessage.value= null;
+      changeRequestSuccessMessage.value= null;
+      try {
+        await axiosClient.post("/change-requests", {requestCreatorEmail: email.value});
+        changeRequestSuccessMessage.value = "change-request created successfully!";
+      } catch (error) {
+        changeRequestErrorMessage.value = error.response.data || "Invalid email.";
+      }
+    };
+
     return {
       newGame,
       categories,
@@ -263,6 +367,9 @@ export default {
       redirectToOrderView,
       onImageUpload,
       addGame,
+      editGameName,
+      editGameDescription,
+      deleteGame,
       addCategory,
       errorMessage,
       successMessage,
@@ -272,6 +379,20 @@ export default {
       errorMessage2,
       successMessage3,
       errorMessage3,
+      errorMessageP1,
+      successMessageP1,
+      successMessageP2,
+      errorMessageP2,
+      successMessageP3,
+      errorMessageP3,
+      successMessageP4,
+      errorMessageP4,
+      orderId,
+      orderErrorMessage,
+      createRequest,
+      changeRequestErrorMessage,
+      changeRequestSuccessMessage,
+      email,
     };
   },
 };

@@ -15,80 +15,92 @@
               <th style="min-width: 200px;">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="order in orders" :key="order.number">
+          <tbody v-if="order">
+            <tr>
               <td>{{ order.number }}</td>
               <td>{{ order.orderedDate }}</td>
               <td>{{ order.shippedDate || "N/A" }}</td>
-              <td>{{ order.shippingAddress }}</td>
-              <td>${{ order.totalPrice.toFixed(2) }}</td>
+              <td>{{ order.shipTo }}</td>
+              <td>{{ order.total }}</td>
               <td>{{ order.status }}</td>
-              <td>{{ order.payment }}</td>
+              <td>{{ order.paymentId }}</td>
               <td>
                 <div class="actions">
-                  <select v-model="order.tempStatus">
+                  <select v-model="tempStatus">
                     <option>Pending</option>
                     <option>Shipped</option>
                     <option>Delivered</option>
                     <option>Cancelled</option>
                   </select>
-                  <button @click="confirmAction(order)" class="btn-primary">Submit</button>
+                  <button @click="confirmAction()" class="btn-primary">Submit</button>
                 </div>
               </td>
             </tr>
           </tbody>
+          <tbody v-else>
+          <tr>
+            <td colspan="8">Loading order details...</td>
+          </tr>
+        </tbody>
         </table>
+        <p v-if="message" class="message">{{ message }}</p>
       </div>
       <button class="btn-back" @click="goBack">Back to Portal</button>
     </div>
   </template>
   
   <script>
-  import { ref } from "vue";
+  import { ref, onMounted } from "vue";
   import { useRouter } from "vue-router";
+  import axios from "axios";
+
+  const axiosClient = axios.create({
+  baseURL: "http://localhost:8080",
+  });
   
   export default {
-    name: "OrderView",
-    setup() {
-      const orders = ref([
-        {
-          number: 1,
-          orderedDate: "2024-11-01",
-          shippedDate: null,
-          shippingAddress: "123 Example St, Cityville",
-          totalPrice: 59.99,
-          status: "Pending",
-          tempStatus: "Pending",
-          payment: "Paid",
-        },
-        {
-          number: 2,
-          orderedDate: "2024-11-05",
-          shippedDate: "2024-11-06",
-          shippingAddress: "456 Market St, Townsville",
-          totalPrice: 129.99,
-          status: "Delivered",
-          tempStatus: "Delivered",
-          payment: "Paid",
-        },
-      ]);
-  
+    name: "order_management",
+    props: ["id"],
+    setup(props) {
+      const order = ref(null);
+      const tempStatus= ref("");
       const router = useRouter();
-  
-      const confirmAction = (order) => {
-        order.status = order.tempStatus; // Update the actual status
-        console.log(`Order #${order.number} updated to status: ${order.status}`);
-      };
-  
-      const goBack = () => {
-        router.push({ name: "staff" });
-      };
-  
-      return {
-        orders,
-        confirmAction,
-        goBack,
-      };
+      const message = ref("");
+
+      const fetchOrder = async () => {
+      try {
+        const response = await axiosClient.get("/orders/"+props.id);
+        order.value = response.data;
+      } catch (error) {
+        console.error("Error fetching order:", error);
+      }
+    };
+      
+    onMounted(fetchOrder);
+
+    const confirmAction = async () => {
+      try{
+        const response = await axiosClient.put("/orders/"+props.id+"/status"+"?newStatus="+tempStatus.value);
+        fetchOrder();
+        message.value= "Order status updated!"
+      }
+      catch (error) {
+        console.error("Error fetching order:", error);
+      }
+    };
+
+    const goBack = () => {
+      router.push({ name: "staff" });
+    };
+    
+    return {
+      order,
+      confirmAction,
+      goBack,
+      fetchOrder,
+      tempStatus,
+      message,
+    };
     },
   };
   </script>
@@ -175,5 +187,10 @@
   .btn-back:hover {
     background-color: #0078a3;
   }
+  .message {
+  color: green;
+  margin-top: 10px;
+  text-align: center;
+}
   </style>
   

@@ -8,7 +8,7 @@ import AccountView from '../views/AccountView.vue';
 import CheckoutView from '../views/CheckoutView.vue'; // Import the Checkout View
 import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
 import StaffView from '@/views/StaffView.vue';
-import OrderView from '@/views/OrderView.vue';
+import OrderManagementView from '@/views/OrderManagementView.vue';
 
 
 const router = createRouter({
@@ -31,9 +31,10 @@ const router = createRouter({
       component: StaffView,
     },
     {
-      path: "/orders",
-      name: "orders",
-      component: OrderView,
+      path: "/order_management/:id",
+      name: "order_management",
+      component: OrderManagementView,
+      props: true,
     },
     {
       path: '/signin', // Route for the SignIn page

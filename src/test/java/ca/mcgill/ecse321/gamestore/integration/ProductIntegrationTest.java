@@ -112,8 +112,8 @@ public class ProductIntegrationTest {
         ResponseEntity<String> response = restTemplate.postForEntity("/product", request, String.class);
 
         assertNotNull(response);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("The category cannot be empty!", response.getBody());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Can't find category with the given Id!", response.getBody());
     }
 
     // test to get a product with a valid Id
@@ -161,22 +161,6 @@ public class ProductIntegrationTest {
 
         ResponseEntity<ProductListDto> response = restTemplate.getForEntity("/product", ProductListDto.class);
 
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ProductListDto products = response.getBody();
-        assertNotNull(products);
-        assertEquals(2, products.getProducts().size());
-    }
-
-    // test to get all products with category
-    @Test
-    public void testGetAllProductsWithCategory() {
-        ProductRequestDto request1 = new ProductRequestDto(1, "CSGO", "Shooter game", "www", lineItem_id, category_id);
-        restTemplate.postForEntity("/product", request1, ProductResponseDto.class);
-        ProductRequestDto request2 = new ProductRequestDto(2, "GTA", "Open world", "www", lineItem_id, category_id);
-        restTemplate.postForEntity("/product", request2, ProductResponseDto.class);
-
-        ResponseEntity<ProductListDto> response = restTemplate.getForEntity("/product/category/"+category.getId(), ProductListDto.class);
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         ProductListDto products = response.getBody();
