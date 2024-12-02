@@ -15,8 +15,8 @@
       <hr />
       <div class="header-center">
         <input type="text" placeholder="Search store" />
-        <button>Discover</button>
-        <button>Browse</button>
+        <router-link to="/" class="center-button">Discover</router-link>
+        <router-link to="/browse" class="center-button">Browse</router-link>
       </div>
     </header>
 
@@ -127,17 +127,6 @@
                 <p class="game-price">{{ game.price }}</p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Categories Section -->
-      <section class="categories">
-        <h2>Categories</h2>
-        <div class="card-container">
-          <div class="game-card" v-for="category in categories" :key="category.id">
-            <img :src="category.image" :alt="category.name" class="game-image" />
-            <h3>{{ category.name }}</h3>
           </div>
         </div>
       </section>
@@ -376,24 +365,21 @@ hr {
   color: white;
 }
 
-.header-center button {
-  padding: 8px 16px;
-  background-color: transparent; /* No background */
-  color: white; /* Default text color */
-  border: none; /* Remove borders */
+.header-center .center-button {
+  background-color: transparent; /* Same as the sign-in button background */
+  color: white;
+  border: none;
   border-radius: 4px;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: color 0.3s ease; /* Smooth transition for text color */
+  transition: background-color 0.3s ease;
 }
 
-.header-center button:hover,
-.header-center button:active {
-  color: grey; /* Change text color to black on hover or click */
+.header-center .center-button:hover,
+.header-centre button:active {
+  color: grey;
 }
 
-header button:hover {
-  background-color: #000;
-}
 
 /* Main Content */
 main {
@@ -697,7 +683,6 @@ footer {
   margin-bottom: 8px;
 }
 </style>
-
 
 
 

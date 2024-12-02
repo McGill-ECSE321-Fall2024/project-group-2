@@ -278,13 +278,15 @@ export default {
     },
     handlePayment() {
       if (this.isFormValid) {
-        alert('Payment processed successfully!');
-        this.$router.push('/order-confirmation');
+        // Redirect directly to the order complete page
+        this.$router.push('/ordercomplete');
       }
     }
   }
 };
 </script>
+
+
 
 
 <style scoped>
