@@ -184,4 +184,3 @@ public class CategoryIntegrationTest {
         assertEquals("Can't find category with the given Id!", responseEntity.getBody());
     }
 }
-

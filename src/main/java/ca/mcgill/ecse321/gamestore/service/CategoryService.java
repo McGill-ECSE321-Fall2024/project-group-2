@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class CategoryService {
-    
+
     @Autowired
     CategoryRepository categoryRepository;
 
@@ -72,13 +72,13 @@ public class CategoryService {
     @Transactional
     public boolean deleteCategory(int categoryId){
         Category category= categoryRepository.findCategoryById(categoryId);
-            if (category==null){
-                throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find category with the given Id!");
-            }
-            else{
-                categoryRepository.delete(category);
-                return true;
-            }
+        if (category==null){
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find category with the given Id!");
+        }
+        else{
+            categoryRepository.delete(category);
+            return true;
+        }
     }
 
 }

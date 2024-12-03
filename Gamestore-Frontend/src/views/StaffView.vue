@@ -285,7 +285,7 @@ export default {
         const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
         console.log(game_edit)
         await axiosClient.put("/product/name/"+game_edit.data.id+"?newName="+editGameRequest.value.name);
-        successMessageP2.value = "Product name updated successfully!"; 
+        successMessageP2.value = "Product name updated successfully!";
       }
       catch (error) {
         errorMessageP2.value = error.response.data || "An error occurred.";
@@ -298,7 +298,7 @@ export default {
       try{
         const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
         await axiosClient.put("/product/description/"+game_edit.data.id+"?newDescription="+editGameRequest.value.description);
-        successMessageP3.value = "Product description updated successfully!"; 
+        successMessageP3.value = "Product description updated successfully!";
       }
       catch (error) {
         errorMessageP3.value = error.response.data || "An error occurred.";
@@ -335,7 +335,7 @@ export default {
       try {
         const cat_edit= await axiosClient.get("/category/name/"+ updateCategoryRequest.value.oldName);
         await axiosClient.put("/category/"+cat_edit.data.id+"?newName="+updateCategoryRequest.value.name);
-        successMessage2.value = "Category updated successfully!"; 
+        successMessage2.value = "Category updated successfully!";
       } catch (error) {
         errorMessage2.value = error.response.data || "An error occurred.";
       }

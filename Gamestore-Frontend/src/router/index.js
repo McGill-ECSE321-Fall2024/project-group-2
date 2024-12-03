@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import SignInView from '../views/SignInView.vue'; // Import the SignIn View
-import EmployeeView from '../views/EmployeeView.vue'; // Ensure this view is imported
 import CustomerView from '../views/CustomerView.vue'; // Ensure this view is imported
 import OwnerView from '../views/OwnerView.vue'; // Ensure this view is imported
 import AccountView from '../views/AccountView.vue';
@@ -51,11 +50,7 @@ const router = createRouter({
       name: 'customer',
       component: CustomerView
     },
-    {
-      path: '/employees',
-      name: 'employee',
-      component: EmployeeView
-    },
+
     {
       path: '/owner',
       name: 'owner',
