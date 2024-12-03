@@ -113,6 +113,8 @@ export default {
   background-color: #121212;
   border-radius: 8px;
   padding: 2rem;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .order-complete-content {

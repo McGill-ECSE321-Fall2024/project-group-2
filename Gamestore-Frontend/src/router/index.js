@@ -12,6 +12,7 @@ import BrowseView from '../views/BrowseView.vue'; // Import the Payment View
 import DashBoardView from '../views/DashBoardView.vue'; // Import the Payment View
 import StaffView from '@/views/StaffView.vue';
 import OrderManagementView from '@/views/OrderManagementView.vue';
+import ShoppingCartView from "@/views/ShoppingCartView.vue";
 
 
 
@@ -83,6 +84,11 @@ const router = createRouter({
       name: 'Dashboard',
       component: DashBoardView
     },
+    {
+      path: '/shoppingcart',
+      name: '/ShoppingCart',
+      component: ShoppingCartView
+    }
   ],
 });
 

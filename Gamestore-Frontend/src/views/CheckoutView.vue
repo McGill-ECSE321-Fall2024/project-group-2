@@ -240,7 +240,7 @@ export default {
 }
 
 .checkout-container {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -349,6 +349,7 @@ export default {
 .order-summary {
   position: sticky;
   top: 2rem;
+  margin-left: 50px;
 }
 
 .summary-card {
