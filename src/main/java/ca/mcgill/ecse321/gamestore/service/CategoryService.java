@@ -37,6 +37,18 @@ public class CategoryService {
         }
     }
 
+
+    @Transactional
+    public Category getCategoryByName (String categoryName){
+        Category category= categoryRepository.findCategoryByName(categoryName);
+        if (category==null){
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find category with the given Id!");
+        }
+        else{
+            return category;
+        }
+    }
+
     @Transactional
     public List<Category> getAllCategory (){
         return (List<Category>) categoryRepository.findAll();

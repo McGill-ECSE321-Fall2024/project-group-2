@@ -19,6 +19,11 @@ public class Product
   //Product Attributes
   private String name;
   private String description;
+  @Column(columnDefinition="text")
+  private String imageURL;
+
+
+
 
   //Product Associations
   @OneToOne
@@ -31,8 +36,9 @@ public class Product
   // CONSTRUCTOR
   //------------------------
 
-  public Product(String aName, String aDescription, LineItem aLineItemOfProduct, Category aCategory)
+  public Product(String aName, String aDescription, String aImageURL, LineItem aLineItemOfProduct, Category aCategory)
   {
+    imageURL= aImageURL;
     name = aName;
     description = aDescription;
     if (!setLineItemOfProduct(aLineItemOfProduct))
@@ -64,6 +70,14 @@ public class Product
     return wasSet;
   }
 
+  public boolean setImage(String aImageURL)
+  {
+    boolean wasSet = false;
+    imageURL = aImageURL;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setDescription(String aDescription)
   {
     boolean wasSet = false;
@@ -75,6 +89,11 @@ public class Product
   public String getName()
   {
     return name;
+  }
+
+  public String getImage()
+  {
+    return imageURL;
   }
 
   public String getDescription()

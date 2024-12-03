@@ -9,6 +9,9 @@ import PaymentView from '../views/PaymentView.vue'; // Import the Payment View
 import OrderCompleteView from "@/views/OrderCompleteView.vue"; // Import the Order complete view
 import BrowseView from '../views/BrowseView.vue'; // Import the Payment View
 import DashBoardView from '../views/DashBoardView.vue'; // Import the Payment View
+import StaffView from '@/views/StaffView.vue';
+import OrderManagementView from '@/views/OrderManagementView.vue';
+
 
 
 const router = createRouter({
@@ -24,6 +27,17 @@ const router = createRouter({
       path: '/', // Default route for the home page
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/staff', // Default route for the home page
+      name: 'staff',
+      component: StaffView,
+    },
+    {
+      path: "/order_management/:id",
+      name: "order_management",
+      component: OrderManagementView,
+      props: true,
     },
     {
       path: '/signin', // Route for the SignIn page

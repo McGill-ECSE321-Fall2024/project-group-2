@@ -22,9 +22,10 @@ import ca.mcgill.ecse321.gamestore.exception.GameStoreException;
 import ca.mcgill.ecse321.gamestore.model.Product;
 import ca.mcgill.ecse321.gamestore.service.ProductService;
 
+
 @RestController
 public class ProductRestController {
-
+    
     @Autowired
     private ProductService productService;
 
@@ -36,8 +37,8 @@ public class ProductRestController {
      */
     @PostMapping("/product")
     public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto productDto){
-        try {
-            Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getLineItem(), productDto.getCategory());
+         try {
+            Product createdProduct = productService.createProduct(productDto.getName(), productDto.getDescription(), productDto.getImageURL(), productDto.getLineItem_id(), productDto.getCategory_id());
             return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.CREATED);
         } catch (GameStoreException e) {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
