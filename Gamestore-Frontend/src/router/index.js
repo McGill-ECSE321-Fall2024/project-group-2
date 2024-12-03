@@ -12,6 +12,8 @@ import DashBoardView from '../views/DashBoardView.vue'; // Import the Payment Vi
 import StaffView from '@/views/StaffView.vue';
 import OrderManagementView from '@/views/OrderManagementView.vue';
 import ShoppingCartView from "@/views/ShoppingCartView.vue";
+import ProductView from '../views/ProductView.vue';
+import ReviewView from '../views/ReviewView.vue';
 
 
 
@@ -83,6 +85,21 @@ const router = createRouter({
       path: '/shoppingcart',
       name: '/ShoppingCart',
       component: ShoppingCartView
+    },
+    {
+      path: '/product/name/:name',
+      name: 'product-by-name',
+      component: ProductView
+    },
+    {
+      path : '/product/:id',
+      name : 'product',
+      component : ProductView
+    },
+    {
+      path: '/product/:id/review',
+      name: 'ReviewView',
+      component : ReviewView
     }
   ],
 });
