@@ -108,6 +108,7 @@ export default {
           // Store the email and role in localStorage
           localStorage.setItem("userEmail", this.email);
           localStorage.setItem("userRole", role);
+          localStorage.setItem("userName", response.data.name);
 
           // Redirect to the appropriate view
           await this.$router.push(view);
