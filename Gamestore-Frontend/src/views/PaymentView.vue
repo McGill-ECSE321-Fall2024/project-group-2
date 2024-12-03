@@ -298,7 +298,7 @@ export default {
 }
 
 .payment-container {
-  max-width: 1200px;
+  width: 1000px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 400px;
