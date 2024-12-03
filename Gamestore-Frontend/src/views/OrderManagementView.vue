@@ -69,7 +69,7 @@
 
       const fetchOrder = async () => {
       try {
-        const response = await axiosClient.get("/orders/"+props.id);
+        const response = await axiosClient.get("/orders/number/"+props.id);
         order.value = response.data;
       } catch (error) {
         console.error("Error fetching order:", error);
@@ -80,7 +80,8 @@
 
     const confirmAction = async () => {
       try{
-        const response = await axiosClient.put("/orders/"+props.id+"/status"+"?newStatus="+tempStatus.value);
+        const temp = await axiosClient.get("/orders/number/"+props.id);
+        const response = await axiosClient.put("/orders/"+temp.data.orderId+"/status"+"?newStatus="+tempStatus.value);
         fetchOrder();
         message.value= "Order status updated!"
       }

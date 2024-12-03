@@ -61,6 +61,15 @@ public class ProductRestController {
         }
     }
 
+    @GetMapping("/product/name/{productName}")
+    public ResponseEntity<?> getProductByName(@PathVariable String productName) {
+        try {
+            Product createdProduct = productService.getProductByName(productName);
+            return new ResponseEntity<>(new ProductResponseDto(createdProduct), HttpStatus.OK);
+        } catch (GameStoreException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
+    }
 
 
     /**
@@ -75,6 +84,9 @@ public class ProductRestController {
             products.add(new ProductResponseDto(product));
         } return new ResponseEntity<>(new ProductListDto(products), HttpStatus.OK);
     }
+
+
+
     /**
      * Return All the products with the given category.
      *

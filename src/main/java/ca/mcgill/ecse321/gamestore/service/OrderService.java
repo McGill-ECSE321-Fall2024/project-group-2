@@ -42,6 +42,15 @@ public class OrderService {
     }
 
     @Transactional
+    public Order findOrderByNumber(int number) {
+        Order order = orderRepository.findOrderByNumber(number);
+        if (order==null) {
+            throw new IllegalArgumentException("Order with Number " + number + " not found.");
+        }
+        return order;
+    }
+
+    @Transactional
     public Order updateOrderStatus(int id, OrderStatus newStatus) {
         Order order = findOrderById(id);
         order.setStatus(newStatus);

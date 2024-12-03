@@ -42,7 +42,7 @@ public class CategoryService {
     public Category getCategoryByName (String categoryName){
         Category category= categoryRepository.findCategoryByName(categoryName);
         if (category==null){
-            throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find category with the given Id!");
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find category with the given name!");
         }
         else{
             return category;

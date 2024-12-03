@@ -72,6 +72,16 @@ public class OrderRestController {
         }
     }
 
+    @GetMapping("/number/{number}")
+    public OrderResponseDto getOrderByNumber(@PathVariable int number) {
+        try {
+            Order order = orderService.findOrderByNumber(number);
+            return new OrderResponseDto(order);
+        } catch (IllegalArgumentException e) {
+            throw new GameStoreException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     /**
      * Update the status of an existing Order.
      *
