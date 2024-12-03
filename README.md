@@ -20,6 +20,14 @@ We are a team of developers working on this project with different roles to ensu
 |Mohamed El-Machmouchi|Project Manager|58|58|
 |Katrina Panwar| Quality Assurance Lead|58| 58|
 
+| Name | Team Role | Effort (in hours) | Deliverable 3(hours)|
+|------|-------|----------------|-------------|
+|Abdullah Taltello| Tester|22|22|
+|Farhad Guliyev| Build and Integration Manager|19| 19|
+|Sean O'Keefe| Database Administrator|25| 25|
+|Mohamed El-Machmouchi| Persistence Layer Developer|25|25|
+|Katrina Panwar| Backend Developer |20| 20|
+
 # Project Scope:
 The goal of this project is to create a fully functional web application for an independent game store, offering services to both the management team and the customers. Core features include:
 Inventory and product catalog management by employees.
