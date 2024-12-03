@@ -29,6 +29,7 @@ public class Order
 
 
   //Order Attributes
+  @Column(unique=true)
   private int number;
   private Date orderedDate;
   private Date shippedDate;

@@ -38,6 +38,17 @@ public class ProductService {
     }
 
     @Transactional
+    public Product getProductByName (String productName){
+        Product product= productRepository.findProductByName(productName);
+        if (product==null){
+            throw new GameStoreException(HttpStatus.NOT_FOUND, "Can't find product with the given name!");
+        }
+        else{
+            return product;
+        }
+    }
+
+    @Transactional
     public List<Product> getAllProduct(){
         return (List<Product>) productRepository.findAll();
     }

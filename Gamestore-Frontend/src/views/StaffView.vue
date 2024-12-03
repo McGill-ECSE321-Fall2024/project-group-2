@@ -47,8 +47,8 @@
         <h3>Edit Game Name</h3>
         <form @submit.prevent="editGameName" class="form-grid">
           <div>
-            <label>Game ID:</label>
-            <input v-model="editGameRequest.id" type="text" placeholder="Enter Game ID" required />
+            <label>Game Name:</label>
+            <input v-model="editGameRequest.oldName" type="text" placeholder="Enter Game Name" required />
           </div>
           <div>
             <label>New Game Name:</label>
@@ -65,8 +65,8 @@
         <h3>Edit Game Description</h3>
         <form @submit.prevent="editGameDescription" class="form-grid">
           <div>
-            <label>Game ID:</label>
-            <input v-model="editGameRequest.id" type="text" placeholder="Enter Game ID" required />
+            <label>Game Name:</label>
+            <input v-model="editGameRequest.oldName" type="text" placeholder="Enter Game Name" required />
           </div>
           <div>
             <label>New Game Description:</label>
@@ -84,8 +84,8 @@
       <h2>Delete Game</h2>
       <form @submit.prevent="deleteGame" class="form-grid">
         <div>
-          <label>Game ID:</label>
-          <input v-model="deleteGameId" type="text" required />
+          <label>Game Name:</label>
+          <input v-model="deleteGameName" type="text" required />
         </div>
         <button class="btn-primary" type="submit">Submit</button>
         <p v-if="errorMessageP4" class="error-message">{{ errorMessageP4 }}</p>
@@ -113,8 +113,8 @@
       <h3>Edit Category</h3>
       <form @submit.prevent="updateCategory" class="form-grid">
         <div>
-          <label>Category ID:</label>
-          <input v-model="updateCategoryRequest.id" type="text" required />
+          <label>Category Name:</label>
+          <input v-model="updateCategoryRequest.oldName" type="text" required />
         </div>
         <div>
           <label>New Name:</label>
@@ -129,8 +129,8 @@
       <h3>Delete Category</h3>
       <form @submit.prevent="deleteCategory" class="form-grid">
         <div>
-          <label>Category ID:</label>
-          <input v-model="deleteCategoryId" type="text" required />
+          <label>Category Name:</label>
+          <input v-model="deleteCategoryName" type="text" required />
         </div>
         <button class="btn-primary" type="submit">Submit</button>
       </form>
@@ -143,8 +143,8 @@
       <h2>View and Edit Order</h2>
       <form @submit.prevent="redirectToOrderView" class="form-grid">
       <div>
-        <label>Order ID:</label>
-        <input v-model="orderId" type="text" placeholder="Enter Order ID" required />
+        <label>Order Number:</label>
+        <input v-model="orderNumber" type="text" placeholder="Enter Order Number" required />
       </div>
       <button class="btn-primary" type="submit">Submit</button>
       <p v-if="orderErrorMessage" class="error-message">{{ orderErrorMessage }}</p>
@@ -194,11 +194,11 @@ export default {
     const email= ref("");
     const categories = ref([]); // Example categories
     const newCategory = ref({ name: "" });
-    const editGameRequest = ref({ id: "", name: "", description: "" });
-    const deleteGameId = ref("");
-    const updateCategoryRequest = ref({ id: "", name: "" });
-    const deleteCategoryId = ref("");
-    const orderId = ref("");
+    const editGameRequest = ref({ oldName: "", name: "", description: "" });
+    const deleteGameName = ref("");
+    const updateCategoryRequest = ref({ oldName: "", name: "" });
+    const deleteCategoryName = ref("");
+    const orderNumber = ref("");
 
     // Category Status Messages
     const errorMessage = ref(null);
@@ -240,8 +240,9 @@ export default {
     const redirectToOrderView = async () => {
       orderErrorMessage.value= null;
       try{
-        const response = await axiosClient.get("/orders/"+orderId.value);
-        router.push({ name: "order_management", params: { id: orderId.value } });
+        const response = await axiosClient.get("/orders/number/"+orderNumber.value);
+        console.log(response)
+        router.push({ name: "order_management", params: { id: orderNumber.value } });
       }
       catch  (error) {
         orderErrorMessage.value = error.response.data || "An error occurred.";
@@ -280,8 +281,11 @@ export default {
       successMessageP2.value= null;
       errorMessageP2.value= null;
       try{
-        await axiosClient.put("/product/name/"+editGameRequest.value.id+"?newName="+editGameRequest.value.name);
-        successMessageP2.value = "Product name updated successfully!"; 
+        console.log(editGameRequest.value.oldName)
+        const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
+        console.log(game_edit)
+        await axiosClient.put("/product/name/"+game_edit.data.id+"?newName="+editGameRequest.value.name);
+        successMessageP2.value = "Product name updated successfully!";
       }
       catch (error) {
         errorMessageP2.value = error.response.data || "An error occurred.";
@@ -292,8 +296,9 @@ export default {
       successMessageP3.value= null;
       errorMessageP3.value= null;
       try{
-        await axiosClient.put("/product/description/"+editGameRequest.value.id+"?newDescription="+editGameRequest.value.description);
-        successMessageP3.value = "Product description updated successfully!"; 
+        const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
+        await axiosClient.put("/product/description/"+game_edit.data.id+"?newDescription="+editGameRequest.value.description);
+        successMessageP3.value = "Product description updated successfully!";
       }
       catch (error) {
         errorMessageP3.value = error.response.data || "An error occurred.";
@@ -304,7 +309,8 @@ export default {
       successMessageP4.value= null;
       errorMessageP4.value= null;
       try {
-        await axiosClient.delete("/product/"+deleteGameId.value);
+        const game_edit= await axiosClient.get("/product/name/"+deleteGameName.value);
+        await axiosClient.delete("/product/"+game_edit.data.id);
         successMessageP4.value = "Product deleted successfully!";
       } catch (error) {
         errorMessageP4.value = error.response.data || "An error occurred.";
@@ -327,8 +333,9 @@ export default {
       successMessage2.value= null;
       errorMessage2.value= null;
       try {
-        await axiosClient.put("/category/"+updateCategoryRequest.value.id+"?newName="+updateCategoryRequest.value.name);
-        successMessage2.value = "Category updated successfully!"; 
+        const cat_edit= await axiosClient.get("/category/name/"+ updateCategoryRequest.value.oldName);
+        await axiosClient.put("/category/"+cat_edit.data.id+"?newName="+updateCategoryRequest.value.name);
+        successMessage2.value = "Category updated successfully!";
       } catch (error) {
         errorMessage2.value = error.response.data || "An error occurred.";
       }
@@ -338,7 +345,8 @@ export default {
       successMessage3.value= null;
       errorMessage3.value= null;
       try {
-        await axiosClient.delete("/category/"+deleteCategoryId.value);
+        const cat_edit= await axiosClient.get("/category/name/"+ deleteCategoryName.value);
+        await axiosClient.delete("/category/"+cat_edit.data.id);
         successMessage3.value = "Category deleted successfully!";
       } catch (error) {
         errorMessage3.value = error.response.data || "An error occurred.";
@@ -361,9 +369,9 @@ export default {
       categories,
       newCategory,
       editGameRequest,
-      deleteGameId,
+      deleteGameName,
       updateCategoryRequest,
-      deleteCategoryId,
+      deleteCategoryName,
       redirectToOrderView,
       onImageUpload,
       addGame,
@@ -387,7 +395,7 @@ export default {
       errorMessageP3,
       successMessageP4,
       errorMessageP4,
-      orderId,
+      orderNumber,
       orderErrorMessage,
       createRequest,
       changeRequestErrorMessage,
