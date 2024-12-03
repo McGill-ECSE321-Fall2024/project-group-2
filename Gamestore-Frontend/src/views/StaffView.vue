@@ -353,16 +353,21 @@ export default {
       }
     };
 
-    const createRequest = async () => {
-      changeRequestErrorMessage.value= null;
-      changeRequestSuccessMessage.value= null;
-      try {
-        await axiosClient.post("/change-requests", {requestCreatorEmail: email.value});
-        changeRequestSuccessMessage.value = "change-request created successfully!";
-      } catch (error) {
-        changeRequestErrorMessage.value = error.response.data || "Invalid email.";
-      }
-    };
+   const createRequest = async () => {
+     changeRequestErrorMessage.value = null;
+     changeRequestSuccessMessage.value = null;
+     try {
+       const requestDto = {
+         requestCreatorEmail: email.value,
+         // Add additional fields if required by backend
+       };
+       const response = await axiosClient.post("/change-requests", requestDto);
+       changeRequestSuccessMessage.value = "Change request created successfully!";
+       // Optionally handle the response, which would be a ChangeRequestResponseDto
+     } catch (error) {
+       changeRequestErrorMessage.value = error.response?.data || "Invalid change request.";
+     }
+   };
 
     return {
       newGame,

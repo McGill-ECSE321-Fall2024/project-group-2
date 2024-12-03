@@ -1,88 +1,68 @@
 <template>
   <div class="staff-view">
     <h1>Owner Portal</h1>
-     <section class="form-section">
-        <h2>Employee Management</h2>
+    <!-- Employee Management Section -->
+        <section class="form-section">
+          <h2>Employee Management</h2>
 
-        <!-- Add New Employee -->
-        <h3>Add New Employee</h3>
-        <form @submit.prevent="addEmployee" class="form-grid">
-          <div>
-            <label>User ID:</label>
-            <input v-model="newEmployee.userID" type="text" required />
-          </div>
-          <div>
-            <label>Name:</label>
-            <input v-model="newEmployee.name" type="text" required />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input v-model="newEmployee.email" type="email" required />
-          </div>
-          <div>
-            <label>Password:</label>
-            <input v-model="newEmployee.password" type="password" required />
-          </div>
-          <button class="btn-primary" type="submit">Add Employee</button>
-          <p v-if="employeeErrorMessage" class="error-message">{{ employeeErrorMessage }}</p>
-          <p v-if="employeeSuccessMessage" class="success-message">{{ employeeSuccessMessage }}</p>
-        </form>
+          <!-- Add New Employee -->
+          <h3>Add New Employee</h3>
+          <form @submit.prevent="addEmployee" class="form-grid">
+            <div>
+              <label>User ID:</label>
+              <input v-model="newEmployee.userID" type="text" required />
+            </div>
+            <div>
+              <label>Name:</label>
+              <input v-model="newEmployee.name" type="text" required />
+            </div>
+            <div>
+              <label>Email:</label>
+              <input v-model="newEmployee.email" type="email" required />
+            </div>
+            <div>
+              <label>Password:</label>
+              <input v-model="newEmployee.password" type="password" required />
+            </div>
+            <button class="btn-primary" type="submit">Add Employee</button>
+            <p v-if="employeeErrorMessage" class="error-message">{{ employeeErrorMessage }}</p>
+            <p v-if="employeeSuccessMessage" class="success-message">{{ employeeSuccessMessage }}</p>
+          </form>
 
-        <!-- Edit Employee Password -->
-        <h3>Update Employee Password</h3>
-        <form @submit.prevent="updateEmployeePassword" class="form-grid">
-          <div>
-            <label>Email:</label>
-            <input v-model="editEmployeeRequest.email" type="email" required />
+          <!-- View Employees -->
+          <h3>Employee List</h3>
+          <div v-if="employees.length > 0" class="employee-list">
+            <table>
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="employee in employees" :key="employee.email">
+                  <td>{{ employee.userID }}</td>
+                  <td>{{ employee.name }}</td>
+                  <td>{{ employee.email }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div>
-            <label>Old Password:</label>
-            <input v-model="editEmployeeRequest.oldPassword" type="password" required />
-          </div>
-          <div>
-            <label>New Password:</label>
-            <input v-model="editEmployeeRequest.newPassword" type="password" required />
-          </div>
-          <button class="btn-primary" type="submit">Update Password</button>
-          <p v-if="passwordErrorMessage" class="error-message">{{ passwordErrorMessage }}</p>
-          <p v-if="passwordSuccessMessage" class="success-message">{{ passwordSuccessMessage }}</p>
-        </form>
+          <p v-else>No employees found.</p>
 
-        <!-- Delete Employee -->
-        <h3>Delete Employee</h3>
-        <form @submit.prevent="deleteEmployee" class="form-grid">
-          <div>
-            <label>Email:</label>
-            <input v-model="deleteEmployeeEmail" type="email" required />
-          </div>
-          <button class="btn-primary" type="submit">Delete Employee</button>
-          <p v-if="deleteEmployeeErrorMessage" class="error-message">{{ deleteEmployeeErrorMessage }}</p>
-          <p v-if="deleteEmployeeSuccessMessage" class="success-message">{{ deleteEmployeeSuccessMessage }}</p>
-        </form>
-
-        <!-- View Employees -->
-        <h3>View Employees</h3>
-        <button @click="fetchEmployees" class="btn-primary">Fetch Employees</button>
-        <div v-if="employees.length > 0" class="employee-list">
-          <h4>Employee List</h4>
-          <table>
-            <thead>
-              <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="employee in employees" :key="employee.email">
-                <td>{{ employee.userID }}</td>
-                <td>{{ employee.name }}</td>
-                <td>{{ employee.email }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+          <!-- Delete Employee -->
+          <h3>Delete Employee</h3>
+          <form @submit.prevent="deleteEmployeeByEmail" class="form-grid">
+            <div>
+              <label>Employee Email:</label>
+              <input v-model="deleteEmployeeEmail" type="email" required />
+            </div>
+            <button class="btn-primary" type="submit">Delete Employee</button>
+            <p v-if="deleteEmployeeErrorMessage" class="error-message">{{ deleteEmployeeErrorMessage }}</p>
+            <p v-if="deleteEmployeeSuccessMessage" class="success-message">{{ deleteEmployeeSuccessMessage }}</p>
+          </form>
+        </section>
     <!-- Add New Game -->
     <section class="form-section">
       <h2>Add New Game</h2>
@@ -231,75 +211,48 @@
       <p v-if="orderErrorMessage" class="error-message">{{ orderErrorMessage }}</p>
       </form>
     </section>
+    <div>
+      <input v-model="managerEmail" type="hidden" value="owner@email.com" />
+    </div>
+     <!-- Manage Change Requests -->
+     <section class="form-section">
+       <h2>Manage Change Requests</h2>
 
+       <!-- View Change Requests -->
+       <div v-if="changeRequests.length > 0" class="change-requests-list">
+         <table>
+           <thead>
+             <tr>
+               <th>ID</th>
+               <th>Creator Email</th>
+               <th>Status</th>
+               <th>Actions</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr v-for="request in changeRequests" :key="request.id">
+               <td>{{ request.id }}</td>
+               <td>{{ request.requestCreatorEmail }}</td>
+               <td>{{ request.status }}</td>
+               <td>
+                 <button @click="approveRequest(request.id)" class="btn-primary">Approve</button>
+                 <button @click="declineRequest(request.id)" class="btn-delete">Decline</button>
+               </td>
+             </tr>
+           </tbody>
+         </table>
+       </div>
+       <p v-else>No change requests found.</p>
+     </section>
 
-
-        <!-- Manage Change Requests -->
-        <section class="form-section">
-          <h2>Manage Change Requests</h2>
-
-          <!-- Fetch Change Requests Button -->
-          <button @click="fetchChangeRequests" class="btn-primary">Fetch Change Requests</button>
-
-          <!-- Change Requests List -->
-          <div v-if="changeRequests.length > 0" class="change-requests-list">
-            <h3>Change Requests</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Creator Email</th>
-                  <th>Status</th>
-                  <th>Created At</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="request in changeRequests" :key="request.id">
-                  <td>{{ request.id }}</td>
-                  <td>{{ request.requestCreatorEmail }}</td>
-                  <td>{{ request.status }}</td>
-                  <td>{{ formatDate(request.createdAt) }}</td>
-                  <td>
-                    <div class="action-buttons">
-                      <button
-                        @click="approveRequest(request.id)"
-                        :disabled="request.status !== 'PENDING'"
-                        class="btn-approve"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        @click="declineRequest(request.id)"
-                        :disabled="request.status !== 'PENDING'"
-                        class="btn-decline"
-                      >
-                        Decline
-                      </button>
-                      <button
-                        @click="deleteRequest(request.id)"
-                        class="btn-delete"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Status Messages -->
-          <p v-if="changeRequestErrorMessage" class="error-message">{{ changeRequestErrorMessage }}</p>
-          <p v-if="changeRequestSuccessMessage" class="success-message">{{ changeRequestSuccessMessage }}</p>
-        </section>
-      </div>
+  </div>
 </template>
 
 <script>
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:8080",
@@ -309,6 +262,118 @@ export default {
   name: "StaffView",
   setup() {
     const router = useRouter();
+    // Change Requests Management
+    const changeRequests = ref([]);
+    const managerEmail = ref("owner@email.com");
+
+    // Fetch change requests
+    const fetchChangeRequests = async () => {
+      try {
+        const response = await axiosClient.get("/change-requests");
+        changeRequests.value = response.data.changeRequests;
+      } catch (error) {
+        console.error("Error fetching change requests:", error);
+      }
+    };
+
+    // Approve request
+    const approveRequest = async (id) => {
+      try {
+        await axiosClient.put(`/change-requests/${id}/status`, null, {
+          params: {
+            managerEmail: managerEmail.value,
+            status: "APPROVED"
+          }
+        });
+        fetchChangeRequests(); // Refresh list
+      } catch (error) {
+        console.error("Error approving request:", error);
+      }
+    };
+
+    // Decline request
+    const declineRequest = async (id) => {
+      try {
+        await axiosClient.put(`/change-requests/${id}/status`, null, {
+          params: {
+            managerEmail: managerEmail.value,
+            status: "DECLINED"
+          }
+        });
+        fetchChangeRequests(); // Refresh list
+      } catch (error) {
+        console.error("Error declining request:", error);
+      }
+    };
+
+    // Fetch change requests when component mounts
+    onMounted(fetchChangeRequests);
+
+    // Employee Management
+        const newEmployee = ref({
+          userID: "",
+          name: "",
+          email: "",
+          password: ""
+        });
+        const employees = ref([]);
+        const employeeErrorMessage = ref(null);
+        const employeeSuccessMessage = ref(null);
+        const deleteEmployeeEmail = ref("");
+        const deleteEmployeeErrorMessage = ref(null);
+        const deleteEmployeeSuccessMessage = ref(null);
+
+        // Fetch employees
+        const fetchEmployees = async () => {
+          try {
+            const response = await axiosClient.get("/employee");
+            employees.value = response.data.employees;
+          } catch (error) {
+            console.error("Error fetching employees:", error);
+          }
+        };
+
+        // Add new employee
+        const addEmployee = async () => {
+          employeeErrorMessage.value = null;
+          employeeSuccessMessage.value = null;
+          try {
+            await axiosClient.post("/employee", {
+              userID: newEmployee.value.userID,
+              name: newEmployee.value.name,
+              email: newEmployee.value.email,
+              password: newEmployee.value.password
+            });
+            employeeSuccessMessage.value = "Employee added successfully!";
+            fetchEmployees(); // Refresh employee list
+            // Reset form
+            newEmployee.value = {
+              userID: "",
+              name: "",
+              email: "",
+              password: ""
+            };
+          } catch (error) {
+            employeeErrorMessage.value = error.response.data || "An error occurred.";
+          }
+        };
+
+        // Delete employee by email
+        const deleteEmployeeByEmail = async () => {
+          deleteEmployeeErrorMessage.value = null;
+          deleteEmployeeSuccessMessage.value = null;
+          try {
+            await axiosClient.delete(`/employee/${deleteEmployeeEmail.value}`);
+            deleteEmployeeSuccessMessage.value = "Employee deleted successfully!";
+            fetchEmployees(); // Refresh employee list
+            deleteEmployeeEmail.value = ""; // Reset email input
+          } catch (error) {
+            deleteEmployeeErrorMessage.value = error.response.data || "An error occurred.";
+          }
+        };
+
+        // Fetch employees when component mounts
+        onMounted(fetchEmployees);
 
     // Form Data
     const newGame = ref({
@@ -491,185 +556,18 @@ export default {
         changeRequestErrorMessage.value = error.response.data || "Invalid email.";
       }
     };
-    const newEmployee = ref({
-      userID: "",
-      name: "",
-      email: "",
-      password: ""
-    });
-
-    // Employee management messages
-    const employeeErrorMessage = ref(null);
-    const employeeSuccessMessage = ref(null);
-    const passwordErrorMessage = ref(null);
-    const passwordSuccessMessage = ref(null);
-    const deleteEmployeeErrorMessage = ref(null);
-    const deleteEmployeeSuccessMessage = ref(null);
-
-    // Employee list
-    const employees = ref([]);
-
-    // Edit employee password request
-    const editEmployeeRequest = ref({
-      email: "",
-      oldPassword: "",
-      newPassword: ""
-    });
-
-    // Delete employee email
-    const deleteEmployeeEmail = ref("");
-
-    // Add Employee Method
-    const addEmployee = async () => {
-      employeeErrorMessage.value = null;
-      employeeSuccessMessage.value = null;
-      try {
-        await axiosClient.post("/employee", {
-          userID: newEmployee.value.userID,
-          name: newEmployee.value.name,
-          email: newEmployee.value.email,
-          password: newEmployee.value.password
-        });
-        employeeSuccessMessage.value = "Employee added successfully!";
-        // Reset form
-        newEmployee.value = { userID: "", name: "", email: "", password: "" };
-      } catch (error) {
-        employeeErrorMessage.value = error.response.data || "An error occurred while adding employee.";
-      }
-    };
-
-    // Update Employee Password Method
-    const updateEmployeePassword = async () => {
-      passwordErrorMessage.value = null;
-      passwordSuccessMessage.value = null;
-      try {
-        await axiosClient.put(`/employee/${editEmployeeRequest.value.email}/`, null, {
-          params: {
-            oldPassword: editEmployeeRequest.value.oldPassword,
-            newPassword: editEmployeeRequest.value.newPassword
-          }
-        });
-        passwordSuccessMessage.value = "Employee password updated successfully!";
-        // Reset form
-        editEmployeeRequest.value = { email: "", oldPassword: "", newPassword: "" };
-      } catch (error) {
-        passwordErrorMessage.value = error.response.data || "An error occurred while updating password.";
-      }
-    };
-
-    // Delete Employee Method
-    const deleteEmployee = async () => {
-      deleteEmployeeErrorMessage.value = null;
-      deleteEmployeeSuccessMessage.value = null;
-      try {
-        await axiosClient.delete(`/employee/${deleteEmployeeEmail.value}`);
-        deleteEmployeeSuccessMessage.value = "Employee deleted successfully!";
-        // Reset form
-        deleteEmployeeEmail.value = "";
-      } catch (error) {
-        deleteEmployeeErrorMessage.value = error.response.data || "An error occurred while deleting employee.";
-      }
-    };
-
-    // Fetch Employees Method
-    const fetchEmployees = async () => {
-      try {
-        const response = await axiosClient.get("/employee");
-        employees.value = response.data.employees;
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-        employeeErrorMessage.value = "Could not fetch employees.";
-      }
-    };
-    // Change Requests Management
-        const changeRequests = ref([]);
-
-        // Fetch Change Requests
-        const fetchChangeRequests = async () => {
-          changeRequestErrorMessage.value = null;
-          changeRequestSuccessMessage.value = null;
-          try {
-            const response = await axiosClient.get("/change-requests");
-            changeRequests.value = response.data.changeRequests;
-          } catch (error) {
-            changeRequestErrorMessage.value = error.response?.data || "Could not fetch change requests.";
-          }
-        };
-
-        // Approve Change Request
-        const approveRequest = async (requestId) => {
-          changeRequestErrorMessage.value = null;
-          changeRequestSuccessMessage.value = null;
-          try {
-            const userEmail = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
-            if (!userEmail) {
-              throw new Error("Manager email not found. Please log in.");
-            }
-            await axiosClient.put(`/change-requests/${requestId}/status`, null, {
-              params: {
-                managerEmail: userEmail,
-                status: 'APPROVED'
-              }
-            });
-            changeRequestSuccessMessage.value = "Change request approved successfully!";
-            fetchChangeRequests(); // Refresh the list
-          } catch (error) {
-            changeRequestErrorMessage.value = error.response?.data || "Could not approve change request.";
-          }
-        };
-
-        // Decline Change Request
-        const declineRequest = async (requestId) => {
-          changeRequestErrorMessage.value = null;
-          changeRequestSuccessMessage.value = null;
-          try {
-            const userEmail = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
-            if (!userEmail) {
-              throw new Error("Manager email not found. Please log in.");
-            }
-            await axiosClient.put(`/change-requests/${requestId}/status`, null, {
-              params: {
-                managerEmail: userEmail,
-                status: 'DECLINED'
-              }
-            });
-            changeRequestSuccessMessage.value = "Change request declined successfully!";
-            fetchChangeRequests(); // Refresh the list
-          } catch (error) {
-            changeRequestErrorMessage.value = error.response?.data || "Could not decline change request.";
-          }
-        };
-
-        // Delete Change Request
-        const deleteRequest = async (requestId) => {
-          changeRequestErrorMessage.value = null;
-          changeRequestSuccessMessage.value = null;
-          try {
-            const userEmail = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
-            if (!userEmail) {
-              throw new Error("Manager email not found. Please log in.");
-            }
-            await axiosClient.delete(`/change-requests/${requestId}`, {
-              params: {
-                managerEmail: userEmail
-              }
-            });
-            changeRequestSuccessMessage.value = "Change request deleted successfully!";
-            fetchChangeRequests(); // Refresh the list
-          } catch (error) {
-            changeRequestErrorMessage.value = error.response?.data || "Could not delete change request.";
-          }
-        };
-
-        // Helper method to format date
-        const formatDate = (dateString) => {
-          return new Date(dateString).toLocaleString();
-        };
-    const axiosClient = axios.create({
-      baseURL: "http://localhost:8080",
-    });
 
     return {
+      newEmployee,
+     employees,
+     addEmployee,
+     fetchEmployees,
+     employeeErrorMessage,
+     employeeSuccessMessage,
+     deleteEmployeeEmail,
+     deleteEmployeeByEmail,
+     deleteEmployeeErrorMessage,
+     deleteEmployeeSuccessMessage,
       newGame,
       categories,
       newCategory,
@@ -706,28 +604,11 @@ export default {
       changeRequestErrorMessage,
       changeRequestSuccessMessage,
       email,
-      newEmployee,
-      addEmployee,
-      updateEmployeePassword,
-      deleteEmployee,
-      fetchEmployees,
-      employees,
-      employeeErrorMessage,
-      employeeSuccessMessage,
-      editEmployeeRequest,
-      passwordErrorMessage,
-      passwordSuccessMessage,
-      deleteEmployeeEmail,
-      deleteEmployeeErrorMessage,
-      deleteEmployeeSuccessMessage,
       changeRequests,
+      managerEmail,
       fetchChangeRequests,
       approveRequest,
       declineRequest,
-      deleteRequest,
-      changeRequestErrorMessage,
-      changeRequestSuccessMessage,
-      formatDate
     };
   },
 };
@@ -805,67 +686,23 @@ button {
 .employee-list table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 15px;
 }
-
-.employee-list th,
-.employee-list td {
+.employee-list th, .employee-list td {
   border: 1px solid #555;
   padding: 10px;
   text-align: left;
 }
-
-.employee-list th {
-  background-color: #333;
-  color: #00c4ff;
-}
-.change-requests-list table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.change-requests-list th,
-.change-requests-list td {
-  border: 1px solid #555;
-  padding: 10px;
-  text-align: left;
-}
-
-.change-requests-list th {
-  background-color: #333;
-  color: #00c4ff;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-approve, .btn-decline, .btn-delete {
-  padding: 5px 10px;
-  font-size: 0.8em;
-}
-
-.btn-approve {
-  background-color: green;
-  color: white;
-}
-
-.btn-decline {
-  background-color: red;
-  color: white;
-}
-
 .btn-delete {
-  background-color: #555;
+  background-color: #ff4444;
   color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-delete:hover {
+  background-color: #cc0000;
 }
 
-.btn-approve:disabled,
-.btn-decline:disabled {
-  background-color: #444;
-  color: #888;
-  cursor: not-allowed;
-}
 </style>
