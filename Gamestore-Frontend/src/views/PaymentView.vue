@@ -175,40 +175,7 @@
         </div>
       </div>
 
-      <!-- Right Column - Order Summary -->
-      <div class="order-summary">
-        <div class="summary-card">
-          <h2>Order Summary</h2>
-          <div class="summary-items">
-            <div v-for="item in cartItems" :key="item.id" class="summary-item">
-              <img :src="item.image" :alt="item.name" class="item-image" />
-              <div class="item-details">
-                <h3>{{ item.name }}</h3>
-                <p>Quantity: {{ item.quantity }}</p>
-                <p class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</p>
-              </div>
-            </div>
-          </div>
-          <div class="summary-totals">
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>${{ subtotal.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row">
-              <span>Shipping</span>
-              <span>${{ shippingCost.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row">
-              <span>Tax</span>
-              <span>${{ tax.toFixed(2) }}</span>
-            </div>
-            <div class="summary-row total">
-              <span>Total</span>
-              <span>${{ total.toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
