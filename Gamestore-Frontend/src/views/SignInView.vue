@@ -89,7 +89,7 @@ export default {
 
       // Define the roles and their respective login endpoints
       const roles = [
-        { role: "customer", view: "/product/name/:name" }, // Redirects to CustomerView
+        { role: "customer", view: "/search" }, // Redirects to CustomerView
         { role: "employee", view: "/employee" }, // Redirects to EmployeeView
         { role: "owner", view: "/owner" }, // Redirects to OwnerView
       ];
