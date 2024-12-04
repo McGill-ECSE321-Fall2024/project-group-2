@@ -20,7 +20,7 @@
 
             <div class="form-group">
                 <label for="comment">Comments:</label>
-                <textarea v-model="review.comment" id="comment" required></textarea>
+                <textarea v-model="review.comments" id="comment" required></textarea>
             </div>
 
             <button type="submit" class="submit-review-btn">Submit Review</button>
@@ -45,7 +45,7 @@ export default {
             product: {},
             review: {
                 rating: '',
-                comment: '',
+                comments: '',
             },
             userEmail: localStorage.getItem('userEmail') || '',
             userName: localStorage.getItem('userName') || '',
@@ -75,10 +75,13 @@ export default {
                     return;  // don't redirect automatically - let user click the sign in button
                 }
 
+                
+                console.log('Review form data:', this.review);
+        
                 // prepare the review data
                 const reviewData = {
                     rating: parseInt(this.review.rating),
-                    comments: this.review.comment,
+                    comment: this.review.comments,
                     reviewWriterEmail: this.userEmail,
                     reviewWriterName: this.userName,  
                     productId: this.product.id,

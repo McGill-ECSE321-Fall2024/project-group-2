@@ -119,7 +119,7 @@ export default {
     },
     continueShopping() {
       // Navigate to home page or game catalog
-      this.$router.push('/')
+      this.$router.push('/search')
     }
   }
 }

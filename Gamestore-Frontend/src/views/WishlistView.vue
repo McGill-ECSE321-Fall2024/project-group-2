@@ -20,7 +20,7 @@
 
             <div class="header-center">
                 <div class="header-left-side">
-                    <button class="browse-btn">Browse</button>
+                    <button class="browse-btn" @click="$router.push('/search')">Browse</button>
                 </div>
                 <div class="header-right-side">
                     <router-link to="/shoppingcart" class="icon-link">
