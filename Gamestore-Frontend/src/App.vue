@@ -1,9 +1,17 @@
 <script setup>
+import ProductView from './views/ProductView.vue';
 </script>
 
 <template>
-  <router-view /> <!-- Dynamically render the component based on the route -->
+  <header>
+      <ProductView />
+  </header>
 </template>
+
+
+
+
+
 
 
 

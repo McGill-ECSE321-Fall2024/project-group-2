@@ -10,6 +10,7 @@
         <div class="header-right">
           <router-link to="/" class="sign-in-button">Log out</router-link>
           <router-link to="/dashboard" class="sign-in-button">DashBoard</router-link>
+          <router-link to="/shoppingCart" class="sign-in-button">Shopping Cart</router-link>
         </div>
       </div>
       <hr />
