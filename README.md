@@ -24,7 +24,7 @@ We are a team of developers working on this project with different roles to ensu
 |------|-------|----------------|-------------|
 |Abdullah Taltello| Frontend Developer|24|24|
 |Farhad Guliyev| Frontend Developer|24| 24|
-|Sean O'Keefe| Frontend Developer|26| 26|
+|Sean O'Keefe| Frontend Developer Lead|30| 30|
 |Mohamed El-Machmouchi| Frontend & Backend Developer|27|27|
 |Katrina Panwar| Project Manager & Quality Assurance Lead |24| 24|
 
