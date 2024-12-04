@@ -33,8 +33,8 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/staff', // Default route for the home page
-      name: 'staff',
+      path: '/employee', // Default route for the home page
+      name: 'employee',
       component: StaffView,
     },
     {

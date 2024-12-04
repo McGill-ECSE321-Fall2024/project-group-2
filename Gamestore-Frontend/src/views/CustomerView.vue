@@ -1,3 +1,9 @@
+
+To make the CustomerView redirect to the ProductView when a product image or its container is clicked, you can use Vue Router's router.push() method. Here is the updated code with the necessary changes:
+
+Updated CustomerView Code
+vue
+Copy code
 <template>
   <div id="homepage">
     <!-- Header -->
@@ -10,62 +16,46 @@
         <div class="header-right">
           <router-link to="/" class="sign-in-button">Log out</router-link>
           <router-link to="/dashboard" class="sign-in-button">DashBoard</router-link>
+          <router-link to="/shoppingCart" class="sign-in-button">Shopping Cart</router-link>
         </div>
       </div>
       <hr />
       <div class="header-center">
-        <input type="text" placeholder="Search store" />
+        <input type="text" placeholder="Search store" v-model="searchQuery" @input="filterProducts" />
         <router-link to="/customer" class="center-button">Discover</router-link>
       </div>
     </header>
 
-    <!-- Main Banner Section -->
-    <section id="featured-section">
-      <div class="featured-content">
-        <!-- Main Banner -->
-        <div class="featured-banner">
-          <img :src="featuredItems[selectedIndex].image" alt="Featured" class="featured-image" />
-          <div class="banner-details">
-            <h2>{{ featuredItems[selectedIndex].title }}</h2>
-            <p>{{ featuredItems[selectedIndex].description }}</p>
-            <button class="save-now-btn">Buy Now</button>
-          </div>
-        </div>
-
-        <!-- Side List -->
-        <div class="featured-side-list">
-          <div
-            v-for="(item, index) in featuredItems"
-            :key="item.id"
-            class="side-list-item"
-            :class="{ active: index === selectedIndex }"
-            @click="selectFeatured(index)"
-          >
-            <img :src="item.thumbnail" alt="Thumbnail" class="side-thumbnail" />
-            <span class="side-text">{{ item.title }}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Main Content -->
     <main>
-      <!-- Top Sellers Section -->
-      <section class="top-sellers">
-        <h2>Top Sellers ></h2>
-        <div class="card-container">
-          <div class="game-card" v-for="game in topSellers" :key="game.id">
-            <img :src="game.image" :alt="game.name" class="game-image" />
-            <h3>{{ game.name }}</h3>
-            <p>{{ game.price }}</p>
+      <section class="all-products">
+        <h2>All Products</h2>
+        <div v-if="loading" class="loading">
+          Loading products...
+        </div>
+        <div v-else-if="error" class="error">
+          {{ error }}
+        </div>
+        <div v-else class="card-container">
+          <div
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="game-card"
+            @click="redirectToProduct(product.id)"
+          >
+            <img
+              :src="product.imageURL ? `data:image/jpeg;base64,${product.imageURL}` : '/default-image.png'"
+              :alt="product.name"
+              class="game-image"
+            />
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
     <footer>
-      <p>© 2024 Game Store. All Rights Reserved.</p>
+      <p>©️ 2024 Game Store. All Rights Reserved.</p>
       <ul>
         <li><a href="#">Terms of Service</a></li>
         <li><a href="#">Privacy Policy</a></li>
@@ -76,131 +66,70 @@
 </template>
 
 <script>
-import picture1 from '@/assets/picture1.jpg';
-import picture2 from '@/assets/picture2.jpg';
-import picture3 from '@/assets/picture3.jpg';
-import picture4 from '@/assets/picture4.jpg';
-import picture5 from '@/assets/picture5.jpg';
-import picture6 from '@/assets/picture6.jpg';
-import picture7 from '@/assets/picture7.jpg';
-import picture8 from '@/assets/picture8.jpg';
-import picture9 from '@/assets/picture9.jpg';
-import picture10 from '@/assets/picture10.png';
-import picture12 from '@/assets/picture12.png';
-import picture13 from '@/assets/picture13.png';
-import picture14 from '@/assets/picture14.png';
-import picture15 from '@/assets/picture15.png';
-import picture16 from '@/assets/picture16.jpg';
-import picture17 from '@/assets/picture17.jpg';
-import picture18 from '@/assets/picture18.jpg';
-import picture19 from '@/assets/picture19.jpg';
-import picture20 from '@/assets/picture20.jpg';
-import picture23 from '@/assets/picture23.jpg';
-import picture24 from '@/assets/picture24.jpg';
-import picture25 from '@/assets/picture25.jpg';
-import picture26 from '@/assets/picture26.jpg';
-import picture27 from '@/assets/picture27.jpg';
-import picture28 from '@/assets/picture28.jpg';
-import picture29 from '@/assets/picture29.jpg';
-import logo from '@/assets/logo.png';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "HomeView",
   data() {
     return {
-    selectedIndex: 0,
-          featuredItems: [
-            {
-              id: 1,
-              title: "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
-              description: "Discover the vast Chornobyl Exclusion Zone full of dangerous enemies, deadly anomalies, and powerful artifacts.",
-              image: picture23,
-              thumbnail: picture23,
-            },
-            {
-              id: 2,
-              title: "Black Friday - Cyber Monday Sale",
-              description: "Save on premium edition video games. Offer ends Dec 3.",
-              image: picture26,
-              thumbnail: picture26,
-            },
-            {
-              id: 3,
-              title: "Star Wars Outlaws: Wild Card",
-              description: "Pre-order now to secure exclusive rewards.",
-              image: picture25,
-              thumbnail: picture25,
-            },
-            {
-              id: 4,
-              title: "Discord Nitro Giveaway",
-              description: "Claim your free Discord Nitro for this month.",
-              image: picture24,
-              thumbnail: picture24,
-            },
-            {
-              id: 5,
-              title: "Free Fortnite Outfit",
-              description: "Claim your free Discord Nitro for this month.",
-              image: picture27,
-              thumbnail: picture27,
-              },
-      ],
-      freeGames: [
-              {
-                id: 1,
-                name: "Beholder",
-                image: picture28,
-                status: "free",
-                description: "Free Now - Nov 28 at 11:00 AM",
-              },
-              {
-                id: 2,
-                name: "Brotato",
-                image: picture29,
-                status: "coming-soon",
-                description: "Free Nov 28 - Dec 05",
-              },
-      ],
-      topSellers: [
-        { id: 1, name: "EA SPORTS FC™ 25", price: "$89.99", image: picture1 },
-        { id: 2, name: "Alan Wake 2", price: "$66.99", image: picture2 },
-        { id: 3, name: "Cyberpunk 2077", price: "$79.99", image: picture3 },
-        { id: 4, name: "Hogwarts Legacy", price: "$79.99", image: picture19 },
-        { id: 5, name: "Farming Simulator 25", price: "$64.99", image: picture20 },
-      ],
-      newSellers: [
-              { id: 1, name: "Torque Drift 2", price: "$17.24", image: picture16 },
-              { id: 2, name: "Phoenix Contract", price: "Free", image: picture17 },
-              { id: 3, name: "Karate Survivor", price: "$6.49", image: picture18 },
-            ],
-      mostPlayed: [
-        { id: 1, name: "Fortnite", price: "Free", image: picture4 },
-        { id: 2, name: "Rocket League", price: "Free", image: picture5 },
-        { id: 3, name: "Grand Theft Auto V", price: "$29.99", image: picture6 },
-      ],
-      topUpcoming: [
-        { id: 1, name: "Marvel Rivals", price: "Available 12/05/24", image: picture7 },
-        { id: 2, name: "Assassin’s Creed Shadows", price: "Available 02/14/25", image: picture8 },
-        { id: 3, name: "Path of Exile 2", price: "Available 12/06/24", image: picture9 },
-      ],
-      categories: [
-        { id: 1, name: "Action", image: picture10 },
-        { id: 2, name: "Action-Adventure", image: picture12 },
-        { id: 3, name: "Adventure", image: picture13 },
-        { id: 4, name: "Fighting", image: picture14 },
-        { id: 5, name: "Horror", image: picture15 },
-      ],
+      products: [],
+      filteredProducts: [],
+      searchQuery: '',
+      loading: true,
+      error: null
     };
   },
   methods: {
-      selectFeatured(index) {
-        this.selectedIndex = index; // Update featured item
-    },
-  },
-};
+    async fetchProducts() {
+      try {
+        this.loading = true;
 
+        // Adjust the URL to match your backend configuration
+        const response = await axios.get('http://localhost:8080/product');
+
+        console.log('Full Response:', response);
+        console.log('Response Data:', response.data);
+
+        // Adjust based on actual response structure
+        this.products = response.data.products || response.data;
+        this.filteredProducts = this.products;
+
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+        this.error = 'Failed to load products';
+
+        console.error('Error fetching products:', error);
+
+        // More detailed error logging
+        if (error.response) {
+          console.error('Error data:', error.response.data);
+          console.error('Error status:', error.response.status);
+        }
+      }
+    },
+    filterProducts() {
+      if (!this.searchQuery) {
+        this.filteredProducts = this.products;
+      } else {
+        this.filteredProducts = this.products.filter(product =>
+          product.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          (product.description && product.description.toLowerCase().includes(this.searchQuery.toLowerCase()))
+        );
+      }
+    },
+    redirectToProduct(productId) {
+      // Redirect to the ProductView with the product ID
+      this.$router.push({ name: 'product', params: { id: productId } });
+    }
+  },
+  mounted() {
+    this.fetchProducts();
+  }
+};
 </script>
+
 
 <style scoped>
 /* Global Container */
@@ -611,5 +540,49 @@ footer {
   padding: 8px 16px;
   border-radius: 4px;
   margin-bottom: 8px;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.game-card {
+  background-color: #121212;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.game-card h3 {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.game-card p {
+  color: #aaa;
+  font-size: 0.9em;
 }
 </style>
