@@ -25,24 +25,6 @@
               <span class="info-label">Order Date:</span>
               <span class="info-value">{{ orderDate }}</span>
             </div>
-            <div class="info-item">
-              <span class="info-label">Total Amount:</span>
-              <span class="info-value">${{ orderTotal.toFixed(2) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="order-summary">
-          <h2>Order Summary</h2>
-          <div class="summary-items">
-            <div v-for="item in orderItems" :key="item.id" class="summary-item">
-              <img :src="item.image" :alt="item.name" class="item-image" />
-              <div class="item-details">
-                <h3>{{ item.name }}</h3>
-                <p>Quantity: {{ item.quantity }}</p>
-                <p class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</p>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -57,7 +39,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import picture1 from '@/assets/picture1.jpg';
 import picture3 from '@/assets/picture3.jpg';
@@ -67,7 +48,6 @@ export default {
     return {
       orderNumber: 'ORD-12345-ABCDE',
       orderDate: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-      orderTotal: 184.98,
       userEmail: 'customer@example.com',
       orderItems: [
         {
@@ -90,171 +70,8 @@ export default {
   methods: {
     returnToHome() {
       // Navigate to the home page
-      this.$router.push('/')
+      this.$router.push('/product/name/:name');
     }
   }
 }
 </script>
-
-<style scoped>
-.order-complete-page {
-  background-color: #000;
-  min-height: 100vh;
-  padding: 2rem;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.order-complete-container {
-  max-width: 800px;
-  width: 100%;
-  background-color: #121212;
-  border-radius: 8px;
-  padding: 2rem;
-  margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.order-complete-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.thank-you-message {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #007bff;
-}
-
-.order-status {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.status-icon {
-  color: #4CAF50;
-  margin-bottom: 1rem;
-}
-
-.status-message {
-  font-size: 1.2rem;
-  color: #4CAF50;
-}
-
-.order-info, .order-summary {
-  width: 100%;
-  margin-bottom: 2rem;
-}
-
-.order-info h2, .order-summary h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  text-align: left;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-label {
-  font-size: 0.9rem;
-  color: #888;
-}
-
-.info-value {
-  font-size: 1.1rem;
-  font-weight: bold;
-}
-
-.summary-items {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.summary-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  text-align: left;
-  padding: 1rem;
-  background-color: #1a1a1a;
-  border-radius: 8px;
-}
-
-.item-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 4px;
-  object-fit: cover;
-}
-
-.item-details {
-  flex: 1;
-}
-
-.item-details h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.item-price {
-  font-weight: bold;
-  color: #007bff;
-}
-
-.email-notification {
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
-}
-
-.return-home-button {
-  background-color: #007bff;
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 4px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.return-home-button:hover {
-  background-color: #0056b3;
-}
-
-@media (max-width: 600px) {
-  .order-complete-container {
-    padding: 1rem;
-  }
-
-  .thank-you-message {
-    font-size: 2rem;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .summary-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-</style>
