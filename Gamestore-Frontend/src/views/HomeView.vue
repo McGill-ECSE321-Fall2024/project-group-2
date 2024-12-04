@@ -9,15 +9,9 @@
         </div>
         <div class="header-right">
           <router-link to="/signin" class="sign-in-button">Sign In</router-link>
-          <button class="download-btn">Download</button>
         </div>
       </div>
       <hr />
-      <div class="header-center">
-        <input type="text" placeholder="Search store" />
-        <router-link to="/" class="center-button">Discover</router-link>
-        <router-link to="/search" class="center-button">Browse</router-link>
-      </div>
     </header>
 
     <!-- Main Banner Section -->
@@ -354,6 +348,7 @@ hr {
   gap: 8px;
   padding: 16px 32px;
 }
+
 
 .header-center input {
   width: 100%;

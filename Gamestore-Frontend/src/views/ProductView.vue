@@ -10,11 +10,11 @@
                 <div class="header-right">
                     <div v-if="userEmail">
                         <span class="user-email">Welcome, {{ userName }}!</span>
+                        <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
                         <button @click="signOut" class="sign-out-button">Sign Out</button>
                     </div>
                     <div v-else>
                         <router-link to="/signin" class="sign-in-button">Sign In</router-link>
-                        
                     </div>
                 </div>
             </div>
@@ -419,6 +419,27 @@ hr {
 
 header button:hover {
     background-color: #000;
+}
+
+.dashboard-button {
+      background-color: #1a73e8;
+      color: white;
+      padding: 8px 12px;
+      margin-left: 8px;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+      line-height: normal;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content
+}
+
+.dashboard-button:hover {
+  background-color: #155cb0;
 }
 
 .product-content {

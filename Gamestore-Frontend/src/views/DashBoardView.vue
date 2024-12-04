@@ -1,6 +1,25 @@
 <template>
   <div class="password-management">
-    <h1>Update Your Password</h1>
+        <header>
+                        <div class="header-top">
+                            <div class="header-left">
+                                <img src="@/assets/logo.png" alt="Logo" class="logo" />
+                                <h1>Game Store</h1>
+                            </div>
+                            <div class="header-right">
+                                <div v-if="userEmail">
+                                    <span class="user-email">Welcome, {{ userName }}!</span>
+                                    <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
+                                    <button @click="signOut" class="sign-out-button">Sign Out</button>
+                                </div>
+                                <div v-else>
+                                    <router-link to="/" class="sign-in-button">Sign Out</router-link>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </header>
+                    <h1>Customer DashBoard</h1>
     <form @submit.prevent="updatePassword">
       <label for="email">Email: </label><br>
       <input type="email" v-model="updateCustomer.email" placeholder="Enter your Email" required /><br>
@@ -62,7 +81,7 @@ html, body {
 
 /* Update Password Container Styling */
 .update-password-container {
-  width: 450px; /* Adjust the width of the container */
+  width: 900px; /* Adjust the width of the container */
   height: auto; /* Let height adjust based on content */
   background-color: #1c1c1c; /* Darker background for the container */
   border-radius: 8px; /* Rounded corners */
@@ -72,12 +91,116 @@ html, body {
   margin-left: 10px;
 }
 
-/* Heading */
-h2 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  color: white;
-  font-weight: bold;
+.logo {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 28px;
+    margin-left: 10px;
+}
+
+header {
+    background-color: #000;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+}
+
+.header-top .header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-top .header-left h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+.header-top .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-email {
+    margin-right: 16px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.sign-in-button,
+.sign-out-button {
+    background-color: #1a73e8;
+    color: white;
+    padding: 8px 12px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: normal;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content
+}
+
+.sign-in-button:hover,
+.sign-out-button:hover {
+    background-color: #155cb0;
+}
+
+
+hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 0;
+}
+
+.header-center {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+}
+
+.header-center input {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px 12px;
+    border: 0.5px solid #555;
+    border-radius: 16px;
+    background-color: #333;
+    color: white;
+}
+
+.header-center button {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.header-center button:hover,
+.header-center button:active {
+    color: grey;
+}
+
+header button:hover {
+    background-color: #000;
 }
 
 /* Form Group */
