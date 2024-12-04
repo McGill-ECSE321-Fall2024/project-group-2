@@ -15,6 +15,7 @@ import ShoppingCartView from "@/views/ShoppingCartView.vue";
 import ProductView from '../views/ProductView.vue';
 import ReviewView from '../views/ReviewView.vue';
 import WishlistView from '@/views/WishlistView.vue';
+import SearchView from '@/views/SearchView.vue'
 
 
 
@@ -106,6 +107,11 @@ const router = createRouter({
       path: '/wishlist',
       name: 'wishlist',
       component: WishlistView
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView
     }
   ],
 });

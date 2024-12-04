@@ -16,7 +16,7 @@
       <div class="header-center">
         <input type="text" placeholder="Search store" />
         <router-link to="/" class="center-button">Discover</router-link>
-        <router-link to="/browse" class="center-button">Browse</router-link>
+        <router-link to="/search" class="center-button">Browse</router-link>
       </div>
     </header>
 
