@@ -118,9 +118,8 @@
     min-height: 100vh;
   }
   h1 {
-    color: #00c4ff;
+    color: white;
     text-align: center;
-    margin-bottom: 20px;
   }
   .table-wrapper {
     overflow-x: auto;
