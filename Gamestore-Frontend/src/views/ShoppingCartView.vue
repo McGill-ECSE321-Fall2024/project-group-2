@@ -6,7 +6,7 @@
       <div v-if="cartItems.length > 0" class="cart-content">
         <div class="cart-items">
           <div v-for="item in cartItems" :key="item.id" class="cart-item">
-            <img :src="item.image" :alt="item.name" class="item-image" />
+            <img :src="item.image ? `data:image/jpeg;base64,${item.image}` : ''" :alt="item.name" class="item-image" />
             <div class="item-details">
               <h2>{{ item.name }}</h2>
               <p class="item-price">${{ item.price.toFixed(2) }}</p>
@@ -18,7 +18,8 @@
             </div>
             <div class="item-total">${{ (item.price * item.quantity).toFixed(2) }}</div>
             <button @click="removeItem(item)" class="remove-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 <line x1="10" y1="11" x2="10" y2="17"></line>
@@ -51,7 +52,8 @@
       </div>
 
       <div v-else class="empty-cart">
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="9" cy="21" r="1"></circle>
           <circle cx="20" cy="21" r="1"></circle>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -316,7 +318,8 @@ export default {
     flex-wrap: wrap;
   }
 
-  .item-quantity, .item-total {
+  .item-quantity,
+  .item-total {
     margin-top: 1rem;
   }
 
