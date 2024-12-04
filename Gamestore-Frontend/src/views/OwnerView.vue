@@ -391,10 +391,8 @@ export default {
           }
         };
 
-        // Fetch employees when component mounts
         onMounted(fetchEmployees);
 
-    // Form Data
     const newGame = ref({
       category: "",
       name: "",

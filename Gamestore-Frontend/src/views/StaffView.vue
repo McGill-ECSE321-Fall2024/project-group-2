@@ -1,12 +1,12 @@
 <template>
   <div class="staff-view">
     <header>
-                    <div class="header-top">
-                        <div class="header-left">
-                            <img src="@/assets/logo.png" alt="Logo" class="logo" />
-                            <h1>Game Store</h1>
-                        </div>
-                        <div class="header-right">
+            <div class="header-top">
+                  <div class="header-left">
+                     <img src="@/assets/logo.png" alt="Logo" class="logo" />
+                        <h1>Game Store</h1>
+                    </div>
+                    <div class="header-right">
                             <div v-if="userEmail">
                                 <span class="user-email">Welcome, {{ userName }}!</span>
                                 <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
