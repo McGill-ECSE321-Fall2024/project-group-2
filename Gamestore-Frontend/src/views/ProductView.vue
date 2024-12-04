@@ -1,6 +1,6 @@
 <template>
     <div id="product-page">
-        <!-- header - matching HomeView -->
+        
         <header>
             <div class="header-top">
                 <div class="header-left">
@@ -19,13 +19,24 @@
                 </div>
             </div>
             <hr />
+            
             <div class="header-center">
-                <input type="text" placeholder="Search store" />
-                <button>Discover</button>
-                <button>Browse</button>
+                <div class="header-left-side">
+                    <button class="browse-btn">Browse</button>
+                </div>
+                <div class="header-right-side">
+                    <router-link to="/shoppingcart" class="icon-link">
+                        <img :src="cartIcon" alt="Cart" height="40" width="40">
+                    </router-link>
+                    <router-link to="/wishlist" class="icon-link">
+                        <img :src="wishlistIcon" alt="Wishlist" height="40" width="40">
+                    </router-link>
+                </div>
             </div>
         </header>
 
+        <!-- notification for add to cart-->
+        <div class="notification" ref="notification">Added to cart successfully!</div>
 
         <!-- Main Product Content -->
         <main class="product-content">
@@ -55,8 +66,8 @@
                         ${{ product.lineItem?.price || '0.00' }}
                     </div>
                     <div class="product-actions">
-                        <button class="add-to-cart-btn">Add to Cart</button>
-                        <button class="add-to-wishlist-btn">Add to Wishlist</button>
+                        <button class="add-to-cart-btn" @click="addToCart">Add to Cart</button>
+                        <button class="add-to-wishlist-btn" @click="addToWishlist">Add to Wishlist</button>
                     </div>
                 </div>
             </div>
@@ -85,6 +96,10 @@
 
 
 <script>
+
+import cartIcon from '../assets/shopping-cart.svg'
+import wishlistIcon from '../assets/wishlist-icon.svg'
+
 import axios from "axios";
 
 // for api calls
@@ -92,11 +107,14 @@ const axiosClient = axios.create({
     baseURL: "http://localhost:8080"
 });
 
+
 export default {
     name: 'ProductView',
     // all data properties needed
     data() {
         return {
+            cartIcon,
+            wishlistIcon,
             product: {
                 name: '',
                 description: '',
@@ -183,6 +201,84 @@ export default {
             // navigations method to add review page
             this.$router.push({ name: 'ReviewView', params: { id: this.product.id } });
         },
+
+        //method for adding to cart
+        addToCart() {
+            // Create cart item from product data
+            const cartItem = {
+                id: this.product.id,
+                name: this.product.name,
+                price: this.product.lineItem?.price || 0,
+                quantity: 1,
+                image: this.product.imageURL
+            };
+            
+            // get existing cart from localStorage or create new array
+            let cart = JSON.parse(localStorage.getItem('sessionCart') || '[]');
+            
+            // check if item already exists in cart
+            const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
+            
+            if (existingItemIndex !== -1) {
+                // if item exists, increment quantity
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // if item doesn't exist, add it
+                cart.push(cartItem);
+            }
+            
+            // save back to localStorage
+            localStorage.setItem('sessionCart', JSON.stringify(cart));
+            
+            // show confirmation to user
+            const notification = this.$refs.notification;
+            notification.classList.add('show');
+            
+            // hide notification after 2 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        },
+
+        addToWishlist() {
+            // create wishlist item from product data, couldnt make from object, backend didnt accomadate
+            const wishlistItem = {
+                id: this.product.id,
+                name: this.product.name,
+                price: this.product.lineItem?.price || 0,
+                image: this.product.imageURL
+            };
+            
+            // get existing wishlist from localStorage or create new array
+            let wishlist = JSON.parse(localStorage.getItem('userWishlist') || '[]');
+            
+            // check if item already exists in wishlist
+            const existingItemIndex = wishlist.findIndex(item => item.id === wishlistItem.id);
+            
+            const notification = this.$refs.notification;
+            if (existingItemIndex !== -1) {
+                // Item already in wishlist - could show message
+                const notification = this.$refs.notification;
+                notification.textContent = 'Item already in wishlist!';
+                notification.classList.add('show');
+            } else {
+                // if item doesn't exist, add it
+                wishlist.push(wishlistItem);
+                // save back to localStorage
+                localStorage.setItem('userWishlist', JSON.stringify(wishlist));
+                
+                // show confirmation to user
+                const notification = this.$refs.notification;
+                notification.textContent = 'Added to wishlist successfully!';
+                notification.classList.add('show');
+            }
+            
+            // hide notification after 2 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        },
+
         // method when user clciks sign out
         signOut() {
             localStorage.removeItem('userEmail');
@@ -257,8 +353,7 @@ header {
 }
 
 .sign-in-button,
-.sign-out-button,
-.download-btn {
+.sign-out-button {
     background-color: #1a73e8;
     color: white;
     padding: 8px 12px;
@@ -272,11 +367,11 @@ header {
     line-height: normal;
     display: inline-flex;
     align-items: center;
+    width: fit-content
 }
 
 .sign-in-button:hover,
-.sign-out-button:hover,
-.download-btn:hover {
+.sign-out-button:hover {
     background-color: #155cb0;
 }
 
@@ -324,7 +419,6 @@ header button:hover {
     background-color: #000;
 }
 
-/* Product specific styles */
 .product-content {
     padding: 16px 32px;
     flex: 1;
@@ -489,5 +583,71 @@ header button:hover {
 
 .add-review-btn:hover {
     opacity: 0.9;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background-color: #1a73e8;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.header-center {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 16px 32px;
+    width: 100%;
+}
+
+.browse-btn {
+    background-color: #1a73e8;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: large;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 16px;
+    text-align: left;
+    width: fit-content;
+}
+
+.browse-btn:hover {
+    background-color: #155cb0;
+}
+
+.header-right-side {
+    display: flex;
+    gap: 24px; 
+    align-items: center;
+}
+
+.icon-link {
+    filter: invert(1);
+}
+
+.icon-link:hover {
+    color: #1a73e8;
+    transform: scale(1.1);
+}
+
+.icon-link svg {
+    vertical-align: middle;
 }
 </style>
