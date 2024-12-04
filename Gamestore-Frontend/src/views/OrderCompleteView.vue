@@ -70,7 +70,7 @@ export default {
   methods: {
     returnToHome() {
       // Navigate to the home page
-      this.$router.push('/product/name/:name');
+      this.$router.push('/search');
     }
   }
 }
