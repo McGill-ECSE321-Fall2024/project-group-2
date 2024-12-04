@@ -6,25 +6,39 @@ vue
 Copy code
 <template>
   <div id="homepage">
-    <!-- Header -->
-    <header>
-      <div class="header-top">
-        <div class="header-left">
-          <img src="@/assets/logo.png" alt="Logo" class="logo" />
-          <h1>Game Store</h1>
-        </div>
-        <div class="header-right">
-          <router-link to="/" class="sign-in-button">Log out</router-link>
-          <router-link to="/dashboard" class="sign-in-button">DashBoard</router-link>
-          <router-link to="/shoppingCart" class="sign-in-button">Shopping Cart</router-link>
-        </div>
-      </div>
-      <hr />
-      <div class="header-center">
-        <input type="text" placeholder="Search store" v-model="searchQuery" @input="filterProducts" />
-        <router-link to="/customer" class="center-button">Discover</router-link>
-      </div>
-    </header>
+        <header>
+            <div class="header-top">
+                <div class="header-left">
+                    <img src="@/assets/logo.png" alt="Logo" class="logo" />
+                    <h1>Game Store</h1>
+                </div>
+                <div class="header-right">
+                    <div v-if="userEmail">
+                        <span class="user-email">Welcome, {{ userName }}!</span>
+                        <button @click="signOut" class="sign-out-button">Sign Out</button>
+                    </div>
+                    <div v-else>
+                        <router-link to="/signin" class="sign-in-button">Sign In</router-link>
+                        <router-link to="/dashboard" class="sign-in-button">DashBoard</router-link>
+
+                    </div>
+                </div>
+            </div>
+            <hr />
+
+            <div class="header-center">
+                <div class="header-left-side">
+                </div>
+                <div class="header-right-side">
+                    <router-link to="/shoppingcart" class="icon-link">
+                        <img :src="cartIcon" alt="Cart" height="40" width="40">
+                    </router-link>
+                    <router-link to="/wishlist" class="icon-link">
+                        <img :src="wishlistIcon" alt="Wishlist" height="40" width="40">
+                    </router-link>
+                </div>
+            </div>
+        </header>
 
     <main>
       <section class="all-products">
@@ -66,6 +80,9 @@ Copy code
 </template>
 
 <script>
+import cartIcon from '../assets/shopping-cart.svg'
+import wishlistIcon from '../assets/wishlist-icon.svg'
+
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
@@ -154,108 +171,44 @@ export default {
   min-width: 210%; /* Ensure full width */
   margin-left: -5.7vh;
   overflow-y: hidden;
-
 }
 
-/* Header */
+.logo {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 28px;
+    margin-left: 10px;
+}
+
 header {
-  background-color: #000;
-  color: white;
+    background-color: #000;
+    color: white;
 }
 
 .header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 32px;
-}
-
-.header-top .header-left h1 {
-  font-size: 24px;
-  font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
 }
 
 .header-top .header-left {
-  display: flex; /* Use flexbox to align logo and heading */
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
-.header-top .header-right .sign-in-button,
-.header-top .header-right .download-btn {
-  background-color: transparent; /* No background */
-  color: white; /* Default text color */
-  border: none; /* Remove borders */
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: color 0.3s ease; /* Smooth transition for text color */
-  text-decoration: none; /* Remove underline for the link */
-}
-
-.header-top .header-right .sign-in-button:hover,
-.header-top .header-right .download-btn:hover,
-.header-top .header-right .sign-in-button:active,
-.header-top .header-right .download-btn:active {
-  color: grey; /* Change text color on hover or click */
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #333;
-  margin: 0;
-}
-
-.header-center {
-  display: flex;
-  justify-content: left;
-  margin-left: 0px;
-  align-item: left;
-  gap: 8px;
-  padding: 16px 32px;
-}
-
-.header-center input {
-  width: 100%;
-  max-width: 200px;
-  padding: 8px 12px;
-  border: 0.5px solid #555;
-  border-radius: 16px;
-  background-color: #333;
-  color: white;
-}
-
-.header-center .center-button {
-  background-color: transparent; /* Same as the sign-in button background */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.header-center .center-button:hover,
-.header-centre button:active {
-  color: grey;
+.header-top .header-left h1 {
+    font-size: 24px;
+    font-weight: bold;
 }
 
 
-/* Main Content */
-main {
-  flex: 1;
-  padding: 32px;
-  width: 100%; /* Full width */
-}
-
-section {
-  margin-bottom: 32px;
-}
-
-section h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 16px;
-  text-align: left;
+.header-top .header-right {
+    display: flex;
+    align-items: center;
 }
 
 /* Card Container */

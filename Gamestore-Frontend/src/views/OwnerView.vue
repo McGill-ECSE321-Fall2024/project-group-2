@@ -1,6 +1,25 @@
 <template>
   <div class="staff-view">
-    <h1>Owner Portal</h1>
+    <header>
+                <div class="header-top">
+                    <div class="header-left">
+                        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+                        <h1>Game Store</h1>
+                    </div>
+                    <div class="header-right">
+                        <div v-if="userEmail">
+                            <span class="user-email">Welcome, {{ userName }}!</span>
+                            <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
+                            <button @click="signOut" class="sign-out-button">Sign Out</button>
+                        </div>
+                        <div v-else>
+                            <router-link to="/" class="sign-in-button">Sign Out</router-link>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            </header>
+            <h1>Owner DashBoard</h1>
     <!-- Employee Management Section -->
         <section class="form-section">
           <h2>Employee Management</h2>
@@ -615,94 +634,288 @@ export default {
 </script>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: black;
-  color: white;
-}
+
 .staff-view {
-  padding: 20px;
+  background-color: #000;
+  color: #fff;
   min-height: 100vh;
-}
-h1,
-h2 {
-  color: #00c4ff;
-  text-align: center;
-}
-h3 {
-  color: #00c4ff;
-  margin-top: 20px;
-  text-align: center;
-}
-.form-section {
-  margin-bottom: 40px;
-  padding: 20px;
-  background-color: #222;
+  padding: 16px 32px;
+  width: 900px; /* Increase the width of the container */
+  margin-left: 130px;; /* Center the container */
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
 }
+
+.logo {
+    height: 50px;
+    width: 50px;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 28px;
+    margin-left: 10px;
+}
+
+header {
+    background-color: #000;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+}
+
+.header-top .header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-top .header-left h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+.header-top .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-email {
+    margin-right: 16px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.sign-in-button,
+.sign-out-button {
+    background-color: #1a73e8;
+    color: white;
+    padding: 8px 12px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: normal;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content
+}
+
+.sign-in-button:hover,
+.sign-out-button:hover {
+    background-color: #155cb0;
+}
+
+
+hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 0;
+}
+
+.header-center {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+}
+
+.header-center input {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px 12px;
+    border: 0.5px solid #555;
+    border-radius: 16px;
+    background-color: #333;
+    color: white;
+}
+
+.header-center button {
+    padding: 8px 16px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.header-center button:hover,
+.header-center button:active {
+    color: grey;
+}
+
+header button:hover {
+    background-color: #000;
+}
+
+.staff-view h1 {
+  font-size: 32px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.staff-view h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  color: #1a73e8;
+  text-align: left;
+}
+
+.staff-view h3 {
+  font-size: 20px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.form-section {
+  background-color: #121212;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
 .form-grid {
   display: grid;
-  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
 }
-label {
-  font-weight: bold;
+
+.form-grid div {
+  display: flex;
+  flex-direction: column;
 }
-input,
-textarea,
-select,
-button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #555;
+
+.form-grid label {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #bbb;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  padding: 8px 12px;
+  border: 1px solid #333;
   border-radius: 4px;
-  background-color: #222;
-  color: white;
+  background-color: #1a1a1a;
+  color: #fff;
 }
-button {
-  cursor: pointer;
+
+.form-grid input::placeholder,
+.form-grid textarea::placeholder {
+  color: #777;
 }
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+  outline: none;
+  border-color: #1a73e8;
+}
+
 .btn-primary {
-  background-color: #00c4ff;
-  color: black;
+  padding: 10px 20px;
+  background-color: #1a73e8;
+  color: #fff;
   border: none;
-  padding: 10px;
+  border-radius: 4px;
   font-weight: bold;
-  transition: background 0.3s;
+  cursor: pointer;
+  text-align: center;
 }
+
 .btn-primary:hover {
-  background-color: #0078a8;
+  background-color: #155cb0;
 }
+
 .error-message {
-  color: red;
-  margin-top: 10px;
+  color: #ff6b6b;
+  margin-top: 8px;
 }
+
 .success-message {
-  color: green;
-  margin-top: 10px;
+  color: #4caf50;
+  margin-top: 8px;
 }
+
 .employee-list table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
+  margin-top: 16px;
 }
-.employee-list th, .employee-list td {
-  border: 1px solid #555;
-  padding: 10px;
+
+.employee-list th,
+.employee-list td {
+  padding: 12px 16px;
+  border: 1px solid #333;
   text-align: left;
+  color: #fff;
 }
+
+.employee-list th {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.employee-list tbody tr:nth-child(even) {
+  background-color: #121212;
+}
+
+.employee-list tbody tr:hover {
+  background-color: #1a1a1a;
+}
+
+.change-requests-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.change-requests-list th,
+.change-requests-list td {
+  padding: 12px 16px;
+  border: 1px solid #333;
+  text-align: left;
+  color: #fff;
+}
+
+.change-requests-list th {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+.change-requests-list tbody tr:nth-child(even) {
+  background-color: #121212;
+}
+
+.change-requests-list tbody tr:hover {
+  background-color: #1a1a1a;
+}
+
 .btn-delete {
-  background-color: #ff4444;
+  background-color: #ff6b6b;
   color: white;
+  padding: 8px 12px;
   border: none;
-  padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
 }
+
 .btn-delete:hover {
-  background-color: #cc0000;
+  background-color: #d9534f;
 }
 
 </style>
