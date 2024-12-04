@@ -284,6 +284,8 @@ export default {
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userRole');
             localStorage.removeItem('userName');
+            localStorage.removeItem('sessionCart');   
+            localStorage.removeItem('userWishlist'); 
             this.userEmail = '';
             this.userName = '';
             this.$router.push({ name: 'signin' });
