@@ -317,6 +317,7 @@ header {
 
 .header-top .header-right .sign-in-button,
 .header-top .header-right .download-btn {
+  display: inline-block;
   background-color: transparent; /* No background */
   color: white; /* Default text color */
   border: none; /* Remove borders */
@@ -381,6 +382,11 @@ main {
   flex: 1;
   padding: 32px;
   width: 100%; /* Full width */
+}
+
+.header-right {
+  position: relative;
+  z-index: 1;
 }
 
 section {
