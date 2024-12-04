@@ -1,9 +1,4 @@
 
-To make the CustomerView redirect to the ProductView when a product image or its container is clicked, you can use Vue Router's router.push() method. Here is the updated code with the necessary changes:
-
-Updated CustomerView Code
-vue
-Copy code
 <template>
   <div id="homepage">
         <header>

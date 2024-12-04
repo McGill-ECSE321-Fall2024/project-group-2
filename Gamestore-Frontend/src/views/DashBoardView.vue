@@ -1,25 +1,25 @@
 <template>
   <div class="password-management">
         <header>
-                        <div class="header-top">
-                            <div class="header-left">
-                                <img src="@/assets/logo.png" alt="Logo" class="logo" />
-                                <h1>Game Store</h1>
-                            </div>
-                            <div class="header-right">
-                                <div v-if="userEmail">
-                                    <span class="user-email">Welcome, {{ userName }}!</span>
-                                    <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
-                                    <button @click="signOut" class="sign-out-button">Sign Out</button>
-                                </div>
-                                <div v-else>
-                                    <router-link to="/" class="sign-in-button">Sign Out</router-link>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                    </header>
-                    <h1>Customer DashBoard</h1>
+                <div class="header-top">
+                     <div class="header-left">
+                          <img src="@/assets/logo.png" alt="Logo" class="logo" />
+                        <h1>Game Store</h1>
+                     </div>
+                  <div class="header-right">
+                        <div v-if="userEmail">
+                            <span class="user-email">Welcome, {{ userName }}!</span>
+                                 <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
+                                 <button @click="signOut" class="sign-out-button">Sign Out</button>
+                  </div>
+                        <div v-else>
+                            <router-link to="/" class="sign-in-button">Sign Out</router-link>
+                         </div>
+                  </div>
+            </div>
+         <hr />
+        </header>
+     <h1>Customer DashBoard</h1>
     <form @submit.prevent="updatePassword">
       <label for="email">Email: </label><br>
       <input type="email" v-model="updateCustomer.email" placeholder="Enter your Email" required /><br>
