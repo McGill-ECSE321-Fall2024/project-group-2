@@ -14,6 +14,7 @@ import OrderManagementView from '@/views/OrderManagementView.vue';
 import ShoppingCartView from "@/views/ShoppingCartView.vue";
 import ProductView from '../views/ProductView.vue';
 import ReviewView from '../views/ReviewView.vue';
+import WishlistView from '@/views/WishlistView.vue';
 
 
 
@@ -100,6 +101,11 @@ const router = createRouter({
       path: '/product/:id/review',
       name: 'ReviewView',
       component : ReviewView
+    },
+    {
+      path: '/wishlist',
+      name: 'wishlist',
+      component: WishlistView
     }
   ],
 });

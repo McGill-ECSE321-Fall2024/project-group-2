@@ -64,30 +64,17 @@
 </template>
 
 <script>
-import picture1 from '@/assets/picture1.jpg';
-import picture3 from '@/assets/picture3.jpg';
 export default {
   name: 'ShoppingCartView',
   data() {
     return {
-      cartItems: [
-        {
-          id: 1,
-          name: "Cyberpunk 2077",
-          price: 79.99,
-          quantity: 1,
-          image: picture3
-        },
-        {
-          id: 2,
-          name: "EA Sports FC 24",
-          price: 89.99,
-          quantity: 1,
-          image: picture1
-        }
-      ],
+      cartItems: [],
       shipping: 15.00
     }
+  },
+  created() {
+    // load cart items when component is created
+    this.loadCartItems();
   },
   computed: {
     subtotal() {
@@ -101,19 +88,28 @@ export default {
     }
   },
   methods: {
+    loadCartItems() {
+      this.cartItems = JSON.parse(localStorage.getItem('sessionCart') || '[]');
+    },
     increaseQuantity(item) {
-      item.quantity++
+      item.quantity++;
+      this.updateLocalStorage();
     },
     decreaseQuantity(item) {
       if (item.quantity > 1) {
-        item.quantity--
+        item.quantity--;
+        this.updateLocalStorage();
       }
     },
     removeItem(item) {
-      const index = this.cartItems.findIndex(cartItem => cartItem.id === item.id)
+      const index = this.cartItems.findIndex(cartItem => cartItem.id === item.id);
       if (index !== -1) {
-        this.cartItems.splice(index, 1)
+        this.cartItems.splice(index, 1);
+        this.updateLocalStorage();
       }
+    },
+    updateLocalStorage() {
+      localStorage.setItem('sessionCart', JSON.stringify(this.cartItems));
     },
     proceedToCheckout() {
       // Navigate to checkout page
