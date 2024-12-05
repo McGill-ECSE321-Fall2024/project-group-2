@@ -97,13 +97,13 @@ export default {
       try {
         this.loading = true;
 
-        // Adjust the URL to match your backend configuration
+        // get products from backend
         const response = await axios.get('http://localhost:8080/product');
 
         console.log('Full Response:', response);
         console.log('Response Data:', response.data);
 
-        // Adjust based on actual response structure
+        
         this.products = response.data.products || response.data;
         this.filteredProducts = this.products;
 
@@ -114,13 +114,14 @@ export default {
 
         console.error('Error fetching products:', error);
 
-        // More detailed error logging
+  
         if (error.response) {
           console.error('Error data:', error.response.data);
           console.error('Error status:', error.response.status);
         }
       }
     },
+    // gives all products if no search, if there is gives product with name or description matching query
     filterProducts() {
       if (!this.searchQuery) {
         this.filteredProducts = this.products;
@@ -132,7 +133,7 @@ export default {
       }
     },
     redirectToProduct(productId) {
-      // Redirect to the ProductView with the product ID
+      // redirect to the ProductView with the product ID
       this.$router.push({ name: 'product', params: { id: productId } });
     }
   },
@@ -144,7 +145,7 @@ export default {
 
 
 <style scoped>
-/* Global Container */
+
 
 /* Logo Styling */
 .logo {
@@ -159,11 +160,11 @@ export default {
 
 #homepage {
   background-color: #000; /* Black background */
-  color: #fff; /* White text */
+  color: #fff; 
   min-height: 100vh; /* Cover full screen */
   display: flex;
   flex-direction: column;
-  min-width: 210%; /* Ensure full width */
+  min-width: 210%; 
   margin-left: -5.7vh;
   overflow-y: hidden;
 }

@@ -1,25 +1,25 @@
 <template>
   <div class="staff-view">
     <header>
-            <div class="header-top">
-                  <div class="header-left">
-                     <img src="@/assets/logo.png" alt="Logo" class="logo" />
-                        <h1>Game Store</h1>
-                    </div>
-                    <div class="header-right">
-                            <div v-if="userEmail">
-                                <span class="user-email">Welcome, {{ userName }}!</span>
-                                <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
-                                <button @click="signOut" class="sign-out-button">Sign Out</button>
-                            </div>
-                            <div v-else>
-                                <router-link to="/" class="sign-in-button">Sign Out</router-link>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
-                </header>
-                <h1>Employee DashBoard</h1>
+      <div class="header-top">
+        <div class="header-left">
+          <img src="@/assets/logo.png" alt="Logo" class="logo" />
+          <h1>Game Store</h1>
+        </div>
+        <div class="header-right">
+          <div v-if="userEmail">
+            <span class="user-email">Welcome, {{ userName }}!</span>
+            <button @click="$router.push({ name: 'Dashboard' })" class="dashboard-button">Dashboard</button>
+            <button @click="signOut" class="sign-out-button">Sign Out</button>
+          </div>
+          <div v-else>
+            <router-link to="/" class="sign-in-button">Sign Out</router-link>
+          </div>
+        </div>
+      </div>
+      <hr />
+    </header>
+    <h1>Employee DashBoard</h1>
     <!-- Add New Game -->
     <section class="form-section">
       <h2>Add New Game</h2>
@@ -160,26 +160,26 @@
     <section class="form-section">
       <h2>View and Edit Order</h2>
       <form @submit.prevent="redirectToOrderView" class="form-grid">
-      <div>
-        <label>Order Number:</label>
-        <input v-model="orderNumber" type="text" placeholder="Enter Order Number" required />
-      </div>
-      <button class="btn-primary" type="submit">Submit</button>
-      <p v-if="orderErrorMessage" class="error-message">{{ orderErrorMessage }}</p>
+        <div>
+          <label>Order Number:</label>
+          <input v-model="orderNumber" type="text" placeholder="Enter Order Number" required />
+        </div>
+        <button class="btn-primary" type="submit">Submit</button>
+        <p v-if="orderErrorMessage" class="error-message">{{ orderErrorMessage }}</p>
       </form>
     </section>
 
-     <!-- Create Requests -->
-     <section class="form-section">
+    <!-- Create Requests -->
+    <section class="form-section">
       <h2>Send a Request</h2>
       <form @submit.prevent="createRequest" class="form-grid">
         <div>
-        <label>Request email address:</label>
-        <input v-model="email" type="text" placeholder="Enter email address" required />
-      </div>
-      <button class="btn-primary" type="submit">Submit</button>
-      <p v-if="changeRequestErrorMessage" class="error-message">{{ changeRequestErrorMessage }}</p>
-      <p v-if="changeRequestSuccessMessage" class="success-message">{{ changeRequestSuccessMessage }}</p>
+          <label>Request email address:</label>
+          <input v-model="email" type="text" placeholder="Enter email address" required />
+        </div>
+        <button class="btn-primary" type="submit">Submit</button>
+        <p v-if="changeRequestErrorMessage" class="error-message">{{ changeRequestErrorMessage }}</p>
+        <p v-if="changeRequestSuccessMessage" class="success-message">{{ changeRequestSuccessMessage }}</p>
       </form>
     </section>
 
@@ -209,7 +209,7 @@ export default {
       price: 0,
       image: "",
     });
-    const email= ref("");
+    const email = ref("");
     const categories = ref([]); // Example categories
     const newCategory = ref({ name: "" });
     const editGameRequest = ref({ oldName: "", name: "", description: "" });
@@ -240,8 +240,8 @@ export default {
     const orderErrorMessage = ref(null);
 
     // Change_requests message
-    const changeRequestErrorMessage= ref(null);
-    const changeRequestSuccessMessage= ref (null);
+    const changeRequestErrorMessage = ref(null);
+    const changeRequestSuccessMessage = ref(null);
 
     // Fetch categories from the backend
     const fetchCategories = async () => {
@@ -256,13 +256,13 @@ export default {
     fetchCategories();
 
     const redirectToOrderView = async () => {
-      orderErrorMessage.value= null;
-      try{
-        const response = await axiosClient.get("/orders/number/"+orderNumber.value);
+      orderErrorMessage.value = null;
+      try {
+        const response = await axiosClient.get("/orders/number/" + orderNumber.value);
         console.log(response)
         router.push({ name: "order_management", params: { id: orderNumber.value } });
       }
-      catch  (error) {
+      catch (error) {
         orderErrorMessage.value = error.response.data || "An error occurred.";
       }
     };
@@ -280,14 +280,16 @@ export default {
     };
 
     const addGame = async () => {
-      successMessageP1.value= null;
-      errorMessageP1.value= null;
+      successMessageP1.value = null;
+      errorMessageP1.value = null;
       try {
-        const new_line_item= {price: newGame.value.price, quantity: newGame.value.quantity};
-        const new_line_item2=  await axiosClient.post("/lineitems", new_line_item);
-        const choosen_cat= await axiosClient.get("/category/name/"+ newGame.value.category);
-        const new_game= {name: newGame.value.name, description: newGame.value.description, imageURL: newGame.value.image,
-          lineItem_id: new_line_item2.data.lineItemId, category_id: choosen_cat.data.id};
+        const new_line_item = { price: newGame.value.price, quantity: newGame.value.quantity };
+        const new_line_item2 = await axiosClient.post("/lineitems", new_line_item);
+        const choosen_cat = await axiosClient.get("/category/name/" + newGame.value.category);
+        const new_game = {
+          name: newGame.value.name, description: newGame.value.description, imageURL: newGame.value.image,
+          lineItem_id: new_line_item2.data.lineItemId, category_id: choosen_cat.data.id
+        };
         await axiosClient.post("/product", new_game);
         successMessageP1.value = "Product added successfully!";
       } catch (error) {
@@ -295,14 +297,14 @@ export default {
       }
     };
 
-    const editGameName= async () => {
-      successMessageP2.value= null;
-      errorMessageP2.value= null;
-      try{
+    const editGameName = async () => {
+      successMessageP2.value = null;
+      errorMessageP2.value = null;
+      try {
         console.log(editGameRequest.value.oldName)
-        const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
+        const game_edit = await axiosClient.get("/product/name/" + editGameRequest.value.oldName);
         console.log(game_edit)
-        await axiosClient.put("/product/name/"+game_edit.data.id+"?newName="+editGameRequest.value.name);
+        await axiosClient.put("/product/name/" + game_edit.data.id + "?newName=" + editGameRequest.value.name);
         successMessageP2.value = "Product name updated successfully!";
       }
       catch (error) {
@@ -310,12 +312,12 @@ export default {
       }
     };
 
-    const editGameDescription= async () => {
-      successMessageP3.value= null;
-      errorMessageP3.value= null;
-      try{
-        const game_edit= await axiosClient.get("/product/name/"+editGameRequest.value.oldName);
-        await axiosClient.put("/product/description/"+game_edit.data.id+"?newDescription="+editGameRequest.value.description);
+    const editGameDescription = async () => {
+      successMessageP3.value = null;
+      errorMessageP3.value = null;
+      try {
+        const game_edit = await axiosClient.get("/product/name/" + editGameRequest.value.oldName);
+        await axiosClient.put("/product/description/" + game_edit.data.id + "?newDescription=" + editGameRequest.value.description);
         successMessageP3.value = "Product description updated successfully!";
       }
       catch (error) {
@@ -324,11 +326,11 @@ export default {
     };
 
     const deleteGame = async () => {
-      successMessageP4.value= null;
-      errorMessageP4.value= null;
+      successMessageP4.value = null;
+      errorMessageP4.value = null;
       try {
-        const game_edit= await axiosClient.get("/product/name/"+deleteGameName.value);
-        await axiosClient.delete("/product/"+game_edit.data.id);
+        const game_edit = await axiosClient.get("/product/name/" + deleteGameName.value);
+        await axiosClient.delete("/product/" + game_edit.data.id);
         successMessageP4.value = "Product deleted successfully!";
       } catch (error) {
         errorMessageP4.value = error.response.data || "An error occurred.";
@@ -336,8 +338,8 @@ export default {
     };
 
     const addCategory = async () => {
-      successMessage.value= null;
-      errorMessage.value= null;
+      successMessage.value = null;
+      errorMessage.value = null;
       try {
         await axiosClient.post("/category", { name: newCategory.value.name });
         successMessage.value = "Category added successfully!";
@@ -348,11 +350,11 @@ export default {
     };
 
     const updateCategory = async () => {
-      successMessage2.value= null;
-      errorMessage2.value= null;
+      successMessage2.value = null;
+      errorMessage2.value = null;
       try {
-        const cat_edit= await axiosClient.get("/category/name/"+ updateCategoryRequest.value.oldName);
-        await axiosClient.put("/category/"+cat_edit.data.id+"?newName="+updateCategoryRequest.value.name);
+        const cat_edit = await axiosClient.get("/category/name/" + updateCategoryRequest.value.oldName);
+        await axiosClient.put("/category/" + cat_edit.data.id + "?newName=" + updateCategoryRequest.value.name);
         successMessage2.value = "Category updated successfully!";
       } catch (error) {
         errorMessage2.value = error.response.data || "An error occurred.";
@@ -360,32 +362,32 @@ export default {
     };
 
     const deleteCategory = async () => {
-      successMessage3.value= null;
-      errorMessage3.value= null;
+      successMessage3.value = null;
+      errorMessage3.value = null;
       try {
-        const cat_edit= await axiosClient.get("/category/name/"+ deleteCategoryName.value);
-        await axiosClient.delete("/category/"+cat_edit.data.id);
+        const cat_edit = await axiosClient.get("/category/name/" + deleteCategoryName.value);
+        await axiosClient.delete("/category/" + cat_edit.data.id);
         successMessage3.value = "Category deleted successfully!";
       } catch (error) {
         errorMessage3.value = error.response.data || "An error occurred.";
       }
     };
 
-   const createRequest = async () => {
-     changeRequestErrorMessage.value = null;
-     changeRequestSuccessMessage.value = null;
-     try {
-       const requestDto = {
-         requestCreatorEmail: email.value,
-         // Add additional fields if required by backend
-       };
-       const response = await axiosClient.post("/change-requests", requestDto);
-       changeRequestSuccessMessage.value = "Change request created successfully!";
-       // Optionally handle the response, which would be a ChangeRequestResponseDto
-     } catch (error) {
-       changeRequestErrorMessage.value = error.response?.data || "Invalid change request.";
-     }
-   };
+    const createRequest = async () => {
+      changeRequestErrorMessage.value = null;
+      changeRequestSuccessMessage.value = null;
+      try {
+        const requestDto = {
+          requestCreatorEmail: email.value,
+          // Add additional fields if required by backend
+        };
+        const response = await axiosClient.post("/change-requests", requestDto);
+        changeRequestSuccessMessage.value = "Change request created successfully!";
+        // Optionally handle the response, which would be a ChangeRequestResponseDto
+      } catch (error) {
+        changeRequestErrorMessage.value = error.response?.data || "Invalid change request.";
+      }
+    };
 
     return {
       newGame,
@@ -430,128 +432,130 @@ export default {
 </script>
 
 <style>
-
 .staff-view {
   background-color: #000;
   color: #fff;
   min-height: 100vh;
   padding: 16px 32px;
-  width: 900px; /* Increase the width of the container */
-  margin-left: 130px;; /* Center the container */
+  width: 900px;
+  /* Increase the width of the container */
+  margin-left: 130px;
+  ;
+  /* Center the container */
   border-radius: 8px;
   overflow-y: auto;
 }
 
 .logo {
-    height: 50px;
-    width: 50px;
-    margin-right: 10px;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 28px;
-    margin-left: 10px;
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 28px;
+  margin-left: 10px;
 }
 
 header {
-    background-color: #000;
-    color: white;
-    margin-bottom: 10px;
+  background-color: #000;
+  color: white;
+  margin-bottom: 10px;
 }
 
 .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
 }
 
 .header-top .header-left {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header-top .header-left h1 {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 
 .header-top .header-right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .user-email {
-    margin-right: 16px;
-    font-size: 16px;
-    color: #fff;
+  margin-right: 16px;
+  font-size: 16px;
+  color: #fff;
 }
 
 .sign-in-button,
 .sign-out-button {
-    background-color: #1a73e8;
-    color: white;
-    padding: 8px 12px;
-    margin-left: 8px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    line-height: normal;
-    display: inline-flex;
-    align-items: center;
-    width: fit-content
+  background-color: #1a73e8;
+  color: white;
+  padding: 8px 12px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: normal;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content
 }
 
 .sign-in-button:hover,
 .sign-out-button:hover {
-    background-color: #155cb0;
+  background-color: #155cb0;
 }
 
 
 hr {
-    border: 0;
-    border-top: 1px solid #333;
-    margin: 0;
+  border: 0;
+  border-top: 1px solid #333;
+  margin: 0;
 }
 
 .header-center {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 8px;
-    padding: 16px 32px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
 }
 
 .header-center input {
-    width: 100%;
-    max-width: 200px;
-    padding: 8px 12px;
-    border: 0.5px solid #555;
-    border-radius: 16px;
-    background-color: #333;
-    color: white;
+  width: 100%;
+  max-width: 200px;
+  padding: 8px 12px;
+  border: 0.5px solid #555;
+  border-radius: 16px;
+  background-color: #333;
+  color: white;
 }
 
 .header-center button {
-    padding: 8px 16px;
-    background-color: transparent;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: color 0.3s ease;
+  padding: 8px 16px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .header-center button:hover,
 .header-center button:active {
-    color: grey;
+  color: grey;
 }
 
 header button:hover {
-    background-color: #000;
+  background-color: #000;
 }
 
 .staff-view h1 {
@@ -713,5 +717,4 @@ header button:hover {
 .btn-delete:hover {
   background-color: #d9534f;
 }
-
 </style>

@@ -130,6 +130,7 @@ export default {
                 }, 2000);
             }
         },
+        // clean up local storage for next login
         signOut() {
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userRole');

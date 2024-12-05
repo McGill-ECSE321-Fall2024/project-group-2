@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     returnToHome() {
-      // Navigate to the home page
+      // Navigate to the home page (search for us)
       this.$router.push('/search');
     }
   }

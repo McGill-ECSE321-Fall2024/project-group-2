@@ -233,14 +233,19 @@ export default {
   },
   methods: {
     formatCardNumber(e) {
+      // removes all spaces and non-digits
       const value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
+      // split number into 4 groups and seperate by a space (like how cards always are)
       this.cardDetails.number = value.match(/.{1,4}/g)?.join(' ') || '';
     },
     formatExpiry(e) {
+      // remove non-digits
       const value = e.target.value.replace(/\D/g, '');
+      // once the length of expiry is longer than 2, add the dash (ex. 09/30)
       this.cardDetails.expiry = value.length > 2 ? value.slice(0, 2) + '/' + value.slice(2) : value;
     },
     formatCVV(e) {
+      // remove non-digits
       this.cardDetails.cvv = e.target.value.replace(/\D/g, '');
     },
     handlePayment() {
@@ -366,7 +371,7 @@ export default {
   cursor: not-allowed;
 }
 
-/* Order Summary Styles (same as checkout page) */
+
 .order-summary {
   position: sticky;
   top: 2rem;

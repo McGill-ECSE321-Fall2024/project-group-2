@@ -1,6 +1,6 @@
 <template>
     <div id="product-page">
-        
+
         <header>
             <div class="header-top">
                 <div class="header-left">
@@ -19,7 +19,7 @@
                 </div>
             </div>
             <hr />
-            
+
             <div class="header-center">
                 <div class="header-left-side">
                     <button class="browse-btn" @click="$router.push('/search')">Browse</button>
@@ -43,7 +43,7 @@
             <div class="product-container">
                 <!-- Left side - Image -->
                 <div class="product-image-section">
-                    <img :src="product.imageURL ? `data:image/jpeg;base64,${product.imageURL}` : '@/assets/picture1.jpg'" 
+                    <img :src="product.imageURL ? `data:image/jpeg;base64,${product.imageURL}` : '@/assets/picture1.jpg'"
                         :alt="product.name" class="product-image" />
                 </div>
 
@@ -126,7 +126,7 @@ export default {
             averageRating: 0,
             reviewCount: 0,
             userEmail: '',
-            userName: '',  
+            userName: '',
         };
     },
     // runs when component is created
@@ -143,7 +143,7 @@ export default {
             } else {
                 throw new Error('No valid product identifier provided');
             }
-            
+
             this.product = response.data;
             console.log('Product data:', response.data);
 
@@ -212,13 +212,13 @@ export default {
                 quantity: 1,
                 image: this.product.imageURL
             };
-            
+
             // get existing cart from localStorage or create new array
             let cart = JSON.parse(localStorage.getItem('sessionCart') || '[]');
-            
+
             // check if item already exists in cart
             const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
-            
+
             if (existingItemIndex !== -1) {
                 // if item exists, increment quantity
                 cart[existingItemIndex].quantity += 1;
@@ -226,14 +226,14 @@ export default {
                 // if item doesn't exist, add it
                 cart.push(cartItem);
             }
-            
+
             // save back to localStorage
             localStorage.setItem('sessionCart', JSON.stringify(cart));
-            
+
             // show confirmation to user
             const notification = this.$refs.notification;
             notification.classList.add('show');
-            
+
             // hide notification after 2 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
@@ -248,13 +248,13 @@ export default {
                 price: this.product.lineItem?.price || 0,
                 image: this.product.imageURL
             };
-            
+
             // get existing wishlist from localStorage or create new array
             let wishlist = JSON.parse(localStorage.getItem('userWishlist') || '[]');
-            
+
             // check if item already exists in wishlist
             const existingItemIndex = wishlist.findIndex(item => item.id === wishlistItem.id);
-            
+
             const notification = this.$refs.notification;
             if (existingItemIndex !== -1) {
                 // Item already in wishlist - could show message
@@ -266,13 +266,13 @@ export default {
                 wishlist.push(wishlistItem);
                 // save back to localStorage
                 localStorage.setItem('userWishlist', JSON.stringify(wishlist));
-                
+
                 // show confirmation to user
                 const notification = this.$refs.notification;
                 notification.textContent = 'Added to wishlist successfully!';
                 notification.classList.add('show');
             }
-            
+
             // hide notification after 2 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
@@ -284,8 +284,8 @@ export default {
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userRole');
             localStorage.removeItem('userName');
-            localStorage.removeItem('sessionCart');   
-            localStorage.removeItem('userWishlist'); 
+            localStorage.removeItem('sessionCart');
+            localStorage.removeItem('userWishlist');
             this.userEmail = '';
             this.userName = '';
             this.$router.push({ name: 'signin' });
@@ -296,7 +296,6 @@ export default {
 
 
 <style scoped>
-/* from homeview*/
 #product-page {
     background-color: #000;
     color: #fff;
@@ -422,24 +421,24 @@ header button:hover {
 }
 
 .dashboard-button {
-      background-color: #1a73e8;
-      color: white;
-      padding: 8px 12px;
-      margin-left: 8px;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 14px;
-      line-height: normal;
-      display: inline-flex;
-      align-items: center;
-      width: fit-content
+    background-color: #1a73e8;
+    color: white;
+    padding: 8px 12px;
+    margin-left: 8px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: normal;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content
 }
 
 .dashboard-button:hover {
-  background-color: #155cb0;
+    background-color: #155cb0;
 }
 
 .product-content {
@@ -631,7 +630,7 @@ header button:hover {
 
 .header-center {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
     padding: 16px 32px;
     width: 100%;
@@ -657,7 +656,7 @@ header button:hover {
 
 .header-right-side {
     display: flex;
-    gap: 24px; 
+    gap: 24px;
     align-items: center;
 }
 

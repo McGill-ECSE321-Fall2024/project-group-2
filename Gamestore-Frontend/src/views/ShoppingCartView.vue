@@ -118,7 +118,7 @@ export default {
       this.$router.push('/checkout')
     },
     continueShopping() {
-      // Navigate to home page or game catalog
+      // Navigate to search (functions as home)
       this.$router.push('/search')
     }
   }

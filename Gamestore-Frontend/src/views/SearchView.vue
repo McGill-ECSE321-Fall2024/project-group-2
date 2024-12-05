@@ -172,7 +172,7 @@ export default {
             this.applyFilters();
         },
 
-        // dort products by price
+        // sort products by price
         sortProducts() {
             const sorted = [...this.displayedProducts];
             if (this.priceSort === 'high') {
@@ -193,7 +193,8 @@ export default {
         goToProduct(product) {
             this.$router.push(`/product/${product.id}`);
         },
-
+        
+        // cleans up local storage, so local data is persisted for next login
         signOut() {
             localStorage.removeItem('userEmail');
             localStorage.removeItem('userRole');
