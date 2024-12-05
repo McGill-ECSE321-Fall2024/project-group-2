@@ -15,6 +15,7 @@
               <th style="min-width: 200px;">Actions</th>
             </tr>
           </thead>
+          <!-- show order details if order exists -->
           <tbody v-if="order">
             <tr>
               <td>{{ order.number }}</td>
@@ -54,6 +55,7 @@
   import { useRouter } from "vue-router";
   import axios from "axios";
 
+  // used for api calls
   const axiosClient = axios.create({
   baseURL: "http://localhost:8080",
   });
@@ -67,6 +69,7 @@
       const router = useRouter();
       const message = ref("");
 
+      // get order details
       const fetchOrder = async () => {
       try {
         const response = await axiosClient.get("/orders/number/"+props.id);
@@ -78,6 +81,7 @@
 
     onMounted(fetchOrder);
 
+    // updates order status on confirm
     const confirmAction = async () => {
       try{
         const temp = await axiosClient.get("/orders/number/"+props.id);

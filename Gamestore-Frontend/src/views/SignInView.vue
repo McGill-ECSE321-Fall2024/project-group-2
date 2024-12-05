@@ -60,7 +60,7 @@ import axios from "axios";
 import logo from "@/assets/logo.png";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8080", // Replace with your backend URL
+  baseURL: "http://localhost:8080", 
 });
 
 export default {
@@ -70,7 +70,7 @@ export default {
       email: "",
       password: "",
       loginError: "",
-      logo, // Logo for the application
+      logo, // site logo
     };
   },
   methods: {
@@ -126,16 +126,12 @@ export default {
 };
 </script>
 
-<style>
-/* Add your styles here */
-</style>
 
 
 <style>
 
-/* General Styling for Global Background */
 html, body {
-  background-color: #000 !important; /* Black background */
+  background-color: #000 !important; 
 }
 
 /* Login Container Styling */
@@ -267,7 +263,7 @@ input[type="password"]:focus {
 
 /* Login Error */
 .login-error {
-  color: #ff4d4f; /* Error message color */
+  color: #ff4d4f; 
   font-size: 14px;
   margin-bottom: 10px;
 }

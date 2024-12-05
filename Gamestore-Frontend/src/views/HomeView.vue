@@ -267,32 +267,30 @@ export default {
 </script>
 
 <style scoped>
-/* Global Container */
 
-/* Logo Styling */
 .logo {
   height: 50px;
   width: 50px;
-  margin-right: 10px; /* Add spacing between the logo and the heading */
+  margin-right: 10px; 
   display: inline-block;
-  vertical-align: middle; /* Align logo vertically with text */
+  vertical-align: middle; 
   border-radius: 28px;
   margin-left: 10px;
 }
 
 #homepage {
-  background-color: #000; /* Black background */
-  color: #fff; /* White text */
-  min-height: 100vh; /* Cover full screen */
+  background-color: #000; 
+  color: #fff; 
+  min-height: 100vh; 
   display: flex;
   flex-direction: column;
-  min-width: 210%; /* Ensure full width */
+  min-width: 210%; 
   margin-left: -5.7vh;
   overflow-y: hidden;
 
 }
 
-/* Header */
+
 header {
   background-color: #000;
   color: white;
@@ -311,28 +309,28 @@ header {
 }
 
 .header-top .header-left {
-  display: flex; /* Use flexbox to align logo and heading */
+  display: flex;
   align-items: center;
 }
 
 .header-top .header-right .sign-in-button,
 .header-top .header-right .download-btn {
   display: inline-block;
-  background-color: transparent; /* No background */
-  color: white; /* Default text color */
-  border: none; /* Remove borders */
+  background-color: transparent; 
+  color: white; 
+  border: none; 
   border-radius: 4px;
   padding: 8px 16px;
   cursor: pointer;
-  transition: color 0.3s ease; /* Smooth transition for text color */
-  text-decoration: none; /* Remove underline for the link */
+  transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .header-top .header-right .sign-in-button:hover,
 .header-top .header-right .download-btn:hover,
 .header-top .header-right .sign-in-button:active,
 .header-top .header-right .download-btn:active {
-  color: grey; /* Change text color on hover or click */
+  color: grey; 
 }
 
 hr {
@@ -362,7 +360,7 @@ hr {
 }
 
 .header-center .center-button {
-  background-color: transparent; /* Same as the sign-in button background */
+  background-color: transparent; 
   color: white;
   border: none;
   border-radius: 4px;
@@ -377,11 +375,11 @@ hr {
 }
 
 
-/* Main Content */
+
 main {
   flex: 1;
   padding: 32px;
-  width: 100%; /* Full width */
+  width: 100%; 
 }
 
 .header-right {
@@ -400,16 +398,16 @@ section h2 {
   text-align: left;
 }
 
-/* Card Container */
+
 .card-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5 cards in a row */
-  gap: 16px; /* Space between cards */
-  justify-content: center; /* Center the grid */
+  grid-template-columns: repeat(5, 1fr); 
+  gap: 16px; 
+  justify-content: center; 
 }
 
 .game-card {
-  background-color: #000; /* Darker card background */
+  background-color: #000; 
   color: white;
   font-size: 12px;
   border-radius: 8px;
@@ -419,19 +417,19 @@ section h2 {
 }
 
 .game-card img {
-  width: 170px; /* Uniform image width */
-  height: 200px; /* Uniform image height */
+  width: 170px; 
+  height: 200px; 
   border-radius: 3px;
   margin-bottom: 8px;
 }
 
 .game-card h3 {
-  font-weight: bold; /* Bold game name */
+  font-weight: bold;
   margin: 8px 0 4px;
 }
 
 .game-card p {
-  font-weight: normal; /* Keep price in normal font */
+  font-weight: normal; 
   margin: 0;
 }
 
@@ -490,7 +488,7 @@ footer {
   background-color: #555;
 }
 
-/* List Card Styling (for specific sections) */
+
 .list-card-container {
   display: flex;
   flex-direction: column;
@@ -512,15 +510,15 @@ footer {
 .list-card-content {
   flex: 1;
   margin-left: 10px;
-  text-align: left; /* Align text to the left */
+  text-align: left; 
 }
 .game-name {
-  font-weight: bold; /* Make game name bold */
+  font-weight: bold; 
   margin: 0;
 }
 
 .game-price {
-  font-weight: normal; /* Keep price in normal font */
+  font-weight: normal; 
   margin: 4px 0 0;
 }
 

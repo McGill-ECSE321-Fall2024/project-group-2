@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style scoped>
-/* Copy the styles for the header from your current HomeView page */
+
 header {
   background-color: #000;
   color: white;
